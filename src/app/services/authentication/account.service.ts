@@ -8,6 +8,7 @@ import { IoService } from 'src/app/services/io.service';
 import { httpHeaders } from './utils';
 import { PlatformProvider } from 'src/app/providers/platform/platform';
 import { USERS_URLS } from 'src/app/providers/routes/swap.routes';
+import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
 
 type AccountUpdateOptions = {
   secret: string;
@@ -26,7 +27,7 @@ export class AccountService {
     private io: IoService,
     private plt: PlatformProvider,
     private authProvider: AuthenticationProvider,
-    private http: HttpClient,
+    private http: HttpFallbackService
   ) {}
 
   get canResetPassword(): boolean {
@@ -39,12 +40,9 @@ export class AccountService {
       'Content-Type': 'application/json',
     });
     const body = { emailAddress: email };
-    return this.http
-      .post<void>(url, body, { headers })
-      .toPromise()
-      .catch((err: HttpErrorResponse) => {
-        throw new AccountRegistrationError(err, this.$);
-      });
+    return this.http.post<void>(url, body, { headers }).catch((err: HttpErrorResponse) => {
+      throw new AccountRegistrationError(err, this.$);
+    });
   }
 
   changePassword(password: string): Promise<void> {
@@ -54,12 +52,9 @@ export class AccountService {
     });
     const body = { password };
 
-    return this.http
-      .put<void>(url, body, { headers })
-      .toPromise()
-      .catch((err: HttpErrorResponse) => {
-        throw new AccountRegistrationError(err, this.$);
-      });
+    return this.http.put<void>(url, body, { headers }).catch((err: HttpErrorResponse) => {
+      throw new AccountRegistrationError(err, this.$);
+    });
   }
 
   addAccount(account: Acc): Promise<Acc> {

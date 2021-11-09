@@ -17,7 +17,7 @@ export class TxblockbookService extends TxBase {
 
   init() {}
 
-  private _getData(explorer, addr, url) {
+  private _getData(explorer, addr, url: string) {
     return new Promise((resolve, reject) => {
       this.networkService
         .getData<any>(explorer, '/v2/address/' + addr + '?page=0&pageSize=10&details=txs', url)

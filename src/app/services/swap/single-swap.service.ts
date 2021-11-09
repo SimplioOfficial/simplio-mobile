@@ -13,6 +13,7 @@ import {
   SwapSingleUpdate,
 } from 'src/app/interface/swap';
 import { PlatformProvider } from 'src/app/providers/platform/platform';
+import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
 import { getParams } from '../authentication/utils';
 import { CommonSwap, SwapService } from './swap-common';
 
@@ -28,7 +29,7 @@ export class SingleSwapService extends CommonSwap implements SwapService {
   constructor(
     protected plt: PlatformProvider,
     protected platformProvider: PlatformProvider,
-    protected http: HttpClient,
+    protected http: HttpFallbackService
   ) {
     super(plt, http, platformProvider);
   }
@@ -38,7 +39,7 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.post(url, swapTransaction, { headers }).toPromise();
+    return this.http.post(url, swapTransaction, { headers });
   }
 
   cancel(sagaId: string): Promise<void> {
@@ -47,13 +48,10 @@ export class SingleSwapService extends CommonSwap implements SwapService {
       'Content-Type': 'application/json',
     });
     const body = { sagaId };
-    return this.http
-      .request<void>('DELETE', url, { headers, body })
-      .toPromise()
-      .catch((err: HttpErrorResponse) => {
-        console.error('Cancelling swap has failed');
-        throw err;
-      });
+    return this.http.request<void>('DELETE', url, { headers, body }).catch((err: HttpErrorResponse) => {
+      console.error('Cancelling swap has failed');
+      throw err;
+    });
   }
 
   convert(data: SwapConvertRequestParams): Promise<SwapConvertResponse> {
@@ -63,7 +61,7 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     });
     const params = getParams(data);
 
-    return this.http.get<SwapConvertResponse>(url, { headers, params }).toPromise();
+    return this.http.get<SwapConvertResponse>(url, { headers, params });
   }
 
   report(data: ReportData): Promise<SwapReportPage> {
@@ -85,7 +83,7 @@ export class SingleSwapService extends CommonSwap implements SwapService {
 
     return this.http
       .put(url, data, { headers })
-      .toPromise()
+      
       .then(() => {})
       .catch((err: HttpErrorResponse) => {
         console.error('Updating swap transaction has failed');
@@ -100,8 +98,8 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     });
 
     return this.http
-      .get(url + '/' + address, { headers })
-      .toPromise()
+      .get(url + "/" + address, { headers })
+      
       .catch((err: HttpErrorResponse) => {
         throw err;
       });
@@ -114,8 +112,8 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     });
 
     return this.http
-      .post(url, { userId }, { headers })
-      .toPromise()
+      .post(url, {userId}, { headers })
+      
       .catch((err: HttpErrorResponse) => {
         throw err;
       });
@@ -128,8 +126,8 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     });
 
     return this.http
-      .delete(url + '/' + address, { headers })
-      .toPromise()
+      .delete(url + "/"  + address, { headers })
+      
       .catch((err: HttpErrorResponse) => {
         throw err;
       });

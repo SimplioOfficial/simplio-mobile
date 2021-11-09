@@ -59,7 +59,7 @@ export class HttpService {
             return [];
           }
         };
-        this.http.setRequestTimeout(20);
+        this.http.setRequestTimeout(10);
         this.http
           .post(url, body, options?.headers ? options?.headers : {})
           .then(data => resolve(p(data.data)))
@@ -67,7 +67,7 @@ export class HttpService {
       } else {
         this.httpClient
           .post(url, body, options)
-          .pipe(timeout(20000))
+          .pipe(timeout(10000))
           .subscribe(
             response => {
               resolve(response as T);
@@ -89,7 +89,7 @@ export class HttpService {
   ): Promise<T> {
     return new Promise((resolve, reject) => {
       if (this.plt.isCordova) {
-        this.http.setRequestTimeout(20);
+        this.http.setRequestTimeout(10);
         this.http
           .get(
             url,
@@ -103,7 +103,7 @@ export class HttpService {
       } else {
         this.httpClient
           .get(url, options)
-          .pipe(timeout(20000))
+          .pipe(timeout(10000))
           .subscribe(
             response => {
               resolve(response as T);
@@ -125,7 +125,7 @@ export class HttpService {
     },
   ): Promise<void> {
     if (this.plt.isCordova) {
-      this.http.setRequestTimeout(20);
+      this.http.setRequestTimeout(10);
       return this.http.put(url, body, options?.headers ? options?.headers : {}).then(console.log);
     } else {
       return this.httpClient
@@ -180,7 +180,7 @@ export class HttpService {
       // }
       this.httpClient
         .request(command, url, options)
-        .pipe(timeout(20000))
+        .pipe(timeout(10000))
         .subscribe(
           response => {
             resolve(response as T);
@@ -194,14 +194,6 @@ export class HttpService {
 
   delete<T>(url, headers) {
     return new Promise((resolve, reject) => {
-      // @TODO: fix fordova
-      // if (this.plt.isCordova) {
-      //   this.http.setRequestTimeout(10);
-      //   this.http
-      //     .delete(url, {}, headers)
-      //     .then(res => resolve(JSON.parse(res.data)))
-      //     .catch(err => reject(err));
-      // } else {
       this.httpClient
         .delete(url, { headers })
         .pipe(timeout(20000))
@@ -213,7 +205,6 @@ export class HttpService {
             reject(xhr);
           },
         );
-      // }
     });
   }
 

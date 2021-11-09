@@ -10,6 +10,7 @@ import {
 import { PlatformProvider } from 'src/app/providers/platform/platform';
 import { environment } from 'src/environments/environment';
 import { SWAP_URLS, USERS_URLS } from '../../providers/routes/swap.routes';
+import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { getParams } from '../authentication/utils';
 import { getCurrencyNetwork } from './utils';
@@ -28,8 +29,8 @@ export class CommonSwap {
 
   constructor(
     protected plt: PlatformProvider,
-    protected http: HttpClient,
-    protected platformProvider: PlatformProvider,
+    protected http: HttpFallbackService,
+    protected platformProvider: PlatformProvider
   ) {}
 
   registerWallet(wallet: Wallet): Promise<void> {
@@ -53,17 +54,14 @@ export class CommonSwap {
       'Content-Type': 'application/json',
     });
 
-    return this.http
-      .post<void>(url, data, { headers })
-      .toPromise()
-      .catch((err: HttpErrorResponse) => {
-        console.error('Adding address has failed', data, err);
-        if (!err.error && err.status === 404) {
-          throw new Error('Connection issue');
-        } else {
-          throw new Error('Adding address has failed');
-        }
-      });
+    return this.http.post<void>(url, data, { headers }).catch((err: HttpErrorResponse) => {
+      console.error('Adding address has failed', data, err);
+      if (!err.error && err.status === 404) {
+        throw new Error('Connection issue');
+      } else {
+        throw new Error('Adding address has failed');
+      }
+    });
   }
 
   fetchList(params?: { swapType: SwapType; currency: SupportedFiat }): Promise<SwapPair[]> {
@@ -75,13 +73,10 @@ export class CommonSwap {
       'Content-Type': 'application/json',
     });
 
-    return this.http
-      .get<SwapPair[]>(url, { headers, params })
-      .toPromise()
-      .catch((err: HttpErrorResponse) => {
-        console.error('Listing available swaps has failed');
-        throw err;
-      });
+    return this.http.get<SwapPair[]>(url, { headers, params }).catch((err: HttpErrorResponse) => {
+      console.error('Listing available swaps has failed');
+      throw err;
+    });
   }
 
   getList(params?: { swapType: SwapType; currency: SupportedFiat }): Promise<SwapPair[]> {
@@ -101,12 +96,9 @@ export class CommonSwap {
     });
     const reqParams = getParams(params);
 
-    return this.http
-      .get<SwapReportPage>(url, { headers, params: reqParams })
-      .toPromise()
-      .catch((err: HttpErrorResponse) => {
-        console.error('Reporting swaps has failed');
-        throw err;
-      });
+    return this.http.get<SwapReportPage>(url, { headers, params: reqParams }).catch((err: HttpErrorResponse) => {
+      console.error('Reporting swaps has failed');
+      throw err;
+    });
   }
 }

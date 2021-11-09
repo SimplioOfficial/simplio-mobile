@@ -66,25 +66,7 @@ export class Txweb3Service extends TxBase {
           };
         })
         .catch(err => {
-          if (!data.retry) {
-            data.retry = 0;
-          }
-          ++data.retry;
-          if (data.retry >= 4) {
             throw new Error(data.walletUnit._uuid + '/001');
-          } else {
-            return new Promise((resolve, reject) =>
-              setTimeout(() => {
-                console.log(
-                  'Count retry for',
-                  data.walletUnit.ticker,
-                  data.walletUnit._uuid,
-                  data.retry,
-                );
-                return this.getTxs(data).then(resolve).catch(reject);
-              }, Math.trunc(Math.random() * 3000)),
-            );
-          }
         });
     } catch (_) {
       throw new Error(data.walletUnit._uuid + '/001');
@@ -140,25 +122,7 @@ export class Txweb3Service extends TxBase {
           return txResponse;
         })
         .catch(err => {
-          if (!data.retry) {
-            data.retry = 0;
-          }
-          ++data.retry;
-          if (data.retry >= 4) {
             throw new Error('Get multiple transaction error' + '/003');
-          } else {
-            return new Promise((resolve, reject) =>
-              setTimeout(() => {
-                console.log(
-                  'Count retry for multiple transaction, url',
-                  data.explorers[0].url.split('/api')[0],
-                  ',count',
-                  data.retry,
-                );
-                return this.getTxsMultiple(data).then(resolve).catch(reject);
-              }, Math.trunc(Math.random() * 3000)),
-            );
-          }
         });
     } catch (_) {
       throw new Error('Get multiple transaction error' + '/003');

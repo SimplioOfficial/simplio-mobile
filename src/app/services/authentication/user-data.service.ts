@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AGREEMENTS_URL, USERS_URLS } from '../../providers/routes/swap.routes';
+import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
 import { HttpService } from '../http.service';
 
 export interface UserDataItem {
@@ -19,7 +20,7 @@ export interface UserDataItem {
   providedIn: 'root',
 })
 export class UserDataService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpFallbackService) { }
 
   get(property: string): Promise<any> {
     const url = USERS_URLS.data.href;
@@ -27,10 +28,7 @@ export class UserDataService {
       'Content-Type': 'application/json',
     });
 
-    return this.http
-      .get<UserDataItem[]>(url, { headers })
-      .toPromise()
-      .then(res => res.find(a => a.Name === property)?.Value);
+    return this.http.get<UserDataItem[]>(url, { headers }).then(res => res.find(a => a.Name === property)?.Value);
   }
 
   create(name: string, type: string, value: any): Promise<any> {
@@ -44,7 +42,7 @@ export class UserDataService {
       value,
     };
 
-    return this.http.post<any>(url, body, { headers }).toPromise();
+    return this.http.post<any>(url, body, { headers });
   }
 
   update(name: string, type: string, value: string): Promise<any> {
@@ -58,7 +56,7 @@ export class UserDataService {
       value,
     };
 
-    return this.http.put<any>(url, body, { headers }).toPromise();
+    return this.http.put<any>(url, body, { headers });
   }
 
   remove(name: string): Promise<any> {
@@ -67,7 +65,7 @@ export class UserDataService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.delete<any>(url, { headers }).toPromise();
+    return this.http.delete<any>(url, { headers });
   }
 
   initializeAdvertising(advertising: boolean): Promise<any> {
@@ -76,7 +74,7 @@ export class UserDataService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.post(url, { advertising }, { headers }).toPromise();
+    return this.http.post(url, { advertising }, { headers });
   }
 
   updateAdvertising(advertising: boolean): Promise<any> {
@@ -85,7 +83,7 @@ export class UserDataService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.put(url, { advertising }, { headers }).toPromise();
+    return this.http.put(url, { advertising }, { headers });
   }
 
   getAdvertising(): Promise<boolean> {
@@ -94,9 +92,6 @@ export class UserDataService {
       'Content-Type': 'application/json',
     });
 
-    return this.http
-      .get<any>(url, { headers })
-      .toPromise()
-      .then(res => res.Advertising);
+    return this.http.get<any>(url, { headers }).then(res => res.Advertising);
   }
 }

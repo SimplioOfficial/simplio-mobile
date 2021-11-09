@@ -17,6 +17,7 @@ import { USERS_URLS, USERS_URLS_V2 } from 'src/app/providers/routes/swap.routes'
 import { AccountService } from 'src/app/services/authentication/account.service';
 import { SwapProvider } from '../../providers/data/swap.provider';
 import { HttpService } from '../http.service';
+import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
 
 type AfterLoginOptions = { verify: boolean; isNew: boolean };
 
@@ -33,8 +34,8 @@ export class AuthenticationService {
     private io: IoService,
     private authProvider: AuthenticationProvider,
     private swapProvider: SwapProvider,
-    private http: HttpClient,
-    private acc: AccountService,
+    private http: HttpFallbackService,
+    private acc: AccountService
   ) {}
 
   serverUrl() {
@@ -53,10 +54,7 @@ export class AuthenticationService {
       password,
     };
 
-    return this.http
-      .post<AccountCredentialsResponse>(url, cred, { headers })
-      .toPromise()
-      .then(res => !!res.refresh_token);
+    return this.http.post<AccountCredentialsResponse>(url, cred, { headers }).then(res => !!res.refresh_token);
   }
 
   isValid(token: string): boolean {
@@ -125,7 +123,7 @@ export class AuthenticationService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.get<RegisterAccountData>(url, { headers }).toPromise();
+    return this.http.get<RegisterAccountData>(url, { headers });
   }
 
   async checkToken() {
@@ -147,12 +145,19 @@ export class AuthenticationService {
       'Content-Type': 'application/json',
     });
 
-    return this.http
-      .post<AccountCredentialsResponse>(url, cred, { headers })
-      .toPromise()
-      .catch((err: HttpErrorResponse) => {
-        if (err.status === 401) {
-          let customErr = new HttpErrorResponse({
+    return this.http.post<AccountCredentialsResponse>(url, cred, { headers }).catch((err: HttpErrorResponse) => {
+      if (err.status === 401) {
+        let customErr = new HttpErrorResponse({
+          headers: err.headers,
+          url: err.url,
+          status: err.status,
+          statusText: err.statusText,
+          error: Object.freeze({
+            code: 'NO_SUCH_USER'
+          })
+        });
+        if (err.error.includes('verify your email')) {
+          customErr = new HttpErrorResponse({
             headers: err.headers,
             url: err.url,
             status: err.status,
@@ -161,22 +166,13 @@ export class AuthenticationService {
               code: 'NO_SUCH_USER',
             }),
           });
-          if (err.error.includes('verify your email')) {
-            customErr = new HttpErrorResponse({
-              headers: err.headers,
-              url: err.url,
-              status: err.status,
-              statusText: err.statusText,
-              error: Object.freeze({
-                code: 'INCOMPLETE_REGISTRATION_PROCESS',
-              }),
-            });
-          }
 
           throw new IdentityVerificationError(customErr, this.$);
         }
-        throw err;
-      });
+      };
+      throw err;
+    });
+      
   }
 
   private _loginv2(cred: AccountCredentials): Promise<AccountCredentialsResponse> {
@@ -187,7 +183,6 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, cred, { headers })
-      .toPromise()
       .catch((err: HttpErrorResponse) => {
         if (err.status === 401) {
           let customErr = new HttpErrorResponse({
@@ -235,7 +230,6 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, body, { headers })
-      .toPromise()
       .catch((err: HttpErrorResponse) => {
         if (err.status === 401) {
           const customErr = new HttpErrorResponse({
@@ -262,7 +256,7 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, body, { headers })
-      .toPromise()
+      
       .then(res => {
         this._refreshServerUrl = url;
         return res;
