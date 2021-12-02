@@ -99,14 +99,6 @@ export interface GeneralRegistrationResponse {
   device_token: string;
 }
 
-export type JwtCertificateResponse = {
-  dotnet: string;
-  der: string;
-  pfx: string;
-  thumbprint: string;
-  fingerprint: string;
-};
-
 export interface BiometricsCredentials {
   pin: string;
 }

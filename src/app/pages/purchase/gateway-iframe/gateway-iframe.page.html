@@ -1,0 +1,14 @@
+<sio-simple-page [hasTapbar]="true" [hasFooter]="false">
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="close()">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <iframe [src]="paymentSafeUrl"></iframe>
+
+  <div class="footer-floating">
+    <!--    <ion-button id="sio-t-btn&#45;&#45;submit" expand="block" mode="ios">AAAA </ion-button>-->
+  </div>
+</sio-simple-page>

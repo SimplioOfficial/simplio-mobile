@@ -25,13 +25,16 @@ import { SioWalletColoredThumbnailComponent } from 'src/app/components/list-item
 import { SioLoadingSwapPendingItemComponent } from 'src/app/components/list-items/swap-items/sio-loading-swap-pending-item/sio-loading-swap-pending-item.component';
 import { SioTransactionProgressComponent } from 'src/app/components/list-items/sio-transaction-progress/sio-transaction-progress.component';
 import { SioSwapEmptyComponent } from 'src/app/components/list-items/sio-swap-empty/sio-swap-empty.component';
+import { SioPurchaseItemComponent } from 'src/app/components/list-items/sio-purchase-item/sio-purchase-item.component';
 import { SioStakeTransactionItemComponent } from './sio-stake-transaction-item/sio-stake-transaction-item.component';
 import { SioStakeItemComponent } from 'src/app/components/list-items/sio-stake-item/sio-stake-item.component';
 import { SioTransactionThumbnailComponent } from 'src/app/components/list-items/thumbnails/sio-transaction-thumbnail/sio-transaction-thumbnail.component';
+import { SioCountryCodeComponent } from './sio-phone-code/sio-country-code.component';
 
 @NgModule({
   imports: [SioSharedModule, CommonModule, IonicModule, SioSharedModule],
   declarations: [
+    SioPurchaseItemComponent,
     SelectWalletComponent,
     SelectEmptyComponent,
     SioWalletThumbnailComponent,
@@ -57,6 +60,7 @@ import { SioTransactionThumbnailComponent } from 'src/app/components/list-items/
     SioSwapEmptyComponent,
     SioStakeTransactionItemComponent,
     SioStakeItemComponent,
+    SioCountryCodeComponent,
   ],
   exports: [
     SioWalletItemComponent,
@@ -78,6 +82,8 @@ import { SioTransactionThumbnailComponent } from 'src/app/components/list-items/
     SioLoadingSwapPendingItemComponent,
     SioTransactionProgressComponent,
     SioSwapEmptyComponent,
+    SioCountryCodeComponent,
+    SioPurchaseItemComponent,
     SioStakeTransactionItemComponent,
     SioStakeItemComponent,
   ]

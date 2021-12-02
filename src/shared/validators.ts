@@ -229,12 +229,45 @@ export const isGreaterThan = (minValue: number) => {
   };
 };
 
+export const isGreaterOrEqualThan = (minValue: number) => {
+  return (c: AbstractControl): null | ValidatorResponse => {
+    return c.value >= minValue
+      ? null
+      : {
+          result: false,
+          msg: ''
+        };
+  };
+};
+
+export const isLessThan = (maxValue: number) => {
+  return (c: AbstractControl): null | ValidatorResponse => {
+    return c.value < maxValue
+      ? null
+      : {
+          result: false,
+          msg: ''
+        };
+  };
+};
+
+export const isLessOrEqualThan = (maxValue: number) => {
+  return (c: AbstractControl): null | ValidatorResponse => {
+    return c.value <= maxValue
+      ? null
+      : {
+          result: false,
+          msg: ''
+        };
+  };
+};
+
 /**
  * An value is smaller than
  * a provided value
  *
  */
-export const isLowerThan = (c: AbstractControl): null | ValidatorResponse => {
+export const isAmountSufficient = (c: AbstractControl): null | ValidatorResponse => {
   const { wallet, amount } = c.value as {
     wallet: Wallet;
     amount: number;

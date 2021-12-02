@@ -1,0 +1,28 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="closeModal()">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+    <span slot="header-title">{{ $.SELECT | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <sio-search
+    [placeholder]="$.SEARCH | translate"
+    (focused)="onSearchFocus($event)"
+    (searched)="onSearchContent($event)"
+  ></sio-search>
+
+  <ion-list>
+    <ion-virtual-scroll [items]="list$ | async">
+      <sio-country-code
+        *virtualItem="let code"
+        [flag]="code.flag"
+        [code]="code.code"
+        [name]="code.name"
+        (click)="selectCode(code)"
+      ></sio-country-code>
+    </ion-virtual-scroll>
+  </ion-list>
+</sio-simple-page>

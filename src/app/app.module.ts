@@ -40,7 +40,6 @@ export function createTranslateLoader(http: HttpClient) {
 }
 import { SioLayoutModule } from './components/layout/sio-layout.module';
 import { SioFormModule } from './components/form/sio-form.module';
-import { VerifySmsModalModule } from './pages/modals/verify-sms-modal/verify-sms.module';
 import { VerifyIdentityModalModule } from './pages/modals/verify-identity-modal/verify-identity.module';
 import { TutorialsProvider } from 'src/app/providers/data/tutorials.provider';
 import { AuthInterceptor } from 'src/app/interceptors/authentication.interceptor';
@@ -60,7 +59,6 @@ import { LivechatWidgetModule } from '@livechat/angular-widget';
     FormsModule,
     SioLayoutModule,
     SioFormModule,
-    VerifySmsModalModule,
     VerifyIdentityModalModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',

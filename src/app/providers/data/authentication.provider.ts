@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { IdentityVerificationLevel, Acc } from 'src/app/interface/user';
+import { Acc, IdentityVerificationLevel } from 'src/app/interface/user';
+import { VerificationRecord } from '../../interface/kyc';
 
 type AccountChangeOptions = { changeAuthStatus: boolean; isNew: boolean };
 
@@ -17,6 +18,8 @@ const defaults = {
   biometricsCredentials: {
     pin: '',
   },
+  sumSubStatus: '',
+  verificationRecord: null,
 };
 
 @Injectable()
@@ -32,6 +35,14 @@ export class AuthenticationProvider {
 
   private _canRecover = new BehaviorSubject<boolean>(defaults.canRecover);
   canRecover$ = this._canRecover.asObservable();
+
+  private _sumsubStatus = new BehaviorSubject<string>(defaults.sumSubStatus);
+  sumSubStatus$ = this._sumsubStatus.asObservable();
+
+  private _latestVerificationRecord = new BehaviorSubject<VerificationRecord>(
+    defaults.verificationRecord,
+  );
+  latestVerificationRecord$ = this._latestVerificationRecord.asObservable();
 
   get isSecuredValue(): boolean {
     const account = this._account.value;
@@ -53,6 +64,25 @@ export class AuthenticationProvider {
 
   get accountValue(): Acc {
     return this._account.value;
+  }
+
+  get isVerifiedValue(): [boolean, string] {
+    return [this._sumsubStatus.value === 'GREEN', this._sumsubStatus.value];
+  }
+
+  get latestVerificationRecord(): VerificationRecord {
+    return this._latestVerificationRecord.value;
+  }
+
+  pushSumsubStatus(status: string): string {
+    this._sumsubStatus.next(status);
+
+    return status;
+  }
+
+  pushVerificationRecord(record: VerificationRecord): VerificationRecord {
+    this._latestVerificationRecord.next(record);
+    return record;
   }
 
   pushAccount(account: Acc, options: Partial<AccountChangeOptions> = {}): Acc {

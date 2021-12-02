@@ -14,6 +14,7 @@ import { AccountMasterSeedResolver } from '../resolvers/account-master-seed.reso
 import { AccountTutorialsResolver } from 'src/app/resolvers/account-tutorials.resolver';
 import { ResponsibilityAgreementModalModule } from 'src/app/pages/modals/responsibility-agreement-modal/responsibility-agreement.module';
 import { ActionsModalModule } from 'src/app/pages/modals/actions-modal/actions.module';
+import { IsUserTrustworthyGuard } from '../guards/is-user-trustworthy-guard';
 
 const routes: Routes = [
   {
@@ -44,6 +45,13 @@ const routes: Routes = [
       {
         path: 'swap',
         loadChildren: () => import('./swap/swap.module').then(m => m.SwapPageModule),
+        data: { tapbar: true },
+      },
+      {
+        path: 'purchase',
+        canActivate: [IsUserTrustworthyGuard],
+        runGuardsAndResolvers: 'always',
+        loadChildren: () => import('./purchase/purchase.module').then(m => m.PurchasePageModule),
         data: { tapbar: true },
       },
     ],
