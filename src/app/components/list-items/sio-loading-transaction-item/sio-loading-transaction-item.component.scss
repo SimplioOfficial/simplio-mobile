@@ -1,0 +1,79 @@
+:host {
+  --fill: var(--ion-color-translucent);
+  display: flex;
+  padding: var(--spacing-small);
+  align-items: center;
+}
+
+.title {
+  flex-grow: 1;
+  margin: 0 var(--spacing-small);
+}
+
+.balance {
+  flex-shrink: 0;
+  max-width: 50px;
+  width: 100%;
+
+  & > * {
+    margin-left: auto;
+    margin-right: 0;
+  }
+}
+
+.balance div {
+  width: 80%;
+}
+
+.balance,
+.title {
+  height: 100%;
+}
+
+.balance div,
+.title div {
+  height: 20px;
+  margin-bottom: calc(var(--spacing-tiny) + 4px);
+}
+
+.balance span,
+.title span {
+  height: 10px;
+  max-width: 10em;
+}
+
+.balance div,
+.balance span,
+.title div,
+.title span {
+  display: block;
+  max-width: 18rem;
+  border-radius: 3px;
+}
+
+.thumbnail,
+.balance div,
+.balance span,
+.title div,
+.title span {
+  animation: PulseAnimation 1s ease infinite;
+  background-color: rgba(var(--ion-background-color-rgb), 0) !important;
+  background-image: linear-gradient(
+    315deg,
+    var(--fill),
+    rgba(var(--ion-text-color-rgb), 0.02)
+  ) !important;
+  background-size: 400% 400%;
+}
+
+@keyframes PulseAnimation {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}

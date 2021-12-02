@@ -1,0 +1,41 @@
+<sio-simple-page>
+  <sio-header>
+    <sio-header-button slot="header-left" [enable]="false"></sio-header-button>
+
+    <span slot="header-title">Wallet options</span>
+
+    <sio-header-button slot="header-right" (click)="onDismissModal()">
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </sio-header-button>
+  </sio-header>
+
+  <form [formGroup]="formField">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <!-- Seed type -->
+          <ion-item>
+            <ion-label class="label">Seed type</ion-label>
+            <ion-select formControlName="seedType" multiple="false" class="smaller">
+              <ion-select-option *ngFor="let s of seedTypes" value="{{ s }}">
+                {{ s }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Recovery seed -->
+          <ion-item detail="true" (click)="openRecoverySeedPrompt()">
+            <ion-label class="label">Recovery seed</ion-label>
+            <span *ngIf="hasRecovery" slot="end" class="badge">Inserted</span>
+          </ion-item>
+
+          <!-- Derivation path -->
+          <ion-item (click)="openDerivationPathPrompt()">
+            <ion-label class="label">Derivation path</ion-label>
+            <span slot="end" class="secondary-text">{{ derivationPath }}</span>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</sio-simple-page>

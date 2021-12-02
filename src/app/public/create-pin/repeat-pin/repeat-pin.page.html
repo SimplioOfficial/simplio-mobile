@@ -1,0 +1,20 @@
+<form [formGroup]="formField" class="code">
+  <div class="code__value">
+    <section>
+      <span class="subtitle">{{ $.REPEAT_PIN | translate }}</span>
+    </section>
+    <sio-pin-value
+      #pinEl
+      formControlName="pinCode"
+      (pinned)="onSubmit($event)"
+      [pin-lengh]="PIN_LENGTH"
+    ></sio-pin-value>
+
+    <section>
+      <ng-template>
+        <span class="e code__error">{{ $.INCORRECT_PIN | translate }}</span>
+      </ng-template>
+    </section>
+  </div>
+  <sio-numpad (changed)="onAmountChange($event)" [display-dot]="false"></sio-numpad>
+</form>

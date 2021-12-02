@@ -1,0 +1,33 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" [routerLink]="['/home', 'user', 'settings']">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.THEME | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-content [scrollY]="true">
+    <ion-grid>
+      <ion-item>
+        <ion-label>{{ $.MODE | translate }}</ion-label>
+        <ion-select [ngModel]="themeMode" (ionChange)="setThemeMode($event)">
+          <ion-select-option *ngFor="let m of themeModeOpts" [value]="m.title">
+            {{ m.title }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>{{ $.ACCENT_COLOR | translate }}</ion-label>
+        <ion-select [ngModel]="accentColor" (ionChange)="setAccentColor($event)">
+          <ion-select-option *ngFor="let c of accentColorsOpts" [value]="c.title">
+            {{ c.title | translate }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-grid>
+  </ion-content>
+</sio-simple-page>

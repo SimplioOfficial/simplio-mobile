@@ -1,0 +1,18 @@
+:host {
+  padding: var(--spacing-tiny) var(--spacing-small) !important;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+  width: 100%;
+}
+
+.arrows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+}

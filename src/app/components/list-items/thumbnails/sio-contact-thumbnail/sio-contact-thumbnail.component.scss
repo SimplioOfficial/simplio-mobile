@@ -1,0 +1,13 @@
+$thumbnail-size: 56px;
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  width: $thumbnail-size;
+  height: $thumbnail-size;
+  background-color: var(--ion-color-secondary);
+  color: var(--ion-color-primary);
+  overflow: hidden;
+}

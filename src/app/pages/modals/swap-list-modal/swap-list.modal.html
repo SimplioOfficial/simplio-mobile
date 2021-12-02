@@ -1,0 +1,31 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="onDismissModal()">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+    <span slot="header-title">{{ $.AVAILABLE_SWAPS | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-list>
+    <ng-container [ngSwitch]="type">
+      <ng-container *ngSwitchCase="TYPE.SINGLE">
+        <ng-container *ngFor="let item of swapList">
+          <ng-container *ngIf="!hasMultipleNetworks(item[0])"
+            ><sio-swap-pairs [ticker]="item[0]" [list]="item[1]"></sio-swap-pairs
+          ></ng-container>
+          <ng-container *ngIf="hasMultipleNetworks(item[0])">
+            <sio-swap-pairs
+              *ngFor="let subItem of getAvailableNetworks(item[0]); let i = index"
+              [ticker]="item[0]"
+              [list]="getAvailablePairsForNetwork(item[0], subItem)"
+              [isToken]="true"
+              [network]="subItem"
+            ></sio-swap-pairs>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ion-list>
+</sio-simple-page>

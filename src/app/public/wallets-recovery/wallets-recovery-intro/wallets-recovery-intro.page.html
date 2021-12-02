@@ -1,0 +1,46 @@
+<div *ngIf="loading$ | async; else content" class="loading">
+  <ion-spinner></ion-spinner>
+</div>
+
+<ng-template #content>
+  <sio-simple-page [scroll]="false">
+    <sio-header>
+      <sio-header-button slot="header-left" (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </sio-header-button>
+
+      <sio-header-button
+        id="sio-t-btn--close"
+        slot="header-right"
+        [enable]="false"
+      ></sio-header-button>
+    </sio-header>
+
+    <header>
+      <h1>{{ $.RECOVERY_INTRO_TITLE | translate }}</h1>
+      <p>{{ $.RECOVERY_INTRO_DESC | translate }}</p>
+    </header>
+
+    <footer slot="footer">
+      <ion-grid class="footer-grid">
+        <ion-row>
+          <ion-col>
+            <ion-button
+              id="sio-t-btn--no"
+              expand="block"
+              color="secondary"
+              mode="ios"
+              (click)="onSubmit(false)"
+              >{{ $.NO | translate }}
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button id="sio-t-btn--yes" expand="block" mode="ios" (click)="onSubmit(true)">{{
+              $.YES | translate
+            }}</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </footer>
+  </sio-simple-page>
+</ng-template>

@@ -1,0 +1,36 @@
+<sio-simple-page>
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back(wallet)">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.EDIT_NAME | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <form [formGroup]="formField">
+          <ion-item>
+            <ion-label position="floating">{{ $.NEW_NAME | translate }}</ion-label>
+            <ion-input
+              formControlName="newName"
+              [autofocus]="true"
+              name="newName"
+              type="text"
+              required
+              mode="md"
+            ></ion-input>
+          </ion-item>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div slot="footer" class="footer-padding">
+    <ion-button expand="block" mode="ios" [disabled]="!isValid" (click)="rename()">{{
+      $.SAVE | translate
+    }}</ion-button>
+  </div>
+</sio-simple-page>

@@ -1,0 +1,13 @@
+<a
+  class="tapbar-button ion-activatable ripple-parent"
+  [routerLinkActive]="activeClass"
+  [ngClass]="{
+    'is-disabled': disabled,
+    'is-active': isActive
+  }"
+  (click)="open()"
+>
+  <ng-content select="ion-icon"></ng-content>
+  <span *ngIf="isActive" class="title">{{ title }}</span>
+  <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+</a>

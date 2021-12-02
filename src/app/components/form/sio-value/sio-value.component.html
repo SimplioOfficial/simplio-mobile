@@ -1,0 +1,39 @@
+<span class="current-currency">{{ currentCurrency }}</span>
+<main>
+  <sio-button
+    id="sio-t-btn--max"
+    shape="square"
+    [no-padding]="true"
+    [is-block]="false"
+    [variant]="1"
+    (click)="onMax()"
+    [ngStyle]="{ visibility: useMaxBtn ? 'visible' : 'hidden' }"
+  >
+    <span style="font-size: 14px">MAX</span>
+  </sio-button>
+
+  <ion-input
+    #inputEl
+    id="sio-t-inp--value"
+    placeholder="0"
+    type="text"
+    text-center
+    [ngModel]="inputValue"
+    readonly
+  ></ion-input>
+
+  <sio-button
+    shape="square"
+    id="sio-t-btn--swap"
+    [no-padding]="true"
+    [is-block]="false"
+    [variant]="1"
+    [ngStyle]="{ visibility: useSwitchBtn ? 'visible' : 'hidden' }"
+    (click)="onSwap()"
+  >
+    <ion-icon name="swap-vertical-outline"></ion-icon>
+  </sio-button>
+</main>
+<span *ngIf="!loading" class="swaped-value">{{ swapedCurrency }} {{ swapedAmount }}</span>
+<span *ngIf="loading" class="swaped-value"><ion-spinner name="dots"></ion-spinner></span>
+<ng-content></ng-content>

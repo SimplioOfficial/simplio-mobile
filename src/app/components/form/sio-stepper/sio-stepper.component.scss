@@ -1,0 +1,50 @@
+$size: 1.2rem;
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 1px;
+    background-color: var(--ion-color-border);
+  }
+
+  &.active {
+    border-color: var(--ion-color-primary);
+  }
+
+  &.passed {
+    border-color: var(--ion-color-primary);
+
+    .step__button {
+      background-color: var(--ion-color-primary);
+    }
+
+    &::after {
+      background-color: var(--ion-color-primary);
+    }
+  }
+}
+
+.step__button {
+  display: grid;
+  place-content: center;
+  width: $size;
+  height: $size;
+  border-radius: 100%;
+  font-size: 0.7em;
+  border: var(--main-border);
+}
+
+.step:last-of-type::after {
+  display: none;
+}

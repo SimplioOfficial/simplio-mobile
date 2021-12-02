@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "85443969647",
+    "project_id": "simplio-797c7",
+    "storage_bucket": "simplio-797c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85443969647:android:1db239207bfeda7244839a",
+        "android_client_info": {
+          "package_name": "dev.simplio.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85443969647-bufglfod0b7ufqtq3buo7dv7gv5c9mu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA26plQKnYhD32DgkaqB0F46-zPU1mRu5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "85443969647-bufglfod0b7ufqtq3buo7dv7gv5c9mu6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "85443969647-s2914aglkl5443msk19hp68v0dqr6d6g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "wallet.simplio.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85443969647:android:41d3f03b25f5df2444839a",
+        "android_client_info": {
+          "package_name": "wallet.simplio.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85443969647-bufglfod0b7ufqtq3buo7dv7gv5c9mu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA26plQKnYhD32DgkaqB0F46-zPU1mRu5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "85443969647-bufglfod0b7ufqtq3buo7dv7gv5c9mu6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "85443969647-s2914aglkl5443msk19hp68v0dqr6d6g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "wallet.simplio.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

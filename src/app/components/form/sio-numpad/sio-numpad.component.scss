@@ -1,0 +1,62 @@
+:host {
+  flex-grow: 1;
+  font-size: 20px;
+  max-height: 340px;
+  height: 100%;
+}
+
+ion-row {
+  height: 100%;
+}
+
+ion-col {
+  --ion-grid-column-padding: 0;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ion-button {
+  --color: var(--ion-text-color);
+}
+
+.numpad__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: var(--ion-background-color);
+  }
+  100% {
+    background-color: var(--ion-color-translucent);
+  }
+}
+
+.ion-activatable {
+  &:active {
+    animation: pulse 0.3s forwards;
+    border-radius: 60px;
+  }
+}
+
+:host[data-type='small'] {
+  background-color: var(--ion-color-translucent);
+  display: block;
+  max-height: 260px;
+  ion-grid {
+    min-height: 240px;
+    padding: var(--spacing-small) 0;
+  }
+}
+
+body.dark {
+  :host[data-type='small'] {
+    color: var(--ion-text-color);
+  }
+}

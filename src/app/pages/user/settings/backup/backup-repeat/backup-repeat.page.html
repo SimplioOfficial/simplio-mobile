@@ -1,0 +1,23 @@
+<section class="repeat-section" *ngIf="words$ | async as words">
+  <section class="seeds">
+    <ion-slides #slides [options]="slideOpts" (ionSlideTransitionEnd)="enable()">
+      <ion-slide *ngFor="let word of final$ | async; index as i">
+        <div class="capsule">
+          <div class="capsule__content" [class]="{ 'is-filled': isFilled(word) }">
+            <div class="capsule-content__item index">{{ i + 1 }}</div>
+            <div class="capsule-content__item word">{{ word }}</div>
+          </div>
+        </div>
+      </ion-slide>
+    </ion-slides>
+  </section>
+
+  <div class="seed">
+    <div class="title">
+      <h3>{{ $.SELECT_WORDS | translate }}</h3>
+    </div>
+    <div *ngFor="let word of words; index as i" class="word" (click)="selectWord(word)">
+      <code>{{ word }}</code>
+    </div>
+  </div>
+</section>

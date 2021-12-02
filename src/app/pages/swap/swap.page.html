@@ -1,0 +1,111 @@
+<sio-page
+  class="swap-page"
+  actionPlaceholder=" {{ $.SEARCH_WALLET | translate }}"
+  (refreshed)="doRefresh($event)"
+  [hasHeader]="true"
+  *ngIf="!(isLoadingInit$ | async); else initLoadingRef"
+>
+  <ng-template #headerTemplate>
+    <div class="header-container">
+      <h3>{{ $.SWAPS | translate }}</h3>
+      <sio-round-button (click)="openSettings()">
+        <ion-icon name="person-outline"></ion-icon>
+      </sio-round-button>
+      <div *ngIf="notificationCount > 0" class="notification-count" (click)="openSettings()">
+        <p>{{ notificationCount }}</p>
+      </div>
+    </div>
+  </ng-template>
+
+  <section slot="dash">
+    <!-- <sio-chart-balance
+      slot="header-left"
+      [totalBalance]="totalBalance$ | async"
+      [selectedBalance]="selectedBalance"
+      [currency]="settings ? settings.currency : 'USD'"
+      [locale]="settings ? settings.language : 'EN'"
+      [rate]="coinRate"
+      [btcPrice]="btcPrice"
+    >
+    </sio-chart-balance>
+    <sio-chart
+      *ngIf="settings && settings.graph.enableGraph"
+      (priceUpdated)="onUpdatePrice($event)"
+      [chartData]="history$ | async"
+      [loading]="isLoadingHistory$ | async"
+      [color]="accentColor$ | async"
+      [rate]="coinRate"
+    ></sio-chart> -->
+  </section>
+
+  <ng-container *ngIf="isEmpty$ | async; else isEmptyRef">
+    <ng-container *ngIf="pendingSwaps$ | async as pendingSwaps">
+      <section *ngIf="!!pendingSwaps.length" class="active">
+        <header class="section-header">
+          <span class="section-title">{{ $.ACTIVE_SWAPS | translate }}</span>
+        </header>
+
+        <ion-slides [options]="slideOpts">
+          <ion-slide *ngFor="let tx of pendingSwaps">
+            <sio-swap-pending-item
+              (click)="openDetail(tx)"
+              [transaction]="tx"
+              [translations]="swapStatusTranslations"
+              [issue-text]="$.TRANSACTION_DETAIL | translate"
+            ></sio-swap-pending-item>
+          </ion-slide>
+        </ion-slides>
+      </section>
+    </ng-container>
+
+    <ng-container *ngIf="swapHistory$ | async as swapHistory">
+      <section class="history" *ngIf="!!swapHistory.length">
+        <header class="section-header">
+          <p class="title section-title">{{ $.COMPLETED_SWAPS | translate }}</p>
+        </header>
+
+        <sio-swap-item
+          *ngFor="let tx of swapHistory"
+          [transaction]="tx"
+          [translations]="swapStatusTranslations"
+          [currency]="currency"
+          [locale]="locale"
+          [mode]="mode"
+          [address-names]="addressNames$ | async"
+          (click)="openDetail(tx)"
+        ></sio-swap-item>
+      </section>
+    </ng-container>
+    <ion-infinite-scroll
+      #infiniteScroll
+      *ngIf="canLoad$ | async; else spacer"
+      threshold="84px"
+      (ionInfinite)="onInfiniteScroll()"
+    >
+      <ion-infinite-scroll-content [loadingSpinner]="null">
+        <sio-loading-transaction-item
+          *ngIf="isLoadingHistory$ | async"
+        ></sio-loading-transaction-item>
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+    <ng-template #spacer>
+      <div class="spacer"></div>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #isEmptyRef>
+    <section class="empty__transactions">
+      <p>{{ $.NO_TRANSACTIONS | translate }}</p>
+    </section>
+  </ng-template>
+
+  <!-- <section class="loading">
+  <sio-spinner></sio-spinner>
+</section> -->
+</sio-page>
+
+<ng-template #initLoadingRef>
+  <section class="loading">
+    <sio-spinner></sio-spinner>
+  </section>
+</ng-template>

@@ -1,0 +1,54 @@
+<sio-simple-page [scroll]="false" [hasHeader]="closable">
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="closeModal()">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ng-container [ngSwitch]="securityLevel">
+    <section *ngSwitchCase="AUTH_METHOD.BIOMETRICS_ON" class="bio">
+      <div class="content" (click)="onBio()"></div>
+      <div>
+        <ion-button expand="block" mode="ios" (click)="setMethod(AUTH_METHOD.PIN)"
+          >{{ $.USE_PIN | translate }}
+        </ion-button>
+      </div>
+    </section>
+
+    <ng-container *ngSwitchDefault>
+      <form [formGroup]="formField" class="code">
+        <div class="code__value">
+          <section>
+            <span class="subtitle">{{ $.ENTER_PIN | translate }}</span>
+          </section>
+          <sio-pin-value
+            formControlName="pinCode"
+            [pin-lengh]="PIN_LENGTH"
+            (pinned)="onPin($event)"
+          ></sio-pin-value>
+
+          <section>
+            <ng-container *ngIf="!result">
+              <span
+                *ngIf="remainingsAttempts <= warnAt && limited; else pinErrorMsg"
+                class="subtitle"
+                >{{ $.TRIES | translate }}: {{ remainingsAttempts }}</span
+              >
+            </ng-container>
+            <ng-template #pinErrorMsg>
+              <span class="e code__error">{{ $.INCORRECT_PIN | translate }}</span>
+            </ng-template>
+          </section>
+
+          <section>
+            <ng-template #pinErrorMsg>
+              <span class="e code__error">{{ $.INCORRECT_PIN | translate }}</span>
+            </ng-template>
+          </section>
+        </div>
+        <sio-numpad (changed)="onAmountChange($event)" [display-dot]="false"></sio-numpad>
+      </form>
+    </ng-container>
+  </ng-container>
+</sio-simple-page>

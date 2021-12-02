@@ -1,0 +1,82 @@
+<sio-simple-page>
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.ADDRESS_LIST | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <section class="addresses">
+    <header class="section-header">
+      <p class="section-title">{{ $.EXTERNAL_ADDRESSES | translate }}</p>
+    </header>
+    <div class="address" *ngFor="let w of wallet.addresses" (click)="copy(w.address)">
+      <div class="address__content">
+        <p>{{ w.address }}</p>
+        <span class="balance">
+          {{ w.balance | balance: wallet.ticker:wallet.type:wallet.decimal }}
+          {{ wallet.ticker }} (xpub/0/{{ w.derivePath }})
+        </span>
+      </div>
+    </div>
+
+    <header class="section-header">
+      <p class="section-title">{{ $.CHANGE_ADDRESSES | translate }}</p>
+    </header>
+    <div class="address" *ngFor="let w of wallet.addresses" (click)="copy(w.address)">
+      <div class="address__content">
+        <p>{{ w.address }}</p>
+        <span class="balance">
+          {{ w.balance | balance: wallet.ticker:wallet.type:wallet.decimal }}
+          {{ wallet.ticker }} (xpub/0/{{ w.derivePath }})
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card no-margin style="border-radius: 0px">
+          <ion-card-header no-padding>
+            <ion-item class="addresses" lines="full">
+            </ion-item>
+          </ion-card-header>
+          <ion-item class="addresses" lines="full" *ngFor="let w of wallet.addresses" (click)="copy(w.address)">
+            <div class="address">
+              {{ w.address }}<br />
+              <p class="balance">
+                {{ w.balance | balance: wallet.ticker:wallet.type:wallet.decimal }}
+                {{ wallet.ticker }} (xpub/0/{{ w.derivePath }})
+              </p>
+            </div>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="!isErc">
+      <ion-col>
+        <ion-card no-margin style="border-radius: 0px">
+          <ion-card-header no-padding>
+            <ion-item class="addresses" lines="full">
+              <ion-label class="label">
+                {{ $.CHANGE_ADDRESSES | translate }}
+              </ion-label>
+            </ion-item>
+          </ion-card-header>
+          <ion-item class="addresses" lines="full" *ngFor="let w of wallet.addresses" (click)="copy(w.address)">
+            <div class="address">
+              {{ w.address }} <br />
+              <p class="balance">
+                {{ w.balance | balance: wallet.ticker:wallet.type:wallet.decimal }}
+                {{ wallet.ticker }} (xpub/1/{{ w.derivePath }})
+              </p>
+            </div>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid> -->
+</sio-simple-page>

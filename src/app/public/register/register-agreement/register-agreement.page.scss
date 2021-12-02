@@ -1,0 +1,38 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 var(--spacing-small);
+  overflow-y: scroll;
+  padding-bottom: var(--spacing-small);
+}
+
+.footer-padding {
+  display: flex;
+  padding: var(--spacing-small) 0 0 0;
+
+  ion-button {
+    margin-right: var(--spacing-small);
+    width: 50%;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}
+
+.actions {
+  padding: 0 var(--spacing-small);
+}
+
+.label {
+  white-space: pre-wrap;
+
+  &.optional {
+    color: var(--ion-color-step-600);
+  }
+
+  &.link {
+    display: contents;
+  }
+}

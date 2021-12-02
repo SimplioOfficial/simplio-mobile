@@ -1,0 +1,23 @@
+:host {
+  user-select: none;
+}
+
+p {
+  color: var(--ion-text-color);
+}
+
+p.is-send {
+  color: var(--ion-color-danger);
+}
+
+p.is-move {
+  color: var(--ion-color-medium);
+}
+
+p.is-receive {
+  color: var(--ion-color-success);
+}
+
+p.is-token {
+  color: var(--ion-color-primary);
+}

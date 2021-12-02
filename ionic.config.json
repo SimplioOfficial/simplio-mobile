@@ -1,0 +1,8 @@
+{
+  "name": "Simplio Wallet",
+  "integrations": {
+    "cordova": {},
+    "capacitor": {}
+  },
+  "type": "angular"
+}

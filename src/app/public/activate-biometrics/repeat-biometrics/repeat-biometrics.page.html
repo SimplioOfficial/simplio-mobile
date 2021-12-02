@@ -1,0 +1,19 @@
+<sio-header>
+  <sio-header-button slot="header-left" (click)="back()">
+    <ion-icon name="arrow-back-outline"></ion-icon>
+  </sio-header-button>
+
+  <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+</sio-header>
+
+<div *ngIf="loading$ | async; else footer" class="content">
+  <ion-spinner></ion-spinner>
+</div>
+
+<ng-template #footer>
+  <footer>
+    <ion-button expand="block" mode="ios" color="light" (click)="onSubmit()"
+      >{{ $.TRY_AGAIN | translate }}
+    </ion-button>
+  </footer>
+</ng-template>

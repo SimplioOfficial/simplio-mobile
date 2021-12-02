@@ -1,0 +1,126 @@
+.wallets-page {
+  display: flex;
+  flex-flow: column;
+}
+
+.avatar {
+  width: 30px;
+  border-radius: 50%;
+}
+
+ion-title {
+  text-align: left;
+}
+
+h1 {
+  margin: 0;
+}
+
+ion-list.has-tapbar {
+  padding-bottom: calc(
+    var(--sizing-element-medium) + (var(--sizing-element-medium) / 2) +
+      constant(safe-area-inset-bottom)
+  ) !important;
+  padding-bottom: calc(
+    var(--sizing-element-medium) + (var(--sizing-element-medium) / 2) + env(safe-area-inset-bottom)
+  ) !important;
+}
+
+.group-separator {
+  &::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background-color: var(--ion-color-border);
+    margin: var(--spacing-smaller) var(--spacing-small);
+  }
+}
+
+.actions {
+  padding: var(--spacing-smaller) var(--spacing-small);
+}
+
+.section-header {
+  padding: var(--spacing-smaller) var(--spacing-small);
+}
+
+.scroll-content {
+  -webkit-overflow-scrolling: auto !important;
+}
+
+.section-action {
+  display: flex;
+  align-items: center;
+  border-radius: 30em;
+  border: var(--main-border);
+  padding: var(--spacing-tiny) var(--spacing-smallest);
+  font-size: 14px;
+
+  span {
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-right: 3px;
+  }
+
+  &.is-filled {
+    background-color: var(--ion-color-primary);
+    color: var(--button-text-color);
+    border-color: var(--ion-color-primary);
+  }
+}
+
+.dash__amount {
+  height: 90px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  padding-top: 25px;
+
+  h1 {
+    font-size: 32px;
+    color: var(--ion-color-step-950);
+  }
+
+  span {
+    font-size: 14px;
+    color: var(--ion-color-step-350);
+    margin-bottom: var(--spacing-tiny);
+  }
+}
+
+.dash__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-small);
+  h3 {
+    margin: 0;
+  }
+
+  .header__user {
+    width: calc(var(--sizing-panel) - var(--spacing-tiny));
+    height: calc(var(--sizing-panel) - var(--spacing-tiny));
+    display: grid;
+    place-content: center;
+    border: var(--main-border);
+    border-radius: 100%;
+    font-size: 1rem;
+  }
+}
+
+sio-section-header {
+  ::ng-deep {
+    .title {
+      margin: auto;
+      width: 100%;
+
+      .section-header {
+        color: var(--ion-color-step-350);
+      }
+    }
+
+    .history__header {
+      min-height: 120px;
+    }
+  }
+}

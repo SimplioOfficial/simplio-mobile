@@ -1,0 +1,31 @@
+:host {
+  flex-grow: 1;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: var(--spacing-small) var(--spacing-medium);
+}
+
+.sio-chart__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--spacing-small);
+
+  .sio-chart__action {
+    width: 100%;
+    margin-left: var(--spacing-small);
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
+.sio-chart__chart {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,14 @@
+<header class="header">
+  <div class="header__content">
+    <ng-content select="sio-header-button[slot='left']"></ng-content>
+    <div class="title">
+      <ng-container *ngIf="showContent">
+        <ng-content></ng-content>
+      </ng-container>
+    </div>
+    <ng-content select="sio-header-button[slot='right']"></ng-content>
+  </div>
+</header>
+<div class="header-ghost">
+  <ng-content select="[slot='ghost']"></ng-content>
+</div>

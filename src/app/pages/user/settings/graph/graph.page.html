@@ -1,0 +1,28 @@
+<sio-simple-page>
+  <sio-header>
+    <sio-header-button slot="header-left" [routerLink]="['/home', 'user', 'settings']">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.CHART | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-content [scrollY]="true">
+    <ion-grid>
+      <ion-item>
+        <ion-label>{{ $.CHART_ON_HOME_PAGE | translate }}</ion-label>
+        <ion-toggle color="primary" [(ngModel)]="enableGraph"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>{{ $.DEFAULT_CHART_PERIOD | translate }}</ion-label>
+        <ion-select [(ngModel)]="chartPeriod">
+          <ion-select-option style="font-size: medium" *ngFor="let t of chartView" value="{{ t }}">
+            {{ t }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-grid>
+  </ion-content>
+</sio-simple-page>

@@ -1,0 +1,8 @@
+<div
+  *ngFor="let _ of lengthStruct; index as i"
+  class="pin-item"
+  [class]="{
+    'is-filled': !!pinValue[i],
+    'is-emitted': isEmitted
+  }"
+></div>

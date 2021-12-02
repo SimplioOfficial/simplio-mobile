@@ -1,0 +1,47 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" [routerLink]="['/home', 'user', 'settings']">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.CHANGE_PASSWORD | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <form [formGroup]="formField">
+          <sio-password
+            [show-remainder]="false"
+            [placeholder]="$.OLD_PASSWORD | translate"
+            formControlName="passwordOld"
+          ></sio-password>
+          <sio-password
+            [placeholder]="$.NEW_PASSWORD | translate"
+            formControlName="passwordNew"
+            [has-number-placeholder]="$.PASSWORD_REQUIRE_NUMBER | translate"
+            [has-symbol-placeholder]="$.PASSWORD_REQUIRE_SYMBOL | translate"
+            [has-upper-placeholder]="$.PASSWORD_REQUIRE_UPPER | translate"
+            [min-length-placeholder]="minLengthText"
+            [control]="formField.get('passwordNew')"
+          ></sio-password>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div class="footer-padding" slot="footer">
+    <div class="select-wallet-button">
+      <ion-button
+        id="sio-t-btn--submit"
+        type="submit"
+        mode="ios"
+        expand="block"
+        [disabled]="!formField.valid"
+        (click)="updatePassword()"
+        >{{ $.UPDATE_PASSWORD | translate }}</ion-button
+      >
+    </div>
+  </div>
+</sio-simple-page>

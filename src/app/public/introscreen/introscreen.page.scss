@@ -1,0 +1,71 @@
+:host {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+
+  background-image: url('../../../assets/img/background.png');
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+}
+
+main {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+
+  header {
+    display: flex;
+    padding: var(--spacing-small);
+
+    .logo {
+      width: var(--sizing-panel);
+      height: var(--sizing-panel);
+      border-radius: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      sio-logo {
+        --size: 2.4em;
+      }
+    }
+  }
+
+  .content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 25% 0 auto 0;
+
+    .title {
+      color: #fff;
+      text-align: center;
+      padding: 0 var(--spacing-small);
+      margin-bottom: 5vh;
+
+      h1 {
+        font-size: 36px;
+        font-weight: bold;
+      }
+    }
+
+    .buttons {
+      position: relative;
+      padding: var(--spacing-small);
+
+      ion-button {
+        margin-bottom: var(--spacing-smaller);
+
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+
+        &.ion-color-tertiary {
+          --ion-color-base: var(--ion-color-primary) !important;
+          border: solid 1px #fff;
+          border-radius: 30em;
+        }
+      }
+    }
+  }
+}

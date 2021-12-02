@@ -1,0 +1,93 @@
+.tools {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: var(--ion-background-color);
+}
+
+.wallets-presenter {
+  padding: 0 var(--spacing-small) var(--spacing-small) var(--spacing-small);
+  border-bottom: solid 1px var(--ion-color-border);
+  span {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--ion-color-step-500);
+  }
+}
+
+.wallets {
+  // background-color: var(--ion-color-translucent);
+  border-radius: var(--main-border-radius);
+
+  .wallet:first-of-type {
+    // padding-top: var(--spacing-tiny);
+    padding-bottom: var(--spacing-small);
+  }
+
+  .wallet:last-of-type {
+    padding-top: var(--spacing-small);
+    // padding-bottom: var(--spacing-tiny);
+  }
+}
+
+.wallet {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: var(--main-border-radius);
+  border: solid 1px rgba(var(--ion-color-primary-rgb), 0);
+  height: 120px;
+  &.is-active {
+    background-color: var(--ion-color-translucent);
+  }
+}
+
+.switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // height: 1px;
+  position: relative;
+  // &::before {
+  //     content: "";
+  //     flex-grow: 1;
+  //     flex-shrink: 1;
+  //     height: 1px;
+  //     width: 100%;
+  // }
+
+  .button {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: var(--button-text-color);
+    height: var(--sizing-element-medium);
+    width: var(--sizing-element-medium);
+    background-color: var(--ion-color-primary);
+    border-radius: 100%;
+    z-index: 2;
+  }
+}
+
+.title {
+  padding: var(--spacing-small);
+}
+
+.empty span {
+  text-align: center;
+}
+
+.empty_list {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-small);
+}

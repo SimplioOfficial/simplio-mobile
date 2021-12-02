@@ -1,0 +1,50 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.ACTIVE_WALLETS | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-item-sliding *ngFor="let w of wallets$ | async">
+    <ion-item>
+      <sio-wallet-item
+        [id]="w.uniqueId"
+        [wallet]="w"
+        [fiatValue]="0"
+        [has-ripple]="false"
+        [isContent]="true"
+      >
+        <ion-toggle
+          *ngIf="!(isLocked(w) && !canLockDefaultWallet && w.isActive); else lockRef"
+          [checked]="w.isActive"
+          [disabled]="isLocked(w) && !canLockDefaultWallet && w.isActive"
+          color="primary"
+          (ionChange)="toggle($event.detail, w)"
+        ></ion-toggle>
+        <ng-template #lockRef>
+          <div class="locker">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+          </div>
+        </ng-template>
+      </sio-wallet-item>
+    </ion-item>
+
+    <ion-item-options *ngIf="!isLocked(w); else lockRefSwipeOption" side="end">
+      <ion-item-option>
+        <div class="option-button" (click)="deleteWallet(w)"><ion-icon name="trash"></ion-icon></div
+      ></ion-item-option>
+    </ion-item-options>
+
+    <ng-template #lockRefSwipeOption>
+      <ion-item-options side="end">
+        <ion-item-option [color]="'secondary'" disabled>
+          <div class="option-button"><ion-icon name="lock-closed-outline"></ion-icon></div>
+        </ion-item-option>
+      </ion-item-options>
+    </ng-template>
+  </ion-item-sliding>
+</sio-simple-page>

@@ -1,0 +1,92 @@
+:host {
+  position: relative;
+  display: inline-block;
+  margin: 0 !important;
+  padding: var(--spacing-small);
+
+  &.no-padding {
+    padding: 0 !important;
+  }
+
+  &.is-primary {
+    display: block;
+
+    .sio-button {
+      background-color: var(--ion-color-primary);
+      color: var(--button-text-color) !important;
+
+      .icon ion-icon {
+        color: var(--button-text-color) !important;
+      }
+    }
+  }
+
+  &.is-secondary {
+    display: block;
+
+    .sio-button {
+      background-color: var(--ion-background-color);
+      border: var(--main-border);
+      color: var(--ion-text-color) !important;
+
+      .icon ion-icon {
+        color: var(--ion-text-color) !important;
+      }
+    }
+  }
+
+  &.is-outline {
+    .sio-button {
+      background-color: var(--ion-background-color);
+      border: solid 2px var(--ion-color-primary);
+      color: var(--ion-color-primary) !important;
+
+      .icon ion-icon {
+        color: var(--ion-color-primary) !important;
+      }
+    }
+  }
+
+  & .sio-button:disabled {
+    background-color: var(--ion-background-color);
+    color: var(--ion-color-step-400) !important;
+    border: solid 1px var(--ion-border-color);
+    box-shadow: none !important;
+  }
+}
+.sio-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--sizing-element-medium);
+  width: var(--sizing-element-medium);
+  margin: 0 !important;
+  border-radius: 100%;
+  font-size: var(--icon-medium);
+  overflow: hidden;
+  user-select: none;
+
+  &.is-circle {
+    border-radius: 100%;
+    height: calc(var(--sizing-element-medium) + var(--sizing-element-medium) / 8);
+    width: calc(var(--sizing-element-medium) + var(--sizing-element-medium) / 8);
+  }
+
+  &.is-block {
+    width: 100%;
+  }
+
+  &.has-shadow {
+    box-shadow: var(--sio-box-shadow);
+  }
+}
+
+.icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: var(--sizing-element-medium);
+}

@@ -1,0 +1,6 @@
+<main>
+  <ng-container
+    [ngTemplateOutlet]="tapbarTemplateRef"
+    [ngTemplateOutletContext]="{ $implicit: url$ | async }"
+  ></ng-container>
+</main>

@@ -1,0 +1,100 @@
+<sio-page
+  #pageComponent
+  class="wallets-page"
+  actionPlaceholder=" {{ $.SEARCH_WALLET | translate }}"
+  (refreshed)="doRefresh($event)"
+  [search-disabled]="!reorderGroup.disabled"
+  (scrolling)="onScroll($event)"
+  (scrollStart)="setScrolling(true)"
+  (scrollEnd)="setScrolling(false)"
+  [hasHeader]="true"
+>
+  <ng-template #headerTemplate>
+    <div #header class="header-container">
+      <h3>{{ $.WALLETS | translate }}</h3>
+      <sio-round-button (click)="openSettings()">
+        <ion-icon name="person-outline"></ion-icon>
+      </sio-round-button>
+      <div *ngIf="notificationCount > 0" class="notification-count" (click)="openSettings()">
+        <p>{{ notificationCount }}</p>
+      </div>
+    </div>
+
+    <div #scrollableHeader>
+      <div class="dash__amount">
+        <span>{{ $.TOTAL_BALANCE | translate }}</span>
+        <h1>{{ +(totalBalance$ | async) | fiat: locale:settings.currency }}</h1>
+      </div>
+      <header class="section-header">
+        <p class="section-title">{{ $.WALLETS | translate }}</p>
+        <div
+          class="section-action ion-activatable ripple-parent is-filled"
+          *ngIf="!this.reorderGroup?.disabled; else addRef"
+          (click)="doneReorderGroup()"
+        >
+          <span>{{ $.DONE | translate }}</span>
+          <ion-icon name="checkmark-outline"></ion-icon>
+          <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+        </div>
+        <ng-template #addRef>
+          <div
+            class="section-action ion-activatable ripple-parent"
+            [routerLink]="['/home', 'wallets', 'add']"
+          >
+            <span>{{ $.ADD | translate }}</span>
+            <ion-icon name="add-outline"></ion-icon>
+            <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+          </div>
+        </ng-template>
+      </header>
+    </div>
+  </ng-template>
+
+  <section slot="dash">
+    <!-- <sio-chart-balance
+      slot="header-left"
+      [totalBalance]="totalBalance$ | async"
+      [selectedBalance]="selectedBalance"
+      [currency]="settings ? settings.currency : 'USD'"
+      [locale]="settings ? settings.language : 'EN'"
+      [rate]="coinRate"
+      [btcPrice]="btcPrice"
+    >
+    </sio-chart-balance>
+    <sio-chart
+      *ngIf="settings && settings.graph.enableGraph"
+      (priceUpdated)="onUpdatePrice($event)"
+      [chartData]="history$ | async"
+      [loading]="isLoadingHistory$ | async"
+      [color]="accentColor$ | async"
+      [rate]="coinRate"
+    ></sio-chart> -->
+  </section>
+
+  <section slot="dash" class="actions" *ngIf="!(isBacked$ | async)">
+    <p class="section-title">{{ $.REMAINING_ACTIONS | translate }}</p>
+    <sio-action-list [actions]="actions"></sio-action-list>
+  </section>
+
+  <section #reorderSection style="padding-bottom: 15px">
+    <ion-reorder-group #reorderGroup (ionItemReorder)="doReorder($event.detail)">
+      <sio-wallet-item
+        [id]="w.uid"
+        *ngFor="let w of wallets$ | async"
+        [wallet]="w"
+        (click)="openWallet(w)"
+        [isContent]="!reorderGroup?.disabled"
+        [errCode]="getTransactionError(w._uuid)"
+        [fiatValue]="getFiatValue(w)"
+        [has-ripple]="reorderGroup.disabled"
+        [currency]="settings ? settings.currency : 'USD'"
+        [locale]="settings ? settings.language : 'EN'"
+        [notification-type]="getNoticationType(w)"
+        appLongPress
+        (pressTime)="onLongPress($event)"
+      >
+        <ion-reorder></ion-reorder>
+      </sio-wallet-item>
+    </ion-reorder-group>
+  </section>
+</sio-page>

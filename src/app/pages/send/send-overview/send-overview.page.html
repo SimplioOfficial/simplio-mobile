@@ -1,0 +1,90 @@
+<sio-simple-page>
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.CONFIRM | translate }}</span>
+
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-content>
+    <main>
+      <div class="overview">
+        <ion-grid>
+          <ion-row>
+            <ion-col class="thumbnail">
+              <sio-wallet-thumbnail [iconID]="sendData.wallet.ticker"></sio-wallet-thumbnail>
+            </ion-col>
+          </ion-row>
+          <ion-row class="amount" text-center>
+            <ion-col>
+              <span>{{ sendData.wallet.ticker }}</span>
+              <h3>
+                {{
+                  amountSat
+                    | balance: sendData.wallet.ticker:sendData.wallet.type:sendData.wallet.decimal
+                }}
+              </h3>
+            </ion-col>
+          </ion-row>
+          <ion-row text-center>
+            <ion-col>
+              <span class="secondary-price">
+                {{
+                  fiatSat
+                    | balance: sendData.wallet.ticker:sendData.wallet.type:sendData.wallet.decimal
+                    | fiat: locale:currency
+                }}</span
+              >
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+
+      <ion-grid class="detail">
+        <ion-row class="headerfee">
+          <ion-col size="6">
+            {{ $.FEE | translate }}
+          </ion-col>
+          <ion-col size="6" text-right>
+            <span
+              >{{
+                sendData.signature.fee
+                  | balance: sendData.pipe.ticker:sendData.pipe.type:sendData.pipe.decimal
+              }}
+              {{ sendData.pipe.ticker }}</span
+            >
+            <!-- <span class="secondary-price"
+              >{{ sendData.fiat.type }}
+              {{
+                (sendData.signature.fee * sendData.fiat.rate | balance: sendData.pipe.ticker:sendData.pipe.type).toFixed(8)
+              }}</span
+            > -->
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="headerfee">
+          <ion-col size="6">
+            {{ $.ADDRESS | translate }}
+          </ion-col>
+          <ion-col size="6" text-right>
+            {{ sendData.address | address: 6 }}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </main>
+  </ion-content>
+
+  <div slot="footer" class="select-wallet-button">
+    <ion-button
+      id="sio-t-sub--overview"
+      expand="block"
+      mode="ios"
+      (click)="onSubmit()"
+      [disabled]="disabledBroadcast"
+      >{{ $.SEND | translate }}</ion-button
+    >
+  </div>
+</sio-simple-page>

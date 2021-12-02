@@ -1,0 +1,73 @@
+.wallet-icons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 64px;
+  height: 52px;
+  position: relative;
+
+  sio-wallet-thumbnail,
+  sio-wallet-colored-thumbnail {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    &:first-of-type {
+      left: 0;
+      z-index: 1;
+    }
+    &:last-of-type {
+      right: 0;
+      z-index: 2;
+    }
+  }
+}
+
+.direction {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 1em;
+  height: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  color: var(--ion-text-color);
+  z-index: 1;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 100%;
+    background-color: var(--ion-background-color);
+    z-index: 0;
+  }
+}
+
+.is-pending {
+  color: var(--ion-color-success);
+}
+
+:host {
+  &[data-transaction-type='Failed'] {
+    .title > *,
+    .balance > * {
+      color: var(--ion-color-step-500) !important;
+    }
+  }
+}
+
+.title {
+  .gray {
+    color: var(--ion-color-step-500);
+    font-size: 14px;
+    margin-bottom: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

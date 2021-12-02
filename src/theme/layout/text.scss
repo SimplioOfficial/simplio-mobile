@@ -1,0 +1,9 @@
+.title-container {
+  padding: var(--spacing-small);
+  & > * {
+    margin: 0;
+  }
+}
+.title-top {
+  padding-top: var(--spacing-medium);
+}

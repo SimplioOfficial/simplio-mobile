@@ -1,0 +1,65 @@
+:host {
+  position: relative;
+  display: inline-block;
+  max-width: 200px;
+  max-height: 200px;
+
+  --stroke-color: var(--ion-color-primary);
+}
+
+.icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+svg {
+  z-index: 1;
+  animation: 2s linear infinite svg-animation;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes svg-animation {
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+
+circle {
+  animation: 1.4s ease-in-out infinite both circle-animation;
+  display: block;
+  fill: transparent;
+  stroke: var(--stroke-color);
+  stroke-dasharray: 283;
+  stroke-dashoffset: 280;
+  transform-origin: 50% 50%;
+}
+
+@keyframes circle-animation {
+  0%,
+  25% {
+    stroke-dashoffset: 280;
+    transform: rotate(0);
+  }
+
+  50%,
+  75% {
+    stroke-dashoffset: 75;
+    transform: rotate(45deg);
+  }
+
+  100% {
+    stroke-dashoffset: 280;
+    transform: rotate(360deg);
+  }
+}

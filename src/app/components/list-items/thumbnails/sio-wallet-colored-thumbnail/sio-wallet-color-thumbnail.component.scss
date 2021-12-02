@@ -1,0 +1,7 @@
+:host {
+  --background-color: var(--ion-color-translucent);
+}
+
+.thumbnail {
+  background-color: var(--background-color) !important;
+}

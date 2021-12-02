@@ -1,0 +1,25 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="onDismissModal()">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ title }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-content>
+    <ng-container *ngIf="wallets.length === 0">
+      <ion-label position="floating">{{ $.NO_AVAILABLE_WALLETS | translate }}</ion-label>
+    </ng-container>
+
+    <sio-wallet-item
+      *ngFor="let w of wallets"
+      [wallet]="w"
+      (click)="selectWallet(w)"
+      [fiatValue]="getNative(w) * getPrice(rates, w.ticker, currency)"
+      [currency]="currency"
+    ></sio-wallet-item>
+  </ion-content>
+</sio-simple-page>

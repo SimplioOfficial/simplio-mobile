@@ -1,0 +1,48 @@
+<!-- Thumbnail -->
+<div
+  class="thumbnail-container"
+  [class]="{ 'has-notification': notificationType > NOTIFICATION_TYPES.NONE }"
+  [attr.data-notification-type]="notificationType"
+>
+  <sio-wallet-thumbnail
+    [iconID]="wallet.ticker"
+    (touchstart)="press($event)"
+    (touchend)="pressUp($event)"
+    [attr.scale]="thumbScale"
+  ></sio-wallet-thumbnail>
+
+  <div *ngIf="isToken()" class="platform-container">
+    <sio-wallet-thumbnail
+      [iconID]="tokenId"
+      (touchstart)="press($event)"
+      (touchend)="pressUp($event)"
+      [attr.scale]="'tiny'"
+    ></sio-wallet-thumbnail>
+  </div>
+</div>
+<!-- Name -->
+<div class="title" (touchstart)="press($event)" (touchend)="pressUp($event)">
+  <p>{{ wallet.name | slice: 0:18 }}</p>
+  <span
+    >{{ wallet.ticker }} {{ platform }} {{ origin
+    }}<code *ngIf="hasError">{{ errCode }}</code></span
+  >
+</div>
+
+<!-- Balance -->
+<ng-content
+  *ngIf="isContent; else balance"
+  (touchstart)="press($event)"
+  (touchend)="pressUp($event)"
+></ng-content>
+<ng-template #balance>
+  <div class="balance">
+    <p
+      >{{ wallet.balance | balance: wallet.ticker:wallet.type:wallet.decimal:4 }}
+      {{ wallet.ticker }}</p
+    >
+    <span>{{ fiatValue | fiat: locale:currency }}</span>
+  </div>
+</ng-template>
+
+<ion-ripple-effect *ngIf="hasRipple"></ion-ripple-effect>

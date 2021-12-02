@@ -1,0 +1,36 @@
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+ion-grid {
+  --ion-grid-padding: var(--spacing-small);
+  color: var(--ion-text-color);
+  width: 100%;
+}
+
+.select-wallet-button {
+  padding: 0 var(--spacing-small) var(--spacing-small) var(--spacing-small);
+}
+
+.thumbnail {
+  display: flex;
+  justify-content: center;
+}
+
+ion-grid {
+  --ion-grid-padding: var(--spacing-small);
+  margin: 0;
+}
+
+ion-item {
+  --background: var(--ion-background-color);
+  --color: var(--ion-text-color);
+  --border-color: var(--ion-color-border);
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: var(--spacing-small);
+  --padding-bottom: 0;
+}

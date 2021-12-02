@@ -1,0 +1,125 @@
+<ion-grid class="numpad__body">
+  <ion-row justify-content-center>
+    <ion-col
+      id="sio-t-btn--one"
+      size="4"
+      class="ion-activatable ripple-parent"
+      (click)="onPress1()"
+    >
+      <ion-text> 1</ion-text>
+    </ion-col>
+
+    <ion-col
+      id="sio-t-btn--two"
+      size="4"
+      class="ion-activatable ripple-parent"
+      (click)="onPress2()"
+    >
+      <ion-text> 2</ion-text>
+    </ion-col>
+
+    <ion-col
+      id="sio-t-btn--three"
+      size="4"
+      class="ion-activatable ripple-parent"
+      (click)="onPress3()"
+    >
+      <ion-text> 3</ion-text>
+    </ion-col>
+  </ion-row>
+
+  <ion-row justify-content-center>
+    <ion-col
+      id="sio-t-btn--four"
+      size="4"
+      class="ion-activatable ripple-parent"
+      (click)="onPress4()"
+    >
+      <ion-text> 4</ion-text>
+    </ion-col>
+
+    <ion-col
+      id="sio-t-btn--five"
+      size="4"
+      class="ion-activatable ripple-parent"
+      (click)="onPress5()"
+    >
+      <ion-text> 5</ion-text>
+    </ion-col>
+
+    <ion-col
+      id="sio-t-btn--six"
+      size="4"
+      class="ion-activatable ripple-parent"
+      (click)="onPress6()"
+    >
+      <ion-text> 6</ion-text>
+    </ion-col>
+  </ion-row>
+
+  <ion-row justify-content-center>
+    <ion-col
+      id="sio-t-btn--seven"
+      size="4"
+      class="ion-activatable ripple-parent"
+      (click)="onPress7()"
+    >
+      <ion-text> 7</ion-text>
+    </ion-col>
+
+    <ion-col
+      id="sio-t-btn--eight"
+      size="4"
+      class="ion-activatable ripple-parent"
+      (click)="onPress8()"
+    >
+      <ion-text> 8</ion-text>
+    </ion-col>
+
+    <ion-col
+      id="sio-t-btn--nine"
+      size="4"
+      class="ion-activatable ripple-parent"
+      (click)="onPress9()"
+    >
+      <ion-text> 9</ion-text>
+    </ion-col>
+  </ion-row>
+
+  <ion-row justify-content-center>
+    <ion-col
+      *ngIf="displayDot; else emptyRef"
+      id="sio-t-btn--dot"
+      size="4"
+      class="ion-activatable ripple-parent"
+      (click)="numpadDot()"
+    >
+      <ion-text> .</ion-text>
+    </ion-col>
+
+    <ion-col
+      id="sio-t-btn--zero"
+      size="4"
+      class="ion-activatable ripple-parent"
+      (click)="onPress0()"
+    >
+      <ion-text> 0</ion-text>
+    </ion-col>
+
+    <ion-col
+      *ngIf="displayBack; else emptyRef"
+      id="sio-t-btn--back"
+      size="4"
+      class="ion-activatable ripple-parent"
+      (click)="numpadBack()"
+    >
+      <ion-text>
+        <ion-icon name="backspace-outline"></ion-icon>
+      </ion-text>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+<ng-template #emptyRef>
+  <ion-col></ion-col>
+</ng-template>

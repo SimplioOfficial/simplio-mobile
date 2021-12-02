@@ -1,0 +1,82 @@
+.header-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(var(--sizing-panel) - var(--spacing-tiny));
+  height: calc(var(--sizing-panel) - var(--spacing-tiny));
+  color: var(--ion-text-color);
+  font-size: var(--icon-medium);
+  position: relative;
+  overflow: hidden;
+  border-radius: 100%;
+  background-color: rgba(var(--ion-background-color-rgb), 0.8);
+}
+
+.header-button-disable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(var(--sizing-panel) - var(--spacing-tiny));
+  height: calc(var(--sizing-panel) - var(--spacing-tiny));
+  position: relative;
+  overflow: hidden;
+  border-radius: 100%;
+}
+
+.content {
+  display: flex;
+}
+
+// :host.has-content .header-button {
+//   border-radius: 100%;
+//   background-color: rgba(var(--ion-background-color-rgb), 0.8);
+// }
+
+:host.has-blinky {
+  .header-button::after {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 6px;
+    height: 6px;
+    border-radius: 100%;
+    opacity: 0;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  &.primary .header-button::after {
+    background-color: var(--ion-color-primary);
+  }
+
+  &.danger .header-button::after {
+    background-color: var(--ion-color-danger);
+  }
+
+  &.warning .header-button::after {
+    background-color: var(--ion-color-warning);
+  }
+
+  &.success .header-button::after {
+    background-color: var(--ion-color-success);
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.has-border {
+  border: solid 1px var(--ion-border-color);
+}
+.has-offset {
+  margin: var(--spacing-tiny);
+}

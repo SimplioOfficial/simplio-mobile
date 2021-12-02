@@ -1,0 +1,30 @@
+// :host {
+//   display: grid;
+//   border-radius: var(--main-border-radius);
+//   position: relative;
+//   overflow: hidden;
+//   width: 140px;
+//   height: 190px;
+// }
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+span {
+  color: var(--ion-color-step-500);
+  margin: 0;
+  font-size: 14px;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: var(--spacing-tiny);
+  color: var(--ion-text-color);
+}
+
+.balance {
+  flex-grow: 0;
+  flex-shrink: 1;
+  text-align: right;
+}

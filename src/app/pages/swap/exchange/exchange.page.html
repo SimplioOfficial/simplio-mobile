@@ -1,0 +1,63 @@
+<sio-simple-page [scroll]="false">
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+    <span slot="header-title">{{ $.SWAP | translate }}</span>
+    <sio-header-button
+      slot="header-right"
+      [has-blinky]="!!selectError"
+      (click)="openSwapListModal()"
+    >
+      <ion-icon name="information-circle-outline"></ion-icon>
+    </sio-header-button>
+  </sio-header>
+
+  <main>
+    <form [formGroup]="formField" [class.is-disabled]="isLoading || selectError">
+      <sio-swap-value
+        formControlName="amount"
+        [sourceWallet]="sourceWallet"
+        [destinationWallet]="destinationWallet"
+        [convertedAmount]="convertedAmount"
+        [isPending]="isPending"
+        (maxClicked)="onMaxClick($event)"
+      ></sio-swap-value>
+    </form>
+
+    <sio-swap-wallets-select
+      (selected)="openSwapWalletModal()"
+      [sourceWallet]="sourceWallet"
+      [destinationWallet]="destinationWallet"
+      [error-title]="selectError"
+      [empty-title]="this.$.NO_WALLETS_TO_SWAP | translate"
+      [isLoading]="isLoading"
+      [label]="$.SELECT_WALLETS | translate"
+    ></sio-swap-wallets-select>
+
+    <!-- Next Button -->
+    <div>
+      <div
+        *ngIf="(currentErrorMsg !== '' || !formField.valid) && !isPending; else submitButtonRef"
+        class="error"
+      >
+        <ion-text>{{ currentErrorMsg }}</ion-text>
+      </div>
+
+      <ng-template #submitButtonRef>
+        <div class="select-wallet-button">
+          <ion-button
+            color=""
+            expand="block"
+            mode="ios"
+            [disabled]="isPending || !formField.valid"
+            (click)="onSubmit()"
+            >{{ $.NEXT | translate }}</ion-button
+          >
+        </div>
+      </ng-template>
+    </div>
+
+    <sio-numpad [num-type]="numTypes.SMALL" (changed)="onAmountChange($event)"></sio-numpad>
+  </main>
+</sio-simple-page>

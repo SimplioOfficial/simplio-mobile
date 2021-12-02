@@ -1,0 +1,127 @@
+@use 'light';
+@use 'dark';
+
+/** Ionic CSS Variables **/
+:root {
+  @include light.light;
+  // TODO: refactor borders
+  --border-radius: 5px; // does not always work
+  --main-border-radius: 12px;
+  --sio-border-radius-small: 10px;
+  --sio-border-radius-smaller: 7px;
+
+  // Spacings
+  --spacing-medium: 2em;
+  --spacing-small: 24px;
+  --spacing-smaller: 18px;
+  --spacing-smallest: 14px;
+  --spacing-tiny: 6px;
+
+  --ion-padding: var(--spacing-small);
+
+  // Sizing
+  --sizing-element-large: 3.6rem;
+  --sizing-element-medium: 3rem;
+  --sizing-element-small: 2rem;
+  // --sizing-panel: 3.6rem;
+  --sizing-panel: 54px;
+
+  // Font sizes
+  --icon-medium: 22px;
+  --icon-large: 28px;
+}
+
+ion-item ion-thumbnail {
+  padding: 8px;
+  margin: 0px;
+}
+
+ion-item ion-icon {
+  margin: 8px;
+}
+
+:focus {
+  outline: none;
+}
+
+ion-toolbar {
+  --background: var(--ion-background-color);
+}
+
+ion-app.cameraView,
+ion-app.cameraView ion-content,
+ion-app.cameraView,
+.cameraView .nav-decor {
+  background: transparent none !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @include dark.dark;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    @include light.light;
+  }
+}
+
+body.dark {
+  @include dark.dark;
+}
+
+body.light {
+  @include light.light;
+}
+
+body[data-accent='blue'] {
+  --ion-color-primary: #3a86ff;
+  --ion-color-primary-rgb: 29, 161, 242;
+
+  --ion-color-primary-shade: #2369d9;
+  --ion-color-primary-tint: #2e77ec;
+}
+
+body[data-accent='red'] {
+  --ion-color-primary: #e0245e;
+  --ion-color-primary-rgb: 240, 45, 58;
+  --button-text-color: #fff;
+
+  --ion-color-primary-shade: #c1174c;
+  --ion-color-primary-tint: #d01f56;
+}
+
+body[data-accent='orange'] {
+  --ion-color-primary: #fe621d;
+  --ion-color-primary-rgb: 254, 98, 29;
+
+  --ion-color-primary-shade: #df4705;
+  --ion-color-primary-tint: #ef530e;
+}
+
+body.light[data-accent='orange'] {
+  --button-text-color: #fff;
+}
+
+body.dark[data-accent='orange'] {
+  --button-text-color: #000;
+}
+
+body.light[data-accent='mono'] {
+  --ion-color-primary: #000;
+  --ion-color-primary-rgb: 0, 0, 0;
+  --button-text-color: #fff;
+
+  --ion-color-primary-shade: #5b5b5b;
+  --ion-color-primary-tint: #424242;
+}
+
+body.dark[data-accent='mono'] {
+  --ion-color-primary: #fff;
+  --ion-color-primary-rgb: 255, 255, 255;
+  --button-text-color: #000;
+
+  --ion-color-primary-shade: #c7c7c7;
+  --ion-color-primary-tint: #e3e3e3;
+}

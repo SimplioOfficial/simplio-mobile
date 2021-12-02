@@ -1,0 +1,29 @@
+<ion-content class="no-scroll" [forceOverscroll]="false">
+  <div class="title">
+    <h3>{{ $.BACKUP_ENTER_TITLE | translate }}</h3>
+    <p>{{ $.BACKUP_ENTER_DESC | translate }}</p>
+    <p>{{ $.KEEP_INFO_SECURE | translate }}</p>
+  </div>
+  <div class="seeds">
+    <div
+      class="seed btn ion-activatable ripple-parent"
+      *ngFor="let word of msedWords$ | async; let i = index"
+      (click)="open(i)"
+      [class]="{ 'is-open': isOpen(i) }"
+    >
+      <span *ngIf="isOpen(i); else wordNumberRef">{{ word }}</span>
+      <ng-template #wordNumberRef>
+        <span>{{ i + 1 }}</span>
+      </ng-template>
+      <ion-ripple-effect type="bounded"></ion-ripple-effect>
+    </div>
+  </div>
+</ion-content>
+
+<footer>
+  <div class="footer-floating" slot="footer">
+    <ion-button expand="block" mode="ios" (click)="onSubmit()">{{
+      $.FINISHED | translate
+    }}</ion-button>
+  </div>
+</footer>

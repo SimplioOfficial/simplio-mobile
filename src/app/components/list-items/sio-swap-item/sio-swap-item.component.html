@@ -1,0 +1,41 @@
+<section class="wallet-icons">
+  <ng-container *ngIf="isCompleted; else canceledThumbnailsRed">
+    <sio-wallet-thumbnail
+      [iconID]="transaction.SourceCurrency"
+      [attr.scale]="'tiny'"
+    ></sio-wallet-thumbnail>
+    <sio-wallet-thumbnail
+      [iconID]="transaction.TargetCurrency"
+      [attr.scale]="'small'"
+    ></sio-wallet-thumbnail>
+  </ng-container>
+</section>
+
+<ng-template #canceledThumbnailsRed>
+  <sio-wallet-colored-thumbnail
+    [mode]="mode"
+    [icon-opacity]="0.5"
+    [iconID]="transaction.SourceCurrency"
+    [attr.scale]="'tiny'"
+  ></sio-wallet-colored-thumbnail>
+  <sio-wallet-colored-thumbnail
+    [mode]="mode"
+    [icon-opacity]="0.5"
+    [iconID]="transaction.TargetCurrency"
+    [attr.scale]="'small'"
+  ></sio-wallet-colored-thumbnail>
+</ng-template>
+
+<!-- Name -->
+<div class="title">
+  <p>{{ getWalletName(transaction.TargetAddress, transaction.TargetCurrency) }}</p>
+  <p class="gray"
+    >From: {{ getWalletName(transaction.SourceRefundAddress, transaction.SourceCurrency) }}</p
+  >
+</div>
+
+<!-- Balance -->
+<div class="balance">
+  <p>{{ balance }} {{ transaction.TargetCurrency }}</p>
+  <span>{{ status }}</span>
+</div>

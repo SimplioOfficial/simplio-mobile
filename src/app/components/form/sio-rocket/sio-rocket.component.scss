@@ -1,0 +1,36 @@
+:host {
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  position: relative;
+}
+
+#Planet {
+  fill: none;
+  stroke: var(--ion-text-color);
+  stroke-width: 5px;
+}
+
+// Rocket
+#Rocket {
+  fill: var(--ion-text-color);
+  fill-rule: nonzero;
+}
+
+// Smoke
+#Smoke_left,
+#Smoke_middle,
+#Smoke_right {
+  fill: var(--ion-color-translucent);
+}
+
+.stars {
+  fill: var(--ion-text-color);
+}
+
+// style="fill:none;stroke:rgb(50,235,235);stroke-width:5.62px;"
+#Fire {
+  fill: var(--ion-color-primary);
+  stroke: var(--ion-color-primary);
+  stroke-width: 5px;
+}

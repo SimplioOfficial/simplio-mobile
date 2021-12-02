@@ -1,0 +1,28 @@
+<main>
+  <section class="content">
+    <div class="content__icon">
+      <div class="circle">
+        <div #circleOne class="circle-1">
+          <ion-icon class="icon" [name]="options.icon"></ion-icon>
+        </div>
+        <div #circleTwo class="circle-2"></div>
+        <div #circleThree class="circle-3"></div>
+      </div>
+    </div>
+    <div class="content_titles">
+      <h1 class="title">{{ options.title }}</h1>
+      <p class="subtitle">{{ options.subtitle }}</p>
+    </div>
+  </section>
+
+  <section class="actions">
+    <ion-button
+      *ngIf="options.hasAction"
+      id="sio-t-btn--submit"
+      expand="block"
+      mode="ios"
+      (click)="onClick($event)"
+      >{{ options.actionText }}
+    </ion-button>
+  </section>
+</main>

@@ -1,0 +1,36 @@
+<sio-simple-page>
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back(wallet)">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.UPDATE_DECIMALS | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <form [formGroup]="formField">
+          <ion-item>
+            <ion-label position="floating">{{ $.UPDATE_DECIMALS | translate }}</ion-label>
+            <ion-input
+              formControlName="newDecimals"
+              [autofocus]="true"
+              name="newDecimals"
+              type="number"
+              required
+              mode="md"
+            ></ion-input>
+          </ion-item>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div slot="footer" class="footer-padding">
+    <ion-button expand="block" mode="ios" [disabled]="!isValid" (click)="update()">{{
+      $.SAVE | translate
+    }}</ion-button>
+  </div>
+</sio-simple-page>

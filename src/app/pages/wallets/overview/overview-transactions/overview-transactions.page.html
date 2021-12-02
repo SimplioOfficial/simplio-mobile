@@ -1,0 +1,22 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.TRANSACTIONS | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-list>
+    <sio-transaction-item
+      *ngFor="let tx of transactions"
+      [transaction]="tx"
+      [wallet]="wallet"
+      [locale]="locale"
+      [unconfirmed-message]="$.UNCONFIRMED | translate"
+      (click)="openTransaction(tx, wallet)"
+    ></sio-transaction-item>
+  </ion-list>
+</sio-simple-page>

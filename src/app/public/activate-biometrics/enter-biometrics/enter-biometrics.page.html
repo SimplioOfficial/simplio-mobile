@@ -1,0 +1,34 @@
+<ng-container *ngIf="!(loading$ | async); else loading">
+  <header>
+    <h1>{{ $.BIOMETRICS_INTRO_TITLE | translate }}</h1>
+    <p>{{ $.BIOMETRICS_INTRO_DESC | translate }}</p>
+  </header>
+
+  <footer>
+    <ion-grid slot="footer" class="footer-grid">
+      <ion-row>
+        <ion-col>
+          <ion-button
+            id="sio-t-btn--no"
+            expand="block"
+            color="secondary"
+            mode="ios"
+            (click)="onSubmit(false)"
+            >{{ $.NO | translate }}
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button id="sio-t-btn--yes" expand="block" mode="ios" (click)="onSubmit(true)">{{
+            $.YES | translate
+          }}</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </footer>
+</ng-container>
+
+<ng-template #loading>
+  <section class="loading">
+    <ion-spinner></ion-spinner>
+  </section>
+</ng-template>

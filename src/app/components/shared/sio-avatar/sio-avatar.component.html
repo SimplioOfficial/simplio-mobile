@@ -1,0 +1,4 @@
+<ion-img *ngIf="hasImage; else av" [src]="img"></ion-img>
+<ng-template #av>
+  <ion-icon name="person-outline"></ion-icon>
+</ng-template>

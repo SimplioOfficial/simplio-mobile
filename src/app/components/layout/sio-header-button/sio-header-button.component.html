@@ -1,0 +1,13 @@
+<div
+  [ngClass]="{
+    'has-border': hasBorder,
+    'has-offset': hasOffset,
+    'header-button ripple-parent ion-activatable': enable,
+    'header-button-disable ripple-parent ion-activatable': !enable
+  }"
+>
+  <div class="content">
+    <ng-content></ng-content>
+  </div>
+  <ion-ripple-effect *ngIf="enable" type="unbounded"></ion-ripple-effect>
+</div>

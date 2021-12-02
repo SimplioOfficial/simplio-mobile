@@ -1,0 +1,41 @@
+.history__header {
+  padding: 0 var(--spacing-small);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  min-height: var(--sizing-panel);
+  top: 0;
+  right: 0;
+  z-index: 2;
+
+  &.has-background {
+    width: 100%;
+    background-color: var(--ion-background-color);
+  }
+
+  &.is-shifted {
+    padding-right: 0 !important;
+  }
+
+  &.has-offset {
+    padding-top: var(--spacing-small);
+  }
+
+  header.head {
+    height: var(--sizing-element-medium);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .history {
+    position: relative;
+  }
+  .history-title {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    background-color: var(--ion-background-color);
+  }
+}

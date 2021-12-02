@@ -1,0 +1,73 @@
+<sio-page>
+  <!-- <div class="connection-prompt" *ngIf="!(isConnected$ | async)">
+    <span>{{ $.DISCONNECTED | translate }}</span>
+  </div> -->
+  <sio-header>
+    <sio-header-button slot="header-left" [routerLink]="['/intro']" id="sio-t-btn--back">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+
+    <sio-header-button
+      id="sio-t-btn--close"
+      slot="header-right"
+      [enable]="false"
+    ></sio-header-button>
+  </sio-header>
+
+  <section class="title-container title-top">
+    <h1>{{ $.LOGIN | translate }}</h1>
+  </section>
+
+  <form [formGroup]="formField">
+    <ion-grid>
+      <ion-row>
+        <ion-col class="col-form">
+          <form [formGroup]="formField">
+            <ion-item>
+              <ion-label position="floating">{{ $.EMAIL | translate }}</ion-label>
+              <ion-input
+                id="sio-t-inp--email"
+                formControlName="email"
+                autofocus
+                name="email"
+                type="email"
+                required
+                mode="md"
+              ></ion-input>
+            </ion-item>
+
+            <sio-password
+              [placeholder]="$.PASSWORD | translate"
+              [show-remainder]="false"
+              formControlName="password"
+              (keyup.enter)="onSubmit()"
+            ></sio-password>
+          </form>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="row-separator">
+        <div class="separator">
+          <span class="dot"></span>
+        </div>
+
+        <div class="link-item link small">
+          <p id="sio-t-lnk--forgot" [routerLink]="!(isConnected$ | async) ? ['#'] : ['/reset']">
+            {{ $.FORGOTTEN_YOUR_PASSWORD | translate }}
+          </p>
+        </div>
+      </ion-row>
+    </ion-grid>
+  </form>
+
+  <div class="footer-floating">
+    <ion-button
+      id="sio-t-btn--submit"
+      expand="block"
+      mode="ios"
+      [disabled]="!formField.valid || !(isConnected$ | async)"
+      (click)="onSubmit()"
+      >{{ $.LOGIN | translate }}
+    </ion-button>
+  </div>
+</sio-page>

@@ -1,0 +1,39 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" [routerLink]="['/home', 'wallets']">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.NEW_WALLET | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <sio-search
+    slot="header"
+    placeholder="{{ $.SEARCH_COINS | translate }}"
+    (searched)="onSearchChange($event)"
+    (focused)="onSearchFocus($event)"
+  >
+  </sio-search>
+
+  <header class="section-header">
+    <span class="section-title">{{ $.POPULAR_COINS_AND_TOKENS | translate }}</span>
+  </header>
+  <sio-coin-item
+    *ngFor="let c of searchedCustomCoins$ | async"
+    [coin]="c"
+    (click)="selectCoin(c)"
+    size="large"
+  ></sio-coin-item>
+
+  <header class="section-header">
+    <span class="section-title">{{ $.AVAILABLE | translate }}</span>
+  </header>
+  <sio-coin-item
+    *ngFor="let c of searchedCoins$ | async"
+    [coin]="c"
+    (click)="selectCoin(c)"
+    size="large"
+  ></sio-coin-item>
+</sio-simple-page>

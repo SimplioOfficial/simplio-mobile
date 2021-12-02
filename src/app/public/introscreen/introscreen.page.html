@@ -1,0 +1,22 @@
+<main>
+  <header>
+    <div class="logo">
+      <sio-logo></sio-logo>
+    </div>
+  </header>
+  <section class="content">
+    <div class="title">
+      <h1>{{ $.INTROSCREEN_TITLE_FIRST | translate }}</h1>
+      <h2>{{ $.INTROSCREEN_DESC_FIRST | translate }}</h2>
+    </div>
+
+    <div class="buttons">
+      <ion-button color="tertiary" (click)="navigate('/login')" expand="block" mode="ios">{{
+        $.LOGIN | translate
+      }}</ion-button>
+      <ion-button color="light" (click)="navigate('/register')" expand="block" mode="ios">{{
+        $.CREATE_NEW_ACCOUNT | translate
+      }}</ion-button>
+    </div>
+  </section>
+</main>

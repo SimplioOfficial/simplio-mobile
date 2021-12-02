@@ -1,0 +1,29 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" [enable]="false"></sio-header-button>
+
+    <span slot="header-title">{{ $.TRANSACTION_OPTIONS | translate }}</span>
+
+    <sio-header-button slot="header-right" (click)="onDismissModal()">
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </sio-header-button>
+  </sio-header>
+
+  <ion-content [scrollY]="true">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item class="fee">
+            <ion-label>{{ $.FEE_LEVEL | translate }}</ion-label>
+            <ion-select multiple="false" [(ngModel)]="feeLevelName" required>
+              <ion-select-option *ngFor="let f of feeLevels" [value]="f">
+                {{ f | translate }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+</sio-simple-page>

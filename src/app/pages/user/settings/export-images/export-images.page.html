@@ -1,0 +1,28 @@
+<sio-simple-page>
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">Export wallets to images</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-grid>
+    <ion-row class="qrcode" *ngFor="let q of qrData">
+      <label>
+        {{ q.name }}
+      </label>
+      <ion-col>
+        <ngx-qrcode
+          [elementType]="'canvas'"
+          [value]="q.data"
+          [scale]="7"
+          [margin]="3"
+          cssClass="sio-qr"
+          qrc-errorCorrectionLevel="L"
+        ></ngx-qrcode>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</sio-simple-page>

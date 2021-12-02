@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>85443969647-s2914aglkl5443msk19hp68v0dqr6d6g.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.85443969647-s2914aglkl5443msk19hp68v0dqr6d6g</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBY4I62RxKW6Kr_q7koSk3FLJ0mpYdeSv8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>85443969647</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>wallet.simplio.app</string>
+	<key>PROJECT_ID</key>
+	<string>simplio-797c7</string>
+	<key>STORAGE_BUCKET</key>
+	<string>simplio-797c7.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:85443969647:ios:2ec0866f4ef9876944839a</string>
+</dict>
+</plist>

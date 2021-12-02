@@ -1,0 +1,114 @@
+<ng-container *ngIf="wallet$ | async as wallet">
+  <ng-container *ngIf="transactions$ | async as transactions">
+    <sio-page
+      #pageComponent
+      *ngIf="!!transactions.length; else emptyRef"
+      (refreshed)="doRefresh($event)"
+      [hasHeader]="true"
+      actionPlaceholder="{{ $.SEARCH_TRANSACTIONS | translate }}"
+      (scrolling)="onScroll($event)"
+    >
+      <ng-template #headerTemplate>
+        <div class="header-container" #header>
+          <sio-header-button slot="left" [routerLink]="['/home', 'wallets']">
+            <ion-icon name="arrow-back-outline"></ion-icon>
+          </sio-header-button>
+          <ion-text style="opacity: 0"
+            >{{ totalCoinBalance | balance: _wallet.ticker:_wallet.type:_wallet.decimal }}
+            {{ _wallet.ticker }}</ion-text
+          >
+
+          <sio-header-button slot="right" (click)="goToTools()" style="margin-left: auto">
+            <ion-icon name="cog-outline"></ion-icon>
+          </sio-header-button>
+        </div>
+
+        <div class="fiat-container" #scrollableHeader>
+          <div class="dash__amount">
+            <sio-chart-coin-balance
+              [totalBalance]="totalBalance"
+              [selectedBalance]="selectedBalance"
+              [ticker]="wallet.ticker"
+              [wallet]="wallet"
+              [totalCoinBalance]="totalCoinBalance"
+              [currency]="currency"
+              [locale]="locale"
+            >
+            </sio-chart-coin-balance>
+          </div>
+        </div>
+      </ng-template>
+
+      <section #transactionsElem class="history" *ngIf="transactions$ | async as txs">
+        <header class="section-header">
+          <p class="section-title">{{ $.HISTORY | translate }}</p>
+        </header>
+        <sio-transaction-item
+          *ngFor="let tx of txs"
+          [transaction]="tx"
+          [wallet]="wallet"
+          [txTokenType]="getTxTokenType(tx)"
+          [locale]="locale"
+          [unconfirmed-message]="$.UNCONFIRMED | translate"
+          (click)="openTransaction(tx, wallet)"
+        ></sio-transaction-item>
+      </section>
+    </sio-page>
+  </ng-container>
+
+  <ng-template #headerRef>
+    <sio-header>
+      <sio-header-button slot="header-left" [routerLink]="['/home', 'wallets']">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </sio-header-button>
+
+      <span slot="header-title">
+        {{ wallet?.name }}
+      </span>
+
+      <sio-header-button slot="header-right" (click)="goToTools()">
+        <ion-icon name="cog-outline"></ion-icon>
+      </sio-header-button>
+    </sio-header>
+  </ng-template>
+
+  <ng-template #emptyRef>
+    <sio-page [hasHeader]="true">
+      <ng-template ngProjectAs="sio-header" [ngTemplateOutlet]="headerRef"></ng-template>
+      <ion-grid class="empty-qr">
+        <ion-row *ngIf="isInitialized" (click)="copy(wallet?.mainAddress)">
+          <ion-col>
+            <ngx-qrcode
+              cssClass="sio-qr"
+              [elementType]="'canvas'"
+              [value]="wallet?.mainAddress"
+              [scale]="7"
+              [margin]="3"
+              qrc-errorCorrectionLevel="L"
+            ></ngx-qrcode>
+            <span> {{ $.YOU_HAVE_NO_TRANSACTION | translate }}</span>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="isInitialized" (click)="copy(wallet?.mainAddress)">
+          <ion-col>
+            <p class="address">
+              {{ wallet?.mainAddress }}
+            </p>
+          </ion-col>
+        </ion-row>
+        <ion-row class="title-init" *ngIf="!isInitialized">
+          <ion-col>
+            <p>{{ $.INIT_SPL_TOKEN_WARNING | translate }}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="!isInitialized">
+          <ion-col>
+            <ion-button mode="ios" (click)="presentCreateTokenAccountPrompt()">{{
+              $.INIT_SPL_TOKEN_BUTTON | translate
+            }}</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </sio-page>
+  </ng-template>
+</ng-container>

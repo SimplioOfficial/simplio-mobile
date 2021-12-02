@@ -1,0 +1,40 @@
+:host {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 var(--spacing-small);
+}
+
+ion-input {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  text-align: center;
+  font-size: 38px;
+  height: 38px;
+  color: var(--ion-text-color);
+}
+
+main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2% var(--spacing-small);
+}
+
+.current-currency,
+.swaped-value {
+  text-align: center;
+  height: 1em;
+}
+
+.current-currency {
+  color: var(--ion-text-color);
+}
+
+.swaped-value {
+  font-size: 14px;
+  color: var(--ion-color-step-500);
+}

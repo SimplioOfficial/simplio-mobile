@@ -1,0 +1,64 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.ABOUT | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item class="settings" lines="full" detail="false" (click)="open(LINKS.TERM)">
+          <ion-label class="label">{{ $.READ_TERMS_AND_CONDITIONS | translate }}</ion-label>
+          <ion-icon name="exit-outline" slot="end"></ion-icon>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item class="settings" lines="full" detail="false" (click)="open(LINKS.PRIV)">
+          <ion-label class="label">{{ $.PRIVACY_POLICY | translate }}</ion-label>
+          <ion-icon name="exit-outline" slot="end"></ion-icon>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item class="settings" lines="full" detail="false" (click)="open(LINKS.COOKIE)">
+          <ion-label class="label">{{ $.COOKIE_POLICY | translate }}</ion-label>
+          <ion-icon name="exit-outline" slot="end"></ion-icon>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item class="settings" lines="full" detail="false" (click)="open(LINKS.WEB)">
+          <ion-label class="label">{{ $.WEBSITE | translate }}</ion-label>
+          <ion-icon name="exit-outline" slot="end"></ion-icon>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item class="settings" lines="full" detail="false" (click)="open(LINKS.DISCORD)">
+          <ion-label class="label">{{ $.DISCORD | translate }}</ion-label>
+          <ion-icon name="exit-outline" slot="end"></ion-icon>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-item slot="footer">
+    <ion-grid>
+      <ion-label class="label">
+        <p>{{ $.LAST_UPDATED | translate }}: {{ info ? (info.updated | date) : '' }}</p>
+        <p class="version">{{ $.VERSION | translate }}: {{ info ? info.version : '' }}</p>
+        <p class="commithash">{{ $.HASH | translate }}: {{ info ? info.commitHash : '' }}</p>
+      </ion-label>
+    </ion-grid>
+  </ion-item>
+</sio-simple-page>

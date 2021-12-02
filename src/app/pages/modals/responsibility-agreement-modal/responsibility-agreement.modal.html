@@ -1,0 +1,32 @@
+<main>
+  <header>
+    <h1>{{ $.RESPONSIBILITY_AGREEMENT_TITLE | translate }}</h1>
+    <p>{{ $.RESPONSIBILITY_AGREEMENT_DESC | translate }}</p>
+  </header>
+  <section class="actions">
+    <p class="section-title">{{ $.REMAINING_ACTIONS | translate }}</p>
+    <sio-action-list [actions]="actions"></sio-action-list>
+  </section>
+</main>
+
+<footer>
+  <ion-grid slot="footer" class="footer-grid">
+    <ion-row>
+      <ion-col>
+        <ion-button
+          id="sio-t-btn--no"
+          expand="block"
+          color="secondary"
+          mode="ios"
+          (click)="onSubmit(false)"
+          >{{ $.CANCEL | translate }}
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button id="sio-t-btn--yes" expand="block" mode="ios" (click)="onSubmit(true)">{{
+          $.AGREE | translate
+        }}</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</footer>

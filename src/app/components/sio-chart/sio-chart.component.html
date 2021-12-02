@@ -1,0 +1,28 @@
+<main class="sio-chart__chart" #chartEl>
+  <ng-content select="sio-chart-balance, sio-chart-coin-balance"></ng-content>
+
+  <chart-display
+    [datasets]="activeChart?.data"
+    [color]="color"
+    (priceUpdated)="onUpdatePriceContent($event)"
+    (mousedown)="activate(true)"
+    (mouseup)="activate(false)"
+    (touchstart)="activate(true)"
+    (touchmove)="activate(true)"
+    (touchend)="activate(false)"
+    [isActive]="isActivated"
+    [loading]="loading"
+    [height]="chartHeight"
+    [rate]="rate"
+  ></chart-display>
+</main>
+<div class="sio-chart__actions">
+  <div *ngFor="let action of actions" class="sio-chart__action">
+    <chart-button
+      (click)="activateChart(action)"
+      [isActive]="activeChart.id === action.id"
+      [title]="action.title"
+    >
+    </chart-button>
+  </div>
+</div>

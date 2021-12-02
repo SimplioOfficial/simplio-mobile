@@ -1,0 +1,10 @@
+<ng-container *ngIf="!isBalance; else selected">
+  <span
+    >{{ totalCoinBalance | balance: wallet.ticker:wallet.type:wallet.decimal }} {{ ticker }}</span
+  >
+  <h1>{{ totalBalance | fiat: locale:currency }}</h1>
+</ng-container>
+<ng-template #selected>
+  <span>{{ selectedBalance && selectedBalance.unixtime | date: 'MMM dd, yyyy, HH:mm' }}</span>
+  <h3>{{ selectedBalance && selectedBalance.balance | fiat: locale:currency }}</h3>
+</ng-template>

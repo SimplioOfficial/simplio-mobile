@@ -1,0 +1,47 @@
+:host.has-bg .header {
+  background-color: var(--ion-background-color);
+}
+
+:host.title-center .title {
+  text-align: center;
+  padding: 0 var(--spacing-small);
+}
+
+.header__content {
+  grid-row-start: 2;
+  grid-row-end: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  color: var(--ion-text-color);
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: grid;
+  width: 100%;
+  grid-template-columns: 100%;
+  grid-template-rows: var(--sizing-panel) var(--sizing-panel);
+  grid-template-rows: constant(safe-area-inset-top) var(--sizing-panel);
+  grid-template-rows: env(safe-area-inset-top) var(--sizing-panel);
+}
+
+.header-ghost {
+  width: 100%;
+  height: calc(var(--sizing-panel) / 2);
+}
+
+.title {
+  flex-grow: 1;
+  padding-left: var(--spacing-small);
+}
+
+.header-ghost {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
