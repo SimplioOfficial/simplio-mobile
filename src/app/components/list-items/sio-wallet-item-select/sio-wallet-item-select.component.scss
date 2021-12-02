@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+span {
+  font-size: 14px;
+  color: var(--ion-color-step-350);
+  margin-bottom: var(--spacing-smallest);
+}
+
+section {
+  width: 100%;
+}
+
+.sio-wallet-item__error > p {
+  color: var(--ion-color-danger-shade);
+}

@@ -1,0 +1,50 @@
+ion-grid {
+  --ion-grid-padding: var(--spacing-small);
+}
+
+.row-separator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-small);
+
+  .separator {
+    padding: 5% 0;
+  }
+
+  span {
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    background-color: var(--ion-color-step-150);
+  }
+}
+
+.link-item {
+  font-size: 14px;
+  text-align: center;
+  p {
+    margin: var(--spacing-small) 0 0 0;
+  }
+}
+
+.col-form {
+  ::ng-deep {
+    ion-item {
+      margin-bottom: 5px;
+
+      &.md {
+        ion-label {
+          font-size: 17px;
+          padding-bottom: 15px;
+          position: relative;
+          top: -3px;
+        }
+      }
+    }
+  }
+}
+
+//item ios ion-focusable hydrated item-label item-label-floating item-interactive item-input item-has-value ion-touched ion-dirty ion-valid
+//item     ion-focusable hydrated item-label item-label-floating item-interactive item-input item-has-value ion-touched ion-dirty ion-valid md

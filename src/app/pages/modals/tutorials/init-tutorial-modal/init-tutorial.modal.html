@@ -1,0 +1,72 @@
+<main>
+  <section class="device-container">
+    <div class="device">
+      <div #overview class="overview"></div>
+
+      <div #actions class="action-menu">
+        <div class="action-menu__content">
+          <div *ngFor="let action of ACTIONS; index as i" class="action__content" class="action">
+            <div class="action-sides action-icon">
+              <ion-icon [name]="action.buttonIcon + '-outline'"></ion-icon>
+            </div>
+            <div class="action-text">
+              <span>{{ action.buttonText | translate }}</span>
+            </div>
+            <div class="action-sides">
+              <span #index class="index">{{ i + 1 }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tapbar">
+        <div #tap class="tap"></div>
+
+        <div class="icon">
+          <ion-icon name="wallet-outline"></ion-icon>
+        </div>
+        <div
+          class="action"
+          [class]="{
+            'has-blinky': hasBlinky
+          }"
+        >
+          <ion-icon name="swap-vertical-outline"></ion-icon>
+        </div>
+
+        <div class="icon">
+          <ion-icon name="repeat-outline"></ion-icon>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ng-container [ngSwitch]="pageNumber">
+    <ion-content *ngSwitchCase="1">
+      <section class="text">
+        <h1>{{ $.TUT_INIT_TITLE | translate }}</h1>
+        <p>{{ $.TUT_INIT_DESC | translate }}</p>
+      </section>
+    </ion-content>
+
+    <ion-content *ngSwitchCase="2">
+      <section class="text">
+        <div class="desc" *ngFor="let a of ACTIONS; index as i">
+          <div class="index">
+            <span>{{ i + 1 }}</span>
+          </div>
+          <p>
+            {{ a.desc | translate }}
+            <span *ngIf="!!a?.commingSoon" class="label">{{ $.COMING_SOON | translate }}</span>
+          </p>
+        </div>
+      </section>
+    </ion-content>
+  </ng-container>
+</main>
+
+<div class="footer-padding" slot="footer">
+  <ion-button expand="block" mode="ios" (click)="onClick()">{{
+    buttonText | translate
+  }}</ion-button>
+</div>

@@ -1,0 +1,28 @@
+<svg class="progress-ring" [attr.width]="sizeX" [attr.height]="sizeY">
+  <circle
+    #placeEl
+    class="progress-ring__circle place"
+    [attr.stroke-width]="strokeWidth"
+    fill="transparent"
+    [attr.r]="radius"
+    [attr.cx]="centralPoint"
+    [attr.cy]="centralPoint"
+  />
+  <circle
+    #loadingEl
+    class="progress-ring__circle ring"
+    [attr.stroke-width]="strokeWidth"
+    fill="transparent"
+    [attr.r]="radius"
+    [attr.cx]="centralPoint"
+    [attr.cy]="centralPoint"
+  />
+</svg>
+<div class="content" *ngIf="!showCoinIcon; else coinIconRef">
+  <ng-content></ng-content>
+</div>
+<ng-template #coinIconRef>
+  <div class="icon" [style]="{ 'background-color': fill }">
+    <div #svgEl></div>
+  </div>
+</ng-template>

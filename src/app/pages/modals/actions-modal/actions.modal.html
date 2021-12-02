@@ -1,0 +1,17 @@
+<main>
+  <div class="wrapper">
+    <div
+      *ngFor="let action of actions"
+      class="action ion-activatable ripple-parent"
+      (click)="onSelect(action)"
+    >
+      <div class="icon">
+        <ion-icon [name]="action.icon"></ion-icon>
+      </div>
+      <div class="title">
+        <span>{{ action.title }}</span>
+      </div>
+      <ion-ripple-effect></ion-ripple-effect>
+    </div>
+  </div>
+</main>

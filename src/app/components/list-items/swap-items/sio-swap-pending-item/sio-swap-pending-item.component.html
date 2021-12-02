@@ -1,0 +1,30 @@
+<main class="ion-activatable ripple-parent">
+  <div class="progress__container">
+    <sio-progress-circle
+      [ticker]="transaction.TargetCurrency"
+      [size]="66"
+      [progress]="progressValue"
+      [stroke-width]="2"
+    >
+      <sio-wallet-thumbnail
+        (coloring)="updateColor($event)"
+        [iconID]="transaction.TargetCurrency"
+      ></sio-wallet-thumbnail>
+    </sio-progress-circle>
+  </div>
+
+  <div class="content">
+    <div class="content__balance">
+      <!-- <span>{{ status }}</span> -->
+      <p>{{ transaction.UserAgreedAmount }}</p>
+      <span>{{ transaction.TargetCurrency }}</span>
+    </div>
+
+    <ng-template #issueRef>
+      <div class="delayed">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <p>{{ issueText }}</p>
+      </div>
+    </ng-template>
+  </div>
+</main>

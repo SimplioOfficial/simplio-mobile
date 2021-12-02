@@ -1,0 +1,41 @@
+<ng-container [ngSwitch]="searchType">
+  <div
+    *ngSwitchCase="TYPES.dynamic"
+    class="searchbar"
+    [ngClass]="{ 'large-string': value?.length > 25 }"
+  >
+    <div *ngIf="isFocused" [ngClass]="{ 'hidden-icon': !hasSearchIcon }" class="icon">
+      <ion-icon name="search"></ion-icon>
+    </div>
+    <label>
+      <input
+        #inputEl
+        *ngIf="value?.length <= 25"
+        type="text"
+        [(ngModel)]="value"
+        (focus)="focusSearch($event)"
+        [placeholder]="placeholder"
+        (input)="onSearchEvent($event)"
+      />
+      <textarea
+        class="search-textarea"
+        *ngIf="value?.length > 25"
+        [(ngModel)]="value"
+        (input)="onSearchEvent($event)"
+      ></textarea>
+    </label>
+    <div *ngIf="isFocused" class="icon" (click)="cancelFocus($event)">
+      <ion-icon name="close-outline"></ion-icon>
+    </div>
+  </div>
+
+  <!-- @todo Resolve actions within the app eg -> address page-->
+  <!--<div #actions class="actions" [class.is-focused]="isFocused" [class.has-button]="hasActions">-->
+  <!--  <ng-content></ng-content>-->
+  <!--</div>-->
+
+  <div *ngSwitchCase="TYPES.static" class="searchbar ion-activatable ripple-parent">
+    <label class="placeholder">{{ placeholder }}</label>
+    <ion-ripple-effect></ion-ripple-effect>
+  </div>
+</ng-container>

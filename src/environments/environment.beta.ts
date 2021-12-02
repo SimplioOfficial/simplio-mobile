@@ -1,0 +1,17 @@
+export const environment = {
+  production: false,
+  SWAP_WS_URL: 'https://simplio-api-test.azurewebsites.net/ws/notifications',
+  SWAP_URL: 'https://simplio-test.azurefd.net/api',
+  LANG_URL: 'https://files.simplio.io/lang/beta/',
+  TEMPLATE_REGISTRATION: 'SIO.REGISTRATION',
+  TEMPLATE_RESET: 'SIO.PASSWORD-RESET',
+  EXPLORER_URL: 'https://files.simplio.io/explorers_fallback_beta.json',
+  FEE_URL: 'https://files.simplio.io/feev2.json',
+  POLICY_VERSION: '0.1.2',
+  CORS_ANYWHERE: 'http://localhost:8080/',
+  DATA: 'https://data.simplio.io/',
+  PIN_LENGTH: 4,
+  DEFAULT_LANGUAGE: 'en',
+  PREFIX: 'SIMPLIO_TEST',
+  LIVECHAT_LICENCE_ID: 13126005,
+};

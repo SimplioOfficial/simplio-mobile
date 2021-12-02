@@ -1,0 +1,79 @@
+:host {
+  --background: none;
+  display: contents;
+}
+
+main {
+  position: relative;
+  margin: var(--spacing-small);
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: 4px;
+    width: 80px;
+    background-color: rgba(255, 255, 255, 0.2);
+    top: -16px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    border-radius: 30em;
+  }
+}
+
+.wrapper {
+  border-radius: var(--main-border-radius);
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
+  box-shadow: var(--sio-box-shadow);
+}
+
+.action {
+  display: grid;
+  grid-template-columns: var(--sizing-panel) 1fr;
+  height: var(--sizing-panel);
+  border-bottom: solid 1px var(--ion-color-border);
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  height: 100%;
+  color: var(--ion-color-primary);
+}
+
+.title {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
+
+body.dark :host {
+  .wrapper {
+    background-color: var(--ion-color-translucent);
+  }
+  .action {
+    border-bottom: solid 1px var(--ion-background-color);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .wrapper {
+    background-color: var(--ion-color-translucent);
+  }
+  .action {
+    border-bottom: solid 1px var(--ion-background-color);
+  }
+}

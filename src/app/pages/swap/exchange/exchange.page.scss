@@ -1,0 +1,82 @@
+.select-wallet-button {
+  padding: 0 var(--spacing-small) var(--spacing-small) var(--spacing-small);
+  min-height: var(--sizing-element-medium);
+}
+
+form {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.direction {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-small);
+
+  ion-icon {
+    flex-shrink: 0;
+    flex-grow: 0;
+    font-size: 16px;
+    padding: 0 var(--spacing-small);
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: block;
+    height: 1px;
+    width: 100%;
+    background-color: var(--ion-border-color);
+  }
+}
+
+ion-input {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  text-align: center;
+  font-size: 36px;
+}
+
+.current-currency,
+.swaped-value {
+  text-align: center;
+}
+
+.current-currency {
+  color: var(--ion-text-color);
+}
+
+.swaped-value {
+  font-size: 14px;
+  color: var(--ion-color-step-500);
+}
+
+form.is-disabled {
+  pointer-events: none !important;
+  opacity: 0.4;
+}
+
+.error {
+  display: grid;
+  place-content: center;
+  background-color: var(--ion-color-warning);
+  // color: var(--ion-background-color) !important;
+  // border: solid 1px var(--ion-color-danger);
+  // border-radius: var(--main-border-radius);
+  color: #000 !important;
+  box-shadow: none !important;
+  height: calc(var(--sizing-element-medium) + var(--spacing-small));
+  font-size: 14px;
+  text-align: center;
+}
+
+main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}

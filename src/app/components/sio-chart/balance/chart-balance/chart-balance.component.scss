@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  height: 54px;
+  user-select: none;
+  box-sizing: content-box;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  // color: var(--ion-text-color);
+  color: var(--ion-text-color);
+  line-height: 1;
+}
+
+span {
+  color: var(--ion-color-step-500);
+  font-size: 13px;
+  margin: 0;
+}

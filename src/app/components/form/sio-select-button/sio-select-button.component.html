@@ -1,0 +1,16 @@
+<main class="ion-activatable ripple-parent">
+  <section>
+    <ng-container
+      [ngTemplateOutlet]="startTemplateRef"
+      [ngTemplateOutletContext]="{ $implicit: startValue }"
+    ></ng-container>
+    <ng-content></ng-content>
+    <span *ngIf="hasValue; else placeholderRef">{{ value }}</span>
+    <ng-template #placeholderRef>
+      <span class="placeholder">{{ placeholder }}</span>
+    </ng-template>
+  </section>
+  <ion-icon name="chevron-down-outline"></ion-icon>
+
+  <ion-ripple-effect></ion-ripple-effect>
+</main>

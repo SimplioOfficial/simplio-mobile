@@ -1,0 +1,76 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" [routerLink]="['/home', 'wallets', name, 'overview']">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+    <span slot="header-title">{{ $.OPTIONS | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col class="header">
+        <sio-wallet-thumbnail scale="large" [iconID]="wallet?.ticker"></sio-wallet-thumbnail>
+        <input
+          #inputFile
+          id="input-file"
+          style="display: none"
+          type="file"
+          (change)="fileProgress($event)"
+        />
+        <h3>{{ name }}{{ isRescanning ? ($.SCANNING | translate) : '' }}</h3>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item-group>
+          <ion-item-divider>
+            <ion-label>{{ $.MAINTENANCE | translate }}</ion-label>
+          </ion-item-divider>
+
+          <ion-item lines="full" (click)="rescan()">
+            <ion-label class="label">
+              {{ $.RESCAN_WALLET | translate }}
+            </ion-label>
+          </ion-item>
+        </ion-item-group>
+
+        <ion-item-group>
+          <ion-item-divider>
+            <ion-label>{{ $.PREFERENCES | translate }}</ion-label>
+          </ion-item-divider>
+
+          <ion-item lines="full" (click)="rename()" detail="true">
+            <ion-label class="label">
+              {{ $.EDIT_NAME | translate }}
+            </ion-label>
+          </ion-item>
+          <ion-item lines="full" (click)="updateDecimals()" detail="true">
+            <ion-label class="label">
+              {{ $.UPDATE_DECIMALS | translate }}
+            </ion-label>
+          </ion-item>
+          <ion-item lines="full" (click)="linkedEmail()" detail="true">
+            <ion-label class="label">
+              {{ $.LINKED_EMAIL | translate }}
+            </ion-label>
+          </ion-item>
+
+          <!-- <ion-item lines="full" (click)="addressList()" detail="true">
+            <ion-label class="label">{{ $.ADDRESS_LIST | translate }}</ion-label>
+          </ion-item> -->
+
+          <!-- <ion-item lines="full" (click)="apiChange()" detail="true" *ngIf="isCoin">
+            <ion-label class="label">{{ $.COIN_API | translate }}</ion-label>
+          </ion-item> -->
+
+          <ion-item lines="full" (click)="walletInfo()" detail="true" *ngIf="false">
+            <ion-label class="label">{{ $.WALLET_INFORMATIONS | translate }}</ion-label>
+          </ion-item>
+        </ion-item-group>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</sio-simple-page>

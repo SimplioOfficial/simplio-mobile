@@ -1,0 +1,46 @@
+<ion-header #headerEl *ngIf="hasHeader" class="page-header">
+  <ng-container
+    [ngTemplateOutlet]="headerTemplateRef"
+    [ngTemplateOutletContext]="{ $implicit: isOpen }"
+  ></ng-container>
+</ion-header>
+
+<ion-content
+  #mainEl
+  [scrollY]="scrollableY"
+  [scrollEvents]="true"
+  (ionScrollStart)="onScrollStart($event)"
+  (ionScroll)="onScroll()"
+  (ionScrollEnd)="onScrollEnd($event)"
+>
+  <ion-refresher [disabled]="refreshable" slot="fixed" (ionRefresh)="onRefreshContent($event)">
+    <ion-refresher-content [pullingIcon]="null"></ion-refresher-content>
+  </ion-refresher>
+
+  <section #dashEl class="main-page__dash" [style]="{ display: isSearching ? 'none' : 'block' }">
+    <ng-content select="[slot='dash']"></ng-content>
+  </section>
+
+  <header #actionEl [class.actions]="searchable">
+    <sio-search
+      *ngIf="searchable"
+      [placeholder]="actionPlaceholder"
+      (focused)="onSearchFocus($event)"
+      (searched)="onSearchContent($event)"
+      [disabled]="disabledSearch"
+    ></sio-search>
+  </header>
+
+  <!-- <ion-list
+    [class]="{
+      'has-tapbar': hasTapbar
+    }"
+  >
+  </ion-list> -->
+  <ng-content></ng-content>
+  <div [class]="{ 'has-tapbar': hasTapbar }"></div>
+
+  <footer *ngIf="hasFooter">
+    <ng-content select="[slot='footer']"></ng-content>
+  </footer>
+</ion-content>

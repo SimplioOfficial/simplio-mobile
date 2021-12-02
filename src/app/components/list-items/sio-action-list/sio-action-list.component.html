@@ -1,0 +1,3 @@
+<section *ngIf="!!actions.length" [class]="{ 'is-disabled': disabled }">
+  <sio-action-item *ngFor="let action of actions" [action]="action"></sio-action-item>
+</section>

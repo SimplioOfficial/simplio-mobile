@@ -1,0 +1,47 @@
+:host {
+  display: flex;
+  padding: var(--spacing-smaller);
+
+  &.is-disabled {
+    background-color: var(--ion-color-translucent);
+  }
+}
+
+.icon-item {
+  display: grid;
+  place-content: center;
+  flex-shrink: 0;
+  flex-grow: 0;
+  padding-right: var(--spacing-smaller);
+}
+.icon {
+  display: grid;
+  place-content: center;
+  width: 2em;
+  height: 2em;
+  border-radius: 100%;
+  font-size: 1.2em;
+  color: var(--ion-color-primary);
+
+  &[data-type='danger'] {
+    border: solid 2px var(--ion-color-danger);
+    color: var(--ion-color-danger);
+  }
+}
+
+.content {
+  flex-shrink: 1;
+  flex-grow: 1;
+
+  p {
+    margin-top: 0;
+    margin-bottom: var(--spacing-tiny);
+    color: var(--ion-text-color);
+  }
+
+  span {
+    color: var(--ion-color-step-500);
+    margin: 0;
+    font-size: 14px;
+  }
+}

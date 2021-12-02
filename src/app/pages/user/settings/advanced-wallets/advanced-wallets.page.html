@@ -1,0 +1,24 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" [routerLink]="['/home', 'user', 'settings']">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.ADVANCED | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-list>
+    <ion-grid>
+      <ion-item
+        class="settings"
+        lines="full"
+        detail="true"
+        [routerLink]="['/home', 'user', 'settings', 'advanced-wallets', 'import-recovery']"
+      >
+        <ion-label class="label">{{ $.CHANGE_MASTER_SEEDS | translate }}</ion-label>
+      </ion-item>
+    </ion-grid>
+  </ion-list>
+</sio-simple-page>

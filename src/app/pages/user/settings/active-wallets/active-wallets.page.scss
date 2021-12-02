@@ -1,0 +1,33 @@
+ion-item.primarywallet:first-child {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+ion-item.primarywallet:last-child {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+ion-item.primarywallet {
+  --background: rgba(46, 45, 45);
+  color: white;
+}
+
+.icon {
+  margin-top: 30%;
+  margin-bottom: 10%;
+  text-align: center;
+  font-size: 100px;
+}
+
+.info {
+  float: right;
+}
+
+.locker {
+  font-size: 18px;
+  color: var(--ion-color-step-450);
+  padding: var(--spacing-tiny);
+}
+
+.option-button {
+  padding: 0 15px;
+}

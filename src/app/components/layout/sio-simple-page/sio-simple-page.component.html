@@ -1,0 +1,18 @@
+<header class="header">
+  <ng-content select="sio-header"></ng-content>
+</header>
+<main>
+  <ion-content class="content" [scrollY]="scroll">
+    <ion-refresher [disabled]="refreshable" slot="fixed" (ionRefresh)="onRefreshContent($event)">
+      <ion-refresher-content [pullingIcon]="null"></ion-refresher-content>
+    </ion-refresher>
+    <header class="content__header">
+      <ng-content select="[slot='header']"></ng-content>
+    </header>
+
+    <ng-content></ng-content>
+  </ion-content>
+  <footer *ngIf="hasFooter">
+    <ng-content select="[slot='footer']"></ng-content>
+  </footer>
+</main>

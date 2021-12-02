@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  width: calc(var(--sizing-panel) - var(--spacing-tiny));
+  height: calc(var(--sizing-panel) - var(--spacing-tiny));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: var(--main-border);
+  border-radius: 100%;
+  font-size: 1rem;
+}

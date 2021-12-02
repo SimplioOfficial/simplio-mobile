@@ -1,0 +1,21 @@
+<!-- Thumbnail -->
+<sio-wallet-thumbnail [iconID]="wallet.ticker" [attr.scale]="thumbScale"></sio-wallet-thumbnail>
+<!-- Name -->
+<div class="title">
+  <p>{{ wallet.name | slice: 0:18 }}</p>
+  <span>{{ wallet.ticker }} {{ errCode }}</span>
+</div>
+
+<!-- Balance -->
+<ng-content *ngIf="isContent; else balance"></ng-content>
+<ng-template #balance>
+  <div class="balance">
+    <p>{{ fiat ? (fiat | fiat: locale:currency) : '' }}</p>
+    <span
+      >{{ wallet.balance | balance: wallet.ticker:wallet.type:wallet.decimal }}
+      {{ wallet.ticker }}</span
+    >
+  </div>
+</ng-template>
+
+<ion-ripple-effect *ngIf="!disabled"></ion-ripple-effect>

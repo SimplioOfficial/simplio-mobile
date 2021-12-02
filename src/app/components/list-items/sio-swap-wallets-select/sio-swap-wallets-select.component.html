@@ -1,0 +1,34 @@
+<span *ngIf="!!label">{{ label }}</span>
+<main>
+  <sio-select-empty
+    *ngIf="hideContent; else contentRef"
+    [title]="emptyTitle"
+    [status]="emptyStatus"
+  ></sio-select-empty>
+
+  <ng-template #contentRef>
+    <ng-container *ngIf="isLoading; else selectRef">
+      <ion-spinner name="dots"></ion-spinner>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #selectRef>
+    <section class="select" (click)="onClick($event)">
+      <section class="wallet-icons">
+        <sio-wallet-thumbnail [iconID]="sourceWallet?.ticker" scale="tiny"></sio-wallet-thumbnail>
+        <div class="direction">
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </div>
+        <sio-wallet-thumbnail
+          [iconID]="destinationWallet?.ticker"
+          scale="tiny"
+        ></sio-wallet-thumbnail>
+      </section>
+
+      <section class="wallet-name">
+        <p>From: {{ sourceWallet?.name | slice: 0:18 }}</p>
+        <p>To: {{ destinationWallet?.name | slice: 0:18 }}</p>
+      </section>
+    </section>
+  </ng-template>
+</main>

@@ -1,0 +1,18 @@
+<header
+  class="history__header"
+  [ngClass]="{
+    'has-background': hasBackground,
+    'is-shifted': !outlined,
+    'has-offset': hasOffset
+  }"
+>
+  <div class="title">
+    <ng-content></ng-content>
+  </div>
+  <div class="button">
+    <ng-content select="sio-section-header-button"></ng-content>
+  </div>
+</header>
+<div class="history-title">
+  <ng-content select="[slot='scroll']"></ng-content>
+</div>

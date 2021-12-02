@@ -1,0 +1,62 @@
+.select-wallet-button {
+  padding: 0 var(--spacing-small) var(--spacing-small) var(--spacing-small);
+}
+
+ion-grid {
+  --ion-grid-padding: var(--spacing-small);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.qr-wrap {
+  width: 75vw;
+  height: 75vw;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.address {
+  margin: 10% 0 0 0;
+  text-align: center;
+  word-break: break-all;
+  color: var(--ion-text-color);
+  font-size: 14px;
+}
+
+.title {
+  text-align: center;
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--ion-color-step-350);
+  }
+}
+
+.title-init {
+  text-align: center;
+  p {
+    margin: 10% 0 10% 0;
+    font-size: 14px;
+    color: var(--ion-color-step-350);
+  }
+}
+
+.empty-qr {
+  display: flex;
+  height: calc(100% - var(--sizing-panel));
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  ion-text {
+    color: var(--ion-color-step-500);
+    font-size: 14px;
+  }
+}
+
+.subtext {
+  margin-top: 14px;
+}

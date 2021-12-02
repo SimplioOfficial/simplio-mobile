@@ -1,0 +1,24 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+header,
+footer {
+  padding: var(--spacing-small);
+  color: var(--ion-text-color);
+
+  ion-col {
+    margin-right: var(--spacing-small);
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}
+
+.actions {
+  padding: 0 var(--spacing-small);
+}

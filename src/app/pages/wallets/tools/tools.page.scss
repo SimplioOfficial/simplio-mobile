@@ -1,0 +1,28 @@
+ion-grid {
+  --ion-grid-padding: var(--spacing-small);
+  margin: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: var(--spacing-small);
+}
+
+ion-item.ion-color-danger {
+  --ion-color-base: var(--ion-color-base) !important;
+  --ion-color-contrast: var(--ion-color-danger) !important;
+}
+
+.warning-item {
+  border: solid 1px var(--ion-color-danger);
+  border-radius: var(--main-border-radius);
+  min-height: var(--sizing-element-medium);
+  background: rgba(var(--ion-color-danger-rgb), 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}

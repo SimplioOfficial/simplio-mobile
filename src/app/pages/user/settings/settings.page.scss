@@ -1,0 +1,75 @@
+ion-grid {
+  padding: 0 var(--spacing-small);
+  margin: 0;
+}
+
+ion-item.ion-color-danger {
+  --ion-color-base: var(--ion-color-base) !important;
+  --ion-color-contrast: var(--ion-color-danger) !important;
+}
+
+.user-details {
+  padding: 0 var(--spacing-small) var(--spacing-medium) var(--spacing-small);
+
+  * {
+    margin: 0;
+  }
+
+  h1 {
+    margin-top: 0.3em;
+  }
+
+  p {
+    color: var(--ion-color-step-500);
+  }
+}
+
+ion-label.label--end {
+  --color: var(--ion-color-step-500);
+  font-size: 0.9em;
+}
+
+.logout-section {
+  //padding: 0 var(--spacing-small);
+  margin-bottom: env(safe-area-inset-bottom);
+  //padding-bottom: env(safe-area-inset-bottom);
+
+  ion-button {
+    --background: var(--ion-color-background);
+    --border-color: var(--ion-border-color);
+    --color: var(--ion-text-color);
+    --border-width: 1px;
+    --border-style: solid;
+    --background-focused: none;
+    --background-activated: var(--ion-color-translucent);
+  }
+}
+
+.font {
+  color: var(--ion-color-step-400);
+}
+
+.actions {
+  padding: var(--spacing-smaller) var(--spacing-small);
+}
+
+ion-item-group:first-of-type {
+  padding-top: 0;
+}
+
+header {
+  padding: var(--spacing-small);
+  p {
+    margin: 0;
+    color: var(--ion-color-step-450);
+  }
+}
+
+.notification-count {
+  left: 93%;
+  top: 11px;
+
+  p {
+    left: -1.2pt;
+  }
+}

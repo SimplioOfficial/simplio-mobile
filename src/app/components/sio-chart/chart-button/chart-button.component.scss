@@ -1,0 +1,17 @@
+:host {
+  flex-grow: 1;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 4em;
+  color: var(--ion-color-step-500);
+  font-size: 14px;
+  height: 2em;
+  width: 2em;
+
+  &.is-active {
+    color: var(--ion-text-color);
+    position: relative;
+  }
+}

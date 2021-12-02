@@ -1,0 +1,35 @@
+<section class="title-container title-top">
+  <h1>{{ $.ENTER_EMAIL_ADDRESS | translate }}</h1>
+</section>
+
+<form [formGroup]="formField">
+  <ion-grid class="grid--form">
+    <ion-row class="row--form">
+      <ion-item>
+        <ion-label position="floating">{{ $.EMAIL | translate }}</ion-label>
+        <ion-input
+          id="sio-t-inp--email"
+          [formControlName]="EMAIL"
+          autofocus
+          name="email"
+          type="email"
+          required
+          mode="md"
+          (keyup.enter)="onSubmit()"
+        ></ion-input>
+      </ion-item>
+    </ion-row>
+  </ion-grid>
+</form>
+
+<div class="footer-floating">
+  <ion-button
+    id="sio-t-btn--submit"
+    [disabled]="!isValid"
+    (click)="onSubmit()"
+    expand="block"
+    mode="ios"
+    [disabled]="!isValid"
+    >{{ $.NEXT | translate }}
+  </ion-button>
+</div>

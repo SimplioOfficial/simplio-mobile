@@ -1,0 +1,36 @@
+<sio-simple-page>
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back(wallet)">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.COIN_API | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-fab vertical="top" horizontal="end" slot="fixed" (click)="showInfo()">
+    <ion-fab-button size="small">
+      <ion-icon name="help"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item class="apiinput">
+          <ion-input [(ngModel)]="api" style="font-size: smaller" (ionChange)="apiChangeAction()">
+          </ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div slot="footer">
+    <!-- Next Button -->
+    <div class="api-change-button">
+      <ion-button expand="block" mode="ios" [disabled]="!apiChanged" (click)="apiChangeAction()">{{
+        $.SAVE | translate
+      }}</ion-button>
+    </div>
+  </div>
+</sio-simple-page>

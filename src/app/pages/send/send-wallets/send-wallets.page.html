@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>{{ $.CHOOSE_WALLET | translate }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list show-reorder="true">
+    <!-- Wallet Item -->
+    <sio-wallet-item
+      *ngFor="let w of wallets"
+      [id]="'sio-t-itm--wallet-' + w.ticker"
+      [wallet]="w"
+      [fiatValue]="getFiatValue(w) | fiat"
+      (click)="selectWallet(w)"
+    >
+    </sio-wallet-item>
+  </ion-list>
+</ion-content>

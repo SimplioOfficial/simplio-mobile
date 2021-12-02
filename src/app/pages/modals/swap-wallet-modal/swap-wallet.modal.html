@@ -1,0 +1,89 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" [enable]="false"></sio-header-button>
+    <span slot="header-title">{{ $.SELECT_WALLETS | translate }}</span>
+    <sio-header-button slot="header-right" (click)="onDismissModal()">
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </sio-header-button>
+  </sio-header>
+
+  <section class="tools">
+    <div class="wallets-presenter">
+      <div class="wallets">
+        <div
+          class="wallet ion-activatable ripple-parent"
+          (click)="changeSegment(false)"
+          [class.is-active]="!state"
+        >
+          <span>{{ $.FROM | translate }}</span>
+          <sio-wallet-item
+            [thumbnail-scale]="'small'"
+            [wallet]="sourceWallet$ | async"
+            [fiatValue]="sourceWalletFiatValue"
+            [currency]="currency"
+            [has-ripple]="false"
+          ></sio-wallet-item>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+
+        <div class="switcher">
+          <div class="button">
+            <sio-button
+              shape="circle"
+              [no-padding]="true"
+              [has-shadow]="true"
+              [is-block]="false"
+              [disabled]="!canSwap"
+              (action)="swapWallets()"
+            >
+              <ion-icon name="swap-vertical-outline"></ion-icon>
+            </sio-button>
+          </div>
+        </div>
+        <div
+          *ngIf="destinationWallet$ | async; else emptyWalletRef"
+          class="wallet ion-activatable ripple-parent"
+          (click)="changeSegment(true)"
+          [class.is-active]="state"
+        >
+          <sio-wallet-item
+            [thumbnail-scale]="'small'"
+            [wallet]="destinationWallet$ | async"
+            [fiatValue]="destinationWalletFiatValue"
+            [currency]="currency"
+            [has-ripple]="false"
+          ></sio-wallet-item>
+          <span>{{ $.TO | translate }}</span>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ion-list>
+    <div class="title" *ngIf="filteredWallets.length">
+      <h3>{{ title }}</h3>
+    </div>
+
+    <sio-wallet-item
+      *ngFor="let w of filteredWallets"
+      [wallet]="w"
+      [fiatValue]="getWalletFiatValue(w)"
+      (click)="selectWallet(w)"
+      [currency]="currency"
+      [isContent]=""
+    ></sio-wallet-item>
+  </ion-list>
+</sio-simple-page>
+
+<ng-template #emptyWalletRef>
+  <div
+    class="wallet empty ion-activatable ripple-parent"
+    [class.is-active]="state"
+    (click)="changeSegment(true)"
+  >
+    <span>{{ $.SELECT_DESTINATION__WALLET | translate }}</span>
+    <ion-ripple-effect></ion-ripple-effect>
+  </div>
+</ng-template>

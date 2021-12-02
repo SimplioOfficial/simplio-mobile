@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>{{ $.WALLET_INFORMATION | translate }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item>
+            <ion-label>
+              {{ $.NAME | translate }}
+            </ion-label>
+            <ion-note splot="end" no-margin>
+              {{ wallet.name }}
+            </ion-note>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

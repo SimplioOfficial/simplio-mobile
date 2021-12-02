@@ -1,0 +1,11 @@
+<header class="header" *ngIf="showContent">
+  <div class="header__content">
+    <div class="title">
+      <h3>{{ title }}</h3>
+    </div>
+  </div>
+</header>
+
+<div class="header-ghost">
+  <ng-content select="[slot='ghost']"></ng-content>
+</div>

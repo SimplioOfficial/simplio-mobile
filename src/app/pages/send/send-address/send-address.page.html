@@ -1,0 +1,108 @@
+<sio-simple-page>
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.SEND_TO | translate }}</span>
+
+    <sio-header-button slot="header-right" (click)="openQr()">
+      <ion-icon name="qr-code-outline"></ion-icon>
+    </sio-header-button>
+  </sio-header>
+
+  <div class="search">
+    <sio-search
+      #searchComponent
+      id="sio-t-inp--address"
+      [value]="address"
+      [hasSearchIcon]="false"
+      placeholder="{{ $.SEARCH_OR_INSERT_ADDRESS | translate }}"
+      (searched)="onSearchContent($event)"
+    ></sio-search>
+  </div>
+  <ion-item *ngIf="isPolkadot">
+    <ion-label>{{ $.KEEP_ALIVE_POLKADOT | translate }}</ion-label>
+    <ion-toggle (ionChange)="toggleKeepAlive($event.detail)"></ion-toggle>
+  </ion-item>
+
+  <sio-wallet-item-select
+    *ngIf="shouldShowFeeList"
+    id="sio-t-btn--select-wallet"
+    [wallet]="_feeWallet"
+    [fiatValue]=""
+    [rate]=""
+    [currency]=""
+    [label]="$.SELECT_FEE_WALLET | translate"
+    (click)="openSelectWalletModal()"
+  >
+  </sio-wallet-item-select>
+
+  <div *ngIf="!disableSend">
+    <ion-grid class="detail">
+      <ion-row class="headerfee">
+        <ion-col size="6">
+          {{ $.AMOUNT | translate }}
+        </ion-col>
+        <ion-col size="6" text-right>
+          <span
+            >{{
+              unsignedTransaction.signature?.amount
+                | balance
+                  : unsignedTransaction.wallet.ticker
+                  : unsignedTransaction.wallet.type
+                  : unsignedTransaction.wallet.decimal
+            }}
+            {{ unsignedTransaction.wallet.ticker }}</span
+          >
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="headerfee">
+        <ion-col size="6">
+          {{ $.FEE | translate }}
+        </ion-col>
+        <ion-col size="6" text-right>
+          <span
+            >{{
+              unsignedTransaction.signature?.fee
+                | balance
+                  : unsignedTransaction.feepipe.ticker
+                  : unsignedTransaction.feepipe.type
+                  : unsignedTransaction.feepipe.decimal
+            }}
+            {{ unsignedTransaction.feepipe.ticker }}</span
+          >
+        </ion-col>
+      </ion-row>
+      <ion-row class="headerfee">
+        <ion-col size="6">
+          {{ $.SENDER_ADDRESS | translate }}
+        </ion-col>
+        <ion-col size="6" text-right>
+          {{ unsignedTransaction.wallet.mainAddress | address: 6 }}
+        </ion-col>
+      </ion-row>
+      <ion-row class="headerfee">
+        <ion-col size="6">
+          {{ $.RECEIVER_ADDRESS | translate }}
+        </ion-col>
+        <ion-col size="6" text-right>
+          {{ unsignedTransaction.address | address: 6 }}
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Next Button -->
+  <div slot="footer" class="footer-floating">
+    <ion-button
+      id="sio-t-sub--address"
+      expand="block"
+      mode="ios"
+      (click)="onSubmit()"
+      [disabled]="disableSend || broadcasting"
+      >{{ $.CONFIRM }}
+    </ion-button>
+  </div>
+</sio-simple-page>

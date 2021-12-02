@@ -1,0 +1,30 @@
+<section
+  (click)="onFocus()"
+  [class]="{
+    'is-focused': isFocused,
+    'is-valid': isValid
+  }"
+>
+  <div *ngFor="let field of formatedFields; let i = index" class="fields">
+    <ng-container [ngSwitch]="field.type">
+      <span
+        *ngSwitchCase="valueTypes.value"
+        [id]="'sio-t-inp--sms-' + i"
+        class="field"
+        [class]="{ filled: field.value !== '' }"
+        >{{ field.value }}</span
+      >
+
+      <span *ngSwitchCase="valueTypes.separator" class="separator">{{ separator }}</span>
+    </ng-container>
+  </div>
+</section>
+
+<input
+  #inputEl
+  id="sio-t-inp--sms-hidden"
+  [formControl]="fieldForm"
+  [type]="type"
+  (blur)="onBlur()"
+  [maxlength]="maxLength"
+/>

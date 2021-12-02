@@ -1,0 +1,48 @@
+<sio-simple-page *ngIf="!finished">
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="onDismissModal()">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <form [formGroup]="formField">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">{{ $.WORD | translate }} {{ index + 1 }}</ion-label>
+            <ion-input
+              #seedInput
+              formControlName="word"
+              type="text"
+              mode="md"
+              [ngModel]="word"
+              (keyup.enter)="onSubmit()"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+
+  <div slot="footer" class="footer-padding">
+    <ion-button (click)="onSubmit()" expand="block" [disabled]="!formField.valid" mode="ios">{{
+      $.APPLY | translate
+    }}</ion-button>
+  </div>
+</sio-simple-page>
+
+<sio-simple-page *ngIf="finished">
+  <section class="title-container title-top">
+    <h2>Seeds have been imported correctly!</h2>
+    <h3 style="margin-top: 30px">In order to load your balances we need to restart the app now</h3>
+  </section>
+  <div slot="footer" class="footer-padding">
+    <ion-button (click)="continue()" expand="block" mode="ios">{{
+      $.CONTINUE | translate
+    }}</ion-button>
+  </div>
+</sio-simple-page>

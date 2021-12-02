@@ -1,0 +1,85 @@
+$thumbnail-size: 48px;
+$thumbnail-size--tiny: 30px;
+$thumbnail-size--small: 44px;
+$thumbnail-size--large: 86px;
+$icon-size: 43%;
+$icon-size-large: 60%;
+
+.thumbnail {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: $thumbnail-size;
+  height: $thumbnail-size;
+  background-color: var(--ion-color-secondary);
+  border-radius: 100%;
+  overflow: hidden;
+
+  &.bordered {
+    border: solid 2px;
+  }
+
+  & > div {
+    width: $icon-size;
+    height: $icon-size;
+  }
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+:host[scale='large'] .thumbnail {
+  width: $thumbnail-size--large;
+  height: $thumbnail-size--large;
+
+  &.is-editable::after {
+    content: 'Edit';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(#000000, 0.6);
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+  }
+}
+
+:host[scale='small'] .thumbnail {
+  width: $thumbnail-size--small;
+  height: $thumbnail-size--small;
+  // border-radius: var(--sio-border-radius-small);
+}
+
+:host[scale='tiny'] .thumbnail {
+  width: $thumbnail-size--tiny;
+  height: $thumbnail-size--tiny;
+  // border-radius: var(--sio-border-radius-smaller);
+
+  & > div {
+    width: $icon-size-large;
+    height: $icon-size-large;
+  }
+}
+
+.thumbnail img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbnail svg {
+  filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.1));
+}

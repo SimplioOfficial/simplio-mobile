@@ -1,0 +1,51 @@
+:host {
+  --font-size: 1em;
+  position: relative;
+}
+
+.fields {
+  display: flex;
+  align-items: center;
+  margin: 4px;
+}
+
+.field {
+  display: inline-block;
+  border: var(--main-border);
+  width: calc(var(--font-size) * 3 / 1.3);
+  height: calc(var(--font-size) * 3);
+  line-height: calc(var(--font-size) * 3);
+  text-align: center;
+  border-radius: var(--main-border-radius);
+  color: var(--ion-color-step-500);
+  background-color: var(--ion-color-translucent);
+  font-size: var(--font-size);
+}
+
+.separator {
+  font-size: 1.2em;
+  margin: var(--spacing-tiny);
+}
+
+input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0;
+  opacity: 0;
+}
+
+section {
+  display: flex;
+  flex-wrap: wrap;
+
+  &.is-focused .field {
+    color: var(--ion-text-color) !important;
+    background-color: #ffffff00 !important;
+  }
+
+  &.is-valid .field {
+    border-color: var(--ion-text-color) !important;
+    color: var(--ion-text-color) !important;
+  }
+}

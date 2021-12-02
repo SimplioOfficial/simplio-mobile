@@ -1,0 +1,7 @@
+:host {
+  position: sticky;
+  display: block;
+  top: -1px; // this is the trick
+  z-index: 2;
+  padding-top: 1px; // compensation for the trick
+}

@@ -1,0 +1,21 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.PRIMARY_WALLET | translate }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <sio-wallet-item
+    *ngFor="let w of wallets$ | async"
+    [wallet]="w"
+    [fiatValue]="0"
+    (click)="updatePrimaryWallet(w)"
+    [isContent]="true"
+  >
+    <ion-icon *ngIf="isSelected(w)" name="checkmark-outline"></ion-icon>
+  </sio-wallet-item>
+</sio-simple-page>

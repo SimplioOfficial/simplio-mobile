@@ -1,0 +1,61 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <sio-header-button
+      *ngIf="showAdvanced; else noAdvanceSetingsRef"
+      slot="header-right"
+      (click)="openModal()"
+    >
+      <ion-icon name="options-outline"></ion-icon>
+    </sio-header-button>
+
+    <ng-template #noAdvanceSetingsRef>
+      <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+    </ng-template>
+  </sio-header>
+
+  <main>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-text class="title">
+            <h1>{{ $.YOUR_ADDED_COIN_TOKEN | translate }}</h1>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <form [formGroup]="formField">
+            <ion-item>
+              <ion-label position="floating">{{ $.NAME | translate }}</ion-label>
+              <ion-input
+                formControlName="name"
+                autofocus
+                name="name"
+                type="text"
+                required
+                mode="md"
+              ></ion-input>
+            </ion-item>
+          </form>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </main>
+
+  <!-- Wallet Selection -->
+  <div slot="footer" class="select-wallet-button">
+    <ion-button
+      expand="block"
+      mode="ios"
+      [disabled]="!isValid || (showAdvanced && recoverySeed === '')"
+      (click)="addCoin()"
+      >{{ $.CREATE | translate }}</ion-button
+    >
+  </div>
+</sio-simple-page>

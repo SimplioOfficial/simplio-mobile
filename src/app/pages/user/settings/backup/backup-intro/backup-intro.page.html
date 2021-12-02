@@ -1,0 +1,44 @@
+<main>
+  <section class="device-container">
+    <div class="device">
+      <ion-slides #slides [options]="slideOpts">
+        <ion-slide>
+          <div class="capsule"></div>
+        </ion-slide>
+        <ion-slide>
+          <div class="capsule"></div>
+        </ion-slide>
+        <ion-slide>
+          <div class="capsule"></div>
+        </ion-slide>
+      </ion-slides>
+
+      <div class="seeds">
+        <div class="title">
+          <span>{{ $.SELECT_WORDS | translate }}</span>
+        </div>
+        <div>
+          <div class="seed"></div>
+          <div class="seed"></div>
+          <div class="seed"></div>
+          <div class="seed"></div>
+          <div class="seed tapped">
+            <div #tap class="tap"></div>
+          </div>
+          <div class="seed"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="text">
+    <h1>{{ $.BACKUP_INTRO_TITLE | translate }}</h1>
+    <p>{{ $.BACKUP_INTRO_DESC | translate }}</p>
+  </section>
+</main>
+
+<div class="footer-padding" slot="footer">
+  <ion-button expand="block" mode="ios" (click)="onSubmit()">{{
+    $.CONTINUE | translate
+  }}</ion-button>
+</div>

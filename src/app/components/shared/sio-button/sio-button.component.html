@@ -1,0 +1,12 @@
+<button
+  #sioButtonEl
+  class="sio-button ion-activatable ripple-parent"
+  type="button"
+  [disabled]="disabled"
+  (click)="onAction($event)"
+>
+  <div class="icon">
+    <ng-content></ng-content>
+  </div>
+  <ion-ripple-effect *ngIf="!disabled"></ion-ripple-effect>
+</button>

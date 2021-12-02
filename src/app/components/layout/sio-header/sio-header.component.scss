@@ -1,0 +1,13 @@
+:host {
+  width: 100%;
+  z-index: 2;
+  height: var(--sizing-panel);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--ion-text-color);
+
+  &.has-border {
+    border-bottom: solid 1px var(--ion-color-border);
+  }
+}

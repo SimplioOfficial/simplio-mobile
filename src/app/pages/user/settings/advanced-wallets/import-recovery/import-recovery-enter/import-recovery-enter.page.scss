@@ -1,0 +1,40 @@
+.seeds {
+  padding: var(--spacing-small);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(60px, 100px));
+  gap: var(--spacing-smaller);
+
+  height: calc(100% - 130px);
+}
+
+.seed {
+  width: 100%;
+  background-color: var(--ion-color-translucent);
+
+  &.is-filled {
+    background-color: var(--ion-color-success);
+    color: var(--button-text-color);
+  }
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 35px;
+  text-align: center;
+  border-radius: 30em;
+  color: var(--ion-color-step-450);
+}
+
+h1 {
+  padding: var(--spacing-smaller) var(--spacing-small);
+}
+
+.loading {
+  display: grid;
+  place-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--ion-background-color);
+}

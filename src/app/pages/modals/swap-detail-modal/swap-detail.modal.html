@@ -1,0 +1,170 @@
+<section class="swap-modal">
+  <header>
+    <div class="close-btn" (click)="dismiss()">
+      <ion-icon name="close-outline"></ion-icon>
+    </div>
+  </header>
+
+  <ion-app>
+    <ion-content [scrollY]="true">
+      <ng-container *ngIf="actions$ | async as actions">
+        <section *ngIf="!!actions.length; else progressRef" class="actions">
+          <p class="section-title">{{ $.REMAINING_ACTIONS | translate }}</p>
+          <sio-action-list [actions]="actions"></sio-action-list>
+        </section>
+
+        <ng-template #progressRef>
+          <ng-container *ngIf="statusValue[swapTx.Status] !== 5">
+            <section class="dash">
+              <sio-transaction-progress
+                *ngFor="let item of items; index as i"
+                [item]="item"
+                [index]="i"
+                [color]="walletColor"
+              ></sio-transaction-progress></section
+          ></ng-container>
+        </ng-template>
+      </ng-container>
+
+      <section class="transaction-detail">
+        <header>
+          <h3>{{ $.SWAP_DETAIL | translate }}</h3>
+        </header>
+
+        <div class="overview">
+          <div class="thumbnail">
+            <sio-wallet-thumbnail
+              class="source-icon"
+              [iconID]="swapTx.SourceCurrency"
+              scale="small"
+            ></sio-wallet-thumbnail>
+            <sio-wallet-thumbnail
+              class="target-icon"
+              [iconID]="swapTx.TargetCurrency"
+            ></sio-wallet-thumbnail>
+          </div>
+        </div>
+
+        <ion-grid class="detail">
+          <ion-row class="headerfee" *ngIf="!!swapTx.UpdatedAt">
+            <ion-col size="6">
+              <span>{{ $.LAST_UPDATED | translate }}</span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p
+                >{{ swapTx.UpdatedAt | date: 'mediumDate' }},
+                {{ swapTx.UpdatedAt | date: 'shortTime' }}</p
+              >
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="headerfee">
+            <ion-col size="6">
+              <span>{{ $.SOURCE | translate }}</span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p>
+                {{ sourceAmount }}
+                {{ sourceCoin }}
+              </p>
+              <p>{{ sourceFiat | fiat: locale:'USD' }}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="headerfee">
+            <ion-col size="6">
+              <span>{{ $.SOURCE_NETWORK | translate }}</span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p>{{ sourceNetwork }}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="headerfee">
+            <ion-col size="6">
+              <span>{{ $.DESTINATION | translate }}</span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p>
+                {{ targetAmount }}
+                {{ swapTx.TargetCurrency }}
+              </p>
+              <p>{{ targetFiat | fiat: locale:'USD' }}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="headerfee">
+            <ion-col size="6">
+              <span>{{ $.DESTINATION_NETWORK | translate }}</span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p>{{ targetNetwork }}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="headerfee">
+            <ion-col size="6">
+              <span>{{ $.TOTAL_FEE | translate }}</span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p>{{ totalFee | number: '1.1-8' }} {{ sourceCoin }}</p>
+              <p>{{ totalFeeFiat | fiat: locale:'USD' }}</p>
+            </ion-col>
+          </ion-row>
+
+          <ng-container *ngIf="!expanded">
+            <ion-row class="icon"
+              ><ion-col size="24">
+                <ion-icon
+                  (click)="expanded = !expanded"
+                  name="arrow-down-circle-outline"
+                ></ion-icon> </ion-col
+            ></ion-row>
+          </ng-container>
+
+          <ng-container *ngIf="expanded">
+            <ion-row class="headerfee">
+              <ion-col size="6">
+                <span>{{ $.TRANSACTION_FEE | translate }} ({{ transactionFeeTicker }})</span>
+              </ion-col>
+              <ion-col size="6" text-right>
+                <p>{{ transactionFee | number: '1.1-8' }} {{ transactionFeeTicker }}</p>
+              </ion-col>
+            </ion-row>
+            <ion-row class="headerfee">
+              <ion-col size="6">
+                <span>{{ $.WITHDRAWAL_FEE | translate }} ({{ targetCoin }})</span>
+              </ion-col>
+              <ion-col size="6" text-right>
+                <p>{{ withdrawalFee | number: '1.1-8' }} {{ targetCoin }}</p>
+              </ion-col>
+            </ion-row>
+            <ion-row class="headerfee">
+              <ion-col size="6">
+                <span>{{ $.SWAP_FEE | translate }}</span>
+              </ion-col>
+              <ion-col size="6" text-right>
+                <p>{{ swapFee | number: '1.1-8' }} {{ sourceCoin }}</p>
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="icon"
+              ><ion-col size="24">
+                <ion-icon
+                  (click)="expanded = !expanded"
+                  name="arrow-up-circle-outline"
+                ></ion-icon> </ion-col
+            ></ion-row>
+          </ng-container>
+        </ion-grid>
+      </section>
+
+      <section class="actions">
+        <ion-button mode="ios" (click)="copySagaId(swapTx)" expand="block">{{
+          $.COPY_SAGA_ID | translate
+        }}</ion-button>
+      </section>
+
+      <div class="offset-bottom"></div> </ion-content
+  ></ion-app>
+</section>

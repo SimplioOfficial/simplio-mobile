@@ -1,0 +1,17 @@
+<span *ngIf="!!label">{{ label }}</span>
+<section>
+  <select-empty *ngIf="isEmpty; else onWallet" class="select" [title]="title"></select-empty>
+
+  <ng-template #onWallet>
+    <select-wallet
+      class="select"
+      [wallet]="wallet && wallet"
+      [rate]="rate"
+      [currency]="currency"
+      [locale]="locale"
+      [disabled]="disabled"
+      [thumbnail-scale]="thumbScale"
+      (click)="onSelectWallet($event)"
+    ></select-wallet>
+  </ng-template>
+</section>

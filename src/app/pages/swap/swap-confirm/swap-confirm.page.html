@@ -1,0 +1,16 @@
+<sio-simple-page [hasHeader]="false">
+  <main class="content">
+    <header>
+      <p>{{ $.SWAP_HAS_BEEN_SUCCESSFUL | translate }}</p>
+      <h3>{{ sourceCoin }} to {{ targetCoin }}</h3>
+    </header>
+    <div class="scene">
+      <sio-rocket></sio-rocket>
+    </div>
+  </main>
+
+  <!-- Next Button -->
+  <div class="select-wallet-button">
+    <ion-button mode="ios" expand="block" (click)="onDone()">{{ $.DONE | translate }}</ion-button>
+  </div>
+</sio-simple-page>

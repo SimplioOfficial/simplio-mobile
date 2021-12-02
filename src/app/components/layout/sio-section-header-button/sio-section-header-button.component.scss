@@ -1,0 +1,19 @@
+:host {
+  display: grid;
+  place-content: center;
+  width: calc(var(--sizing-panel) - var(--spacing-tiny));
+  height: calc(var(--sizing-panel) - var(--spacing-tiny));
+  color: var(--ion-text-color);
+  font-size: var(--icon-medium);
+  position: relative;
+  overflow: hidden;
+  border-radius: 100%;
+
+  &.has-border {
+    border: solid 1px var(--ion-border-color);
+  }
+
+  &.has-offset {
+    margin: var(--spacing-tiny);
+  }
+}

@@ -1,0 +1,17 @@
+:host {
+  --size: 2em;
+  --color: #7c7c7c;
+  --simplio-base-color: var(--color);
+  --simplio-circle-color: var(--color);
+  width: var(--size);
+  height: var(--size);
+  display: block;
+}
+
+.logo-base {
+  fill: var(--simplio-base-color);
+}
+
+.logo-circle {
+  fill: var(--simplio-circle-color);
+}

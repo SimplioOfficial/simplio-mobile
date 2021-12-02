@@ -1,0 +1,26 @@
+<section
+  class="state"
+  [class]="{
+    'is-filled': item.isFilled
+  }"
+>
+  <div class="display">
+    <div
+      class="line"
+      *ngIf="index > 0"
+      [style]="{ 'background-color': item.isFilled ? color : '' }"
+    ></div>
+    <div
+      class="dot"
+      [class]="{ 'is-active': item.isActive }"
+      [style]="{ 'background-color': item.isFilled ? color : '' }"
+    ></div>
+  </div>
+  <div class="desc">
+    <p *ngIf="item.isActive; else labelRef">{{ item.text }}</p>
+  </div>
+</section>
+
+<ng-template #labelRef>
+  <p class="label">{{ item.label }}</p>
+</ng-template>

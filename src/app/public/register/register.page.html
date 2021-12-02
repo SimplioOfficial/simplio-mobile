@@ -1,0 +1,16 @@
+<sio-simple-page [scroll]="false">
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" [routerLink]="['/intro']" id="sio-t-btn--back">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+
+    <sio-header-button
+      id="sio-t-btn--close"
+      slot="header-right"
+      [enable]="false"
+    ></sio-header-button>
+  </sio-header>
+
+  <router-outlet></router-outlet>
+</sio-simple-page>

@@ -1,0 +1,24 @@
+:host {
+  --background: var(--ion-color-translucent);
+  --size: 20px;
+  --margin-top: 0;
+  --margin-right: 0;
+  --margin-bottom: 0;
+  --margin-left: 0;
+  flex-shrink: 0;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 100%;
+  overflow: hidden;
+  background-color: var(--background);
+  margin-top: var(--margin-top);
+  margin-right: var(--margin-right);
+  margin-bottom: var(--margin-bottom);
+  margin-left: var(--margin-left);
+
+  & > * {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

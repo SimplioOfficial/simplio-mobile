@@ -1,0 +1,24 @@
+main {
+  padding: 0 var(--spacing-small);
+  border: solid 1px var(--ion-border-color);
+  min-width: 5em;
+  height: var(--sizing-element-medium);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+}
+
+section {
+  display: flex;
+  align-items: center;
+}
+
+.placeholder {
+  color: var(--ion-color-step-500);
+}
+
+main,
+ion-ripple-effect {
+  border-radius: var(--main-border-radius);
+}

@@ -1,0 +1,15 @@
+<main>
+  <h1>{{ $.IMPORT_RECOVERY_INTRO_TITLE | translate }}</h1>
+</main>
+
+<footer slot="footer">
+  <ion-grid class="footer-grid">
+    <ion-row>
+      <ion-col>
+        <ion-button id="sio-t-btn--yes" expand="block" mode="ios" (click)="onSubmit()">{{
+          $.OK | translate
+        }}</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</footer>

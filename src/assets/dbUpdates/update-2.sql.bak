@@ -1,0 +1,3 @@
+-- updating accounts
+ALTER TABLE accounts ADD COLUMN seeds text not null DEFAULT '';
+ALTER TABLE accounts ADD COLUMN isbackedup text not null DEFAULT '';

@@ -1,0 +1,19 @@
+<span class="current-currency">{{ currency }}</span>
+<main>
+  <ion-input
+    #inputEl
+    id="sio-t-inp--value"
+    placeholder="0"
+    type="text"
+    text-center
+    [ngModel]="inputValue"
+    readonly
+  ></ion-input>
+</main>
+<span *ngIf="loading; else targetAmountRef" class="swaped-value"
+  ><ion-spinner name="dots"></ion-spinner
+></span>
+<ng-template #targetAmountRef>
+  <span class="swaped-value">{{ targetAmount }} {{ targetCurrency }}</span>
+</ng-template>
+<ng-content></ng-content>

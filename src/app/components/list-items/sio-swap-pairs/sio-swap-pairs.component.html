@@ -1,0 +1,24 @@
+<section class="item">
+  <div class="item__content">
+    <sio-wallet-thumbnail [iconID]="ticker"></sio-wallet-thumbnail>
+    <div *ngIf="isToken" class="platform-container">
+      <sio-wallet-thumbnail [iconID]="network" [attr.scale]="'small'"></sio-wallet-thumbnail>
+    </div>
+    <p class="title">{{ ticker }}</p>
+    <div class="icon">
+      <ion-icon [name]="isOpen ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+    </div>
+  </div>
+  <div *ngIf="isOpen" class="swap-group">
+    <div class="swap-item" *ngFor="let swap of list">
+      <div class="swap-item__icon">
+        <sio-wallet-thumbnail [iconID]="ticker" scale="tiny"></sio-wallet-thumbnail>
+        <div class="direction">
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </div>
+        <sio-wallet-thumbnail [iconID]="swap" scale="tiny"></sio-wallet-thumbnail>
+      </div>
+      <span>{{ swap }}</span>
+    </div>
+  </div>
+</section>
