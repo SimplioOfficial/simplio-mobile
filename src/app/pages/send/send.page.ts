@@ -15,7 +15,7 @@ import { SioValueComponent } from 'src/app/components/form/sio-value/sio-value.c
 import { SettingsProvider } from 'src/app/providers/data/settings.provider';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
-import { isGreaterThan, isLowerThan } from 'src/shared/validators';
+import { isGreaterThan, isAmountSufficient } from 'src/shared/validators';
 import { Translate } from 'src/app/providers/translate/';
 import { getPrice } from 'src/app/services/wallets/utils';
 import { RateService } from 'src/app/services/apiv2/connection/rate.service';
@@ -59,8 +59,8 @@ export class SendPage extends TrackedPage implements OnDestroy {
       feeLevelName: [this.feePolicy, [Validators.required]],
     },
     {
-      validators: [isLowerThan],
-    },
+      validators: [isAmountSufficient]
+    }
   );
 
   wallets$ = this.walletsProvider.wallets$.subscribe(w => (this.wallets = w));

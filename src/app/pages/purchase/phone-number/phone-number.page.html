@@ -1,0 +1,32 @@
+<sio-simple-page [scroll]="false">
+  <form [formGroup]="formField">
+    <ion-grid class="grid--title">
+      <ion-row class="title">
+        <ion-col>
+          <ion-text>
+            <h1>{{ $.KYC_PHONE_TITLE | translate }}</h1>
+            <p>{{ $.KYC_PHONE_DESC | translate }}</p>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-grid class="grid--form">
+      <ion-row class="row--form">
+        <ion-col size="4" class="col--form">
+          <sio-select-button [value]="phoneCode" (click)="openPhoneCodeModal()"></sio-select-button>
+        </ion-col>
+        <ion-col size="8" class="col--form">
+          <ion-item>
+            <ion-label position="floating">{{ $.MOBILE_NUMBER | translate }}</ion-label>
+            <ion-input formControlName="phoneNo" name="phoneNo" type="tel" required mode="md"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+
+  <div class="footer-floating">
+    <ion-button (click)="onSubmit()" expand="block" mode="ios" [disabled]="!isValid">{{ $.NEXT | translate }} </ion-button>
+  </div>
+</sio-simple-page>

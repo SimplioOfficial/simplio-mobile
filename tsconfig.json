@@ -20,7 +20,8 @@
       "stream":["node_modules/stream-browserify"],
       "http": ["node_modules/stream-http"],
       "https": ["node_modules/https-browserify"],
-      "os": ["node_modules/os-browserify/browser"]
+      "os": ["node_modules/os-browserify/browser"],
+      "@swipelux/*" : ["./swipelux-api/*"]
     },
     "lib": [
       "es2018",

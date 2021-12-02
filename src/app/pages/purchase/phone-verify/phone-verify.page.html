@@ -1,0 +1,38 @@
+<sio-simple-page [scroll]="false">
+  <ion-grid class="grid--title">
+    <ion-row class="title">
+      <ion-col>
+        <ion-text>
+          <h1>{{ $.FIVE_DIGIT_CODE | translate }}</h1>
+          <p>{{ $.KYC_SMS | translate }}</p>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <form [formGroup]="formField">
+    <ion-grid class="grid--form">
+      <ion-row class="row--form">
+        <sio-formated-input
+          [format]="inputFormat"
+          separator="-"
+          formControlName="smsCode"
+          [is-valid]="isValid"
+        ></sio-formated-input>
+      </ion-row>
+      <ion-row *ngIf="canResend">
+        <ion-col>
+          <ion-item class="link small">
+            <span (click)="resendSmsVerificationCode()">{{ $.RESEND_SMS | translate }}</span>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+
+  <div class="footer-floating">
+    <ion-button (click)="onSubmit()" expand="block" mode="ios" [disabled]="!isValid || !enableButton"
+      >{{ $.VERIFY | translate }}
+    </ion-button>
+  </div>
+</sio-simple-page>

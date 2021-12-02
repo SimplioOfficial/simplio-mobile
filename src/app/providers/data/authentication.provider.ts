@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { IdentityVerificationLevel, Acc } from 'src/app/interface/user';
+import { Acc, IdentityVerificationLevel } from 'src/app/interface/user';
+import { SumSubCurrentStep } from '../../interface/account';
 
 type AccountChangeOptions = { changeAuthStatus: boolean; isNew: boolean };
 
@@ -17,6 +18,7 @@ const defaults = {
   biometricsCredentials: {
     pin: '',
   },
+  sumSubStatus: SumSubCurrentStep.NONE,
 };
 
 @Injectable()
@@ -32,6 +34,9 @@ export class AuthenticationProvider {
 
   private _canRecover = new BehaviorSubject<boolean>(defaults.canRecover);
   canRecover$ = this._canRecover.asObservable();
+
+  private _sumsubStatus = new BehaviorSubject<SumSubCurrentStep>(defaults.sumSubStatus);
+  sumSubStatus$ = this._sumsubStatus.asObservable();
 
   get isSecuredValue(): boolean {
     const account = this._account.value;
@@ -53,6 +58,24 @@ export class AuthenticationProvider {
 
   get accountValue(): Acc {
     return this._account.value;
+  }
+
+  get isVerifiedValue(): [boolean, SumSubCurrentStep] {
+    console.error('NEEDS TO BE CONNECTED TO BACKEND');
+    return [
+      [
+        SumSubCurrentStep.SUCCESFULL_SHOW_NOTIFICATION,
+        SumSubCurrentStep.SUCCESFULL_DONT_SHOW_NOTIFICAT,
+        SumSubCurrentStep.SUCCESFULL_OTHER_WAY,
+      ].indexOf(this._sumsubStatus.value) > -1,
+      this._sumsubStatus.value,
+    ];
+  }
+
+  pushSumsubStatus(status: SumSubCurrentStep): SumSubCurrentStep {
+    this._sumsubStatus.next(status);
+
+    return status;
   }
 
   pushAccount(account: Acc, options: Partial<AccountChangeOptions> = {}): Acc {

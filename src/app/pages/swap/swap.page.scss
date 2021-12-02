@@ -125,3 +125,28 @@ ion-slide {
   color: var(--ion-color-step-350);
   z-index: 1;
 }
+ion-segment {
+  border-bottom: 1px solid #f2f2f2;
+  position: fixed;
+  background: var(--ion-background-color);
+  z-index: 10;
+  width: 100%;  
+  --offset-bottom: auto!important;
+  --overflow: hidden;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;    
+  }
+}
+ion-segment-button{
+  text-transform: none !important;
+  --indicator-height: 1px;
+  margin: 30px 0 0 0;
+}
+section.container {
+  margin-top: 87px;
+  padding: 0 20px;
+}
+ion-label {
+  padding: 0px 20px;
+}

@@ -71,6 +71,7 @@
     "@simplioofficial/bitcore-zcashy-modified": "github:SimplioOfficial/bitcore-zcashy-modified",
     "@solana/spl-token": "0.1.8",
     "@solana/web3.js": "1.21.0",
+    "@sumsub/cordova-idensic-mobile-sdk-plugin": "1.18.2",
     "@techiediaries/ngx-qrcode": "9.1.0",
     "bchaddrjs": "0.5.2",
     "bignumber.js": "9.0.1",

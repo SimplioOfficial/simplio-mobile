@@ -60,6 +60,12 @@ export class HomePage extends TrackedPage implements OnInit {
   private _timeoutOccurs: boolean | null = null;
   readonly actions: ActionsModalProps = [
     {
+      title: this.$.instant(this.$.BUY),
+      icon: 'logo-bitcoin',
+      cssClass: ['transaction-action-sheet', ' sio-t-btn--action-send'],
+      handler: () => this._navigateWithWallet('home', 'purchase')
+    },
+    {
       title: this.$.instant(this.$.SEND),
       icon: 'arrow-up',
       cssClass: ['transaction-action-sheet', 'sio-t-btn--action-send'],

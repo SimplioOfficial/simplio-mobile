@@ -1,0 +1,16 @@
+:host::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: calc(var(--sizing-element-medium) + 2 * var(--spacing-small));
+  padding-bottom: calc(var(--sizing-element-medium) + 2 * var(--spacing-small));
+}
+
+ion-row.row--form {
+  align-items: flex-end;
+}
+
+ion-col.col--form,
+ion-grid.grid--title {
+  padding: 0 var(--spacing-small);
+}

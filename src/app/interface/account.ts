@@ -99,13 +99,18 @@ export interface GeneralRegistrationResponse {
   device_token: string;
 }
 
-export type JwtCertificateResponse = {
-  dotnet: string;
-  der: string;
-  pfx: string;
-  thumbprint: string;
-  fingerprint: string;
-};
+export enum SumSubCurrentStep {
+  NONE = 'NONE',
+  REQUIRED = 'REQUIRED',
+  INIT = 'INIT',
+  PENDING = 'PENDING',
+  RETRY = 'RETRY',
+  RED_FINAL = 'RED_FINAL',
+  RENEW = 'RENEW',
+  SUCCESFULL_SHOW_NOTIFICATION = 'SUCCESFULL_SHOW_NOTIFICATION',
+  SUCCESFULL_DONT_SHOW_NOTIFICAT = 'SUCCESFULL_DONT_SHOW_NOTIFICAT',
+  SUCCESFULL_OTHER_WAY = 'SUCCESFULL_OTHER_WAY'
+}
 
 export interface BiometricsCredentials {
   pin: string;

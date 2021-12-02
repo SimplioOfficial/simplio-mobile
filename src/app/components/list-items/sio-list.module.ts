@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SioSharedModule } from '../shared/sio-shared.module';
 import { IonicModule } from '@ionic/angular';
+import { SioCountryCodeComponent } from './sio-phone-code/sio-country-code.component';
 // components
 import { SioWalletItemComponent } from './sio-wallet-item/sio-wallet-item.component';
 import { SioWalletThumbnailComponent } from './thumbnails/sio-wallet-thumbnail/sio-wallet-thumbnail.component';
@@ -51,6 +52,7 @@ import { SioSwapEmptyComponent } from 'src/app/components/list-items/sio-swap-em
     SioLoadingSwapPendingItemComponent,
     SioTransactionProgressComponent,
     SioSwapEmptyComponent,
+    SioCountryCodeComponent,
   ],
   exports: [
     SioWalletItemComponent,
@@ -71,6 +73,7 @@ import { SioSwapEmptyComponent } from 'src/app/components/list-items/sio-swap-em
     SioLoadingSwapPendingItemComponent,
     SioTransactionProgressComponent,
     SioSwapEmptyComponent,
+    SioCountryCodeComponent,
   ],
 })
 export class SioListModule {}

@@ -1,8 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AGREEMENTS_URL, USERS_URLS } from '../../providers/routes/swap.routes';
+import { USERS_URLS } from '../../providers/routes/account.routes';
+import { AGREEMENTS_URL } from '../../providers/routes/swap.routes';
 import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
-import { HttpService } from '../http.service';
 
 export interface UserDataItem {
   ETag: string;

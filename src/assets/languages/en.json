@@ -656,5 +656,17 @@
   "TOTAL_FEE": "Total fee",
   "TRANSACTION_FEE": "Transaction fee",
   "WITHDRAWAL_FEE": "Withdrawal fee",
-  "SWAP_FEE": "Swap fee"
+  "SWAP_FEE": "Swap fee",
+  "PURCHASE_CRYPTO": "Purchase Crypto",
+  "SELECT_CRYPTO": "Select coin",
+  "CREATE_WALLET_FIRST": "Create new wallet for the selected coin first",
+  "MOBILE_NUMBER": "Mobile number",
+  "KYC_PHONE_DESC": "Please enter your mobile number to receive a verification code",
+  "KYC_PHONE_TITLE": "Mobile number",
+  "FIVE_DIGIT_CODE": "5-digit code",
+  "KYC_SMS": "Please enter the 5 digit verification code you have received to your phone.",
+  "KYC_EMAIL": "Please enter the 5 digit verification code you have received to your email.",
+  "PAYMENT_SUCCESS_TITLE": "Your payment was successful",
+  "PAYMENT_FAILURE_DESC": "Please contact support for further information",
+  "PAYMENT_FAILURE_TITLE": "Your payment was declined"
 }

@@ -11,17 +11,36 @@ import { catchError, filter, switchMap, take, tap } from 'rxjs/operators';
 import { Acc } from 'src/app/interface/user';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { environment } from '../../environments/environment';
+import { SwipeluxProvider } from '../providers/swipelux/swipelux-provider.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private _isRefreshing = false;
   private _acc = new BehaviorSubject<Acc>(null);
 
-  constructor(private auth: AuthenticationService, private authProvider: AuthenticationProvider) {}
+  constructor(
+    private auth: AuthenticationService,
+    private swipeluxProvider: SwipeluxProvider,
+    private authProvider: AuthenticationProvider
+  ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const acc = this.authProvider.accountValue;
     if (!acc) return next.handle(req);
+
+    // requests to swipelux needs to be authorized with different token
+    if (req.url.includes(environment.SWIPELUX)) {
+      const cloned = req.clone({
+        setHeaders: {
+          // Authorization: '',
+          Authorization: this.swipeluxProvider.authToken ?? '',
+          'x-merchant-key': this.swipeluxProvider.merchantKey ?? ''
+        }
+      });
+
+      return next.handle(cloned);
+    }
 
     req = this._authorize(req, acc);
 

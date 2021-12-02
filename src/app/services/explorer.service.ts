@@ -1,22 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { UtilsService } from './utils.service';
 import {
   Explorer,
-  Networks,
-  ExplorerType,
-  BlockbookAddress,
+    ExplorerType,
   NetworkFallback,
 } from 'src/app/interface/explorer';
 import {
   AddrUtxo,
   ExplorerTransactionData,
-  TransactionAPI,
-  WalletType,
-  AddrBalance,
-  Wallet,
 } from 'src/app/interface/data';
 import { environment } from '../../environments/environment';
 import { PlatformProvider } from '../providers/platform/platform';

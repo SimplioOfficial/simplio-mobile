@@ -7,7 +7,7 @@
 >
   <ng-template #headerTemplate>
     <div class="header-container">
-      <h3>{{ $.SWAPS | translate }}</h3>
+      <h3>{{ $.TRADE | translate }}</h3>
       <sio-round-button (click)="openSettings()">
         <ion-icon name="person-outline"></ion-icon>
       </sio-round-button>
@@ -40,21 +40,52 @@
 
   <ng-container *ngIf="isEmpty$ | async; else isEmptyRef">
     <ng-container *ngIf="pendingSwaps$ | async as pendingSwaps">
-      <section *ngIf="!!pendingSwaps.length" class="active">
-        <header class="section-header">
-          <span class="section-title">{{ $.ACTIVE_SWAPS | translate }}</span>
-        </header>
+        <!-- tab sections   -->
+        <ion-segment (ionChange)="segmentChanged($event)" scrollable="true" scrollbar="false" swipe-gesture="true" mode="md" [(ngModel)]="segment" value="home" >
+          <ion-segment-button value="swaps">
+            <ion-label>{{ $.SWAPS | translate }}</ion-label>
+          </ion-segment-button>
 
-        <ion-slides [options]="slideOpts">
-          <ion-slide *ngFor="let tx of pendingSwaps">
-            <sio-swap-pending-item
-              (click)="openDetail(tx)"
-              [transaction]="tx"
-              [translations]="swapStatusTranslations"
-              [issue-text]="$.TRANSACTION_DETAIL | translate"
-            ></sio-swap-pending-item>
-          </ion-slide>
-        </ion-slides>
+          <ion-segment-button value="purchases">
+            <ion-label>{{ $.PURCHASES | translate }}</ion-label>
+          </ion-segment-button>
+
+          <ion-segment-button value="staking">
+            <ion-label>{{ $.STAKING | translate }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+        <!--end tab sections   -->
+        <section class="container">
+          <div [ngSwitch]="segment" >
+                <ion-grid *ngSwitchCase="'swaps'">
+                  <section *ngIf="!!pendingSwaps.length" class="active">
+                    <header class="section-header">
+                      <span class="section-title">{{ $.ACTIVE_SWAPS | translate }}</span>
+                    </header>
+
+                    <ion-slides [options]="slideOpts">
+                      <ion-slide *ngFor="let tx of pendingSwaps">
+                        <sio-swap-pending-item
+                          (click)="openDetail(tx)"
+                          [transaction]="tx"
+                          [translations]="swapStatusTranslations"
+                          [issue-text]="$.TRANSACTION_DETAIL | translate"
+                        ></sio-swap-pending-item>
+                      </ion-slide>
+                    </ion-slides>
+                  </section>
+              </ion-grid>
+              <ion-grid *ngSwitchCase="'purchases'">
+                <ion-col>
+                  purchases
+                </ion-col>
+              </ion-grid>
+              <ion-grid *ngSwitchCase="'staking'">
+                <ion-col>
+                  staking
+                </ion-col>
+              </ion-grid>
+          </div>
       </section>
     </ng-container>
 

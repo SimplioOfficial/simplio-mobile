@@ -1,0 +1,38 @@
+:host::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: calc(var(--sizing-element-medium) + 2 * var(--spacing-small));
+  padding-bottom: calc(var(--sizing-element-medium) + 2 * var(--spacing-small));
+}
+
+ion-row.row--form {
+  justify-content: center;
+}
+
+ion-col.col--form,
+ion-grid.grid--title {
+  padding: 0 var(--spacing-small);
+}
+
+ion-grid.grid--form {
+  --ion-grid-padding: var(--spacing-small);
+}
+
+.link {
+  --border-color: var(--ion-background-color);
+  height: var(--sizing-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ion-color-step-500);
+
+  span {
+    width: 100%;
+    text-align: center;
+  }
+
+  &.small {
+    font-size: 14px;
+  }
+}

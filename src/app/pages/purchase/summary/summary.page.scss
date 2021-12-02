@@ -1,0 +1,99 @@
+.select-wallet-button {
+  padding: 0 var(--spacing-small) var(--spacing-small) var(--spacing-small);
+}
+
+ion-grid {
+  --ion-grid-padding: var(--spacing-small);
+}
+
+.thumbnail {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 6%;
+}
+
+ion-col span {
+  font-size: 14px;
+  color: var(--ion-color-step-500);
+}
+
+p {
+  margin: 0;
+}
+
+.overview {
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .amount h3 {
+    margin: 0;
+    font-size: 24px;
+  }
+
+  .loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--ion-background-color);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: var(--sizing-element-medium);
+  }
+}
+
+.detail {
+  flex-shrink: 0;
+  flex-grow: 1;
+  width: 100%;
+
+  ion-row {
+    padding: var(--spacing-small) 0;
+    border-top: solid 1px var(--ion-color-border);
+  }
+}
+
+ion-row[text-center] {
+  text-align: center;
+}
+
+ion-col[text-right] {
+  text-align: right;
+  span {
+    display: block;
+  }
+}
+
+main {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+}
+
+.reference-row {
+  padding: var(--spacing-medium) var(--spacing-small);
+}
+
+.reference-button {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-small);
+  margin: 0 auto;
+  font-size: 14px;
+  border-radius: var(--main-border-radius);
+  border: dashed 2px var(--ion-color-border);
+
+  &.is-empty {
+    color: var(--ion-color-step-500);
+  }
+
+  span {
+    overflow-wrap: anywhere;
+  }
+}
