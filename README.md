@@ -1,4 +1,4 @@
-# [<p align="center"><img width="80" src="https://simplio.io/images/icons/_logo_white_300x300.png"></p>](https://simplio.io)
+[<p align="center"><img width="80" src="https://simplio.io/images/icons/_logo_white_300x300.png"></p>](https://simplio.io)
 # <div align="center">[Simplio](https://simplio.io)</div>
 
 ![Platform Support](https://img.shields.io/badge/platform-ios%20|%20android-%23989898)
