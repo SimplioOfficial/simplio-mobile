@@ -14,12 +14,12 @@ It is available for both [Android](https://play.google.com/store/apps/details?id
 and [iOS](https://apps.apple.com/us/app/simplio-wallet/id1580073536)
 
 
-## Supported chains
+## :chains: Supported chains
 
 Simplio Wallet supports more than 50 blockchains: Bitcoin, Ethereum,
 Binance Chain, and most major blockchain platforms. The full list is [here](https://github.com/ciripel/script_generated_files/blob/master/full_list.md).
 
-## Install development version
+## :hammer_and_wrench: Install development version
 
 Simplio development version should be installed via Node Package Manager:
 
@@ -27,7 +27,7 @@ Simplio development version should be installed via Node Package Manager:
 npm install
 ```
 
-## Start development version
+## :godmode: Start development version
 
 Simplio development version should be started and tested in browser with command:
 
@@ -35,7 +35,7 @@ Simplio development version should be started and tested in browser with command
 npm start
 ```
 
-## Run application on mobile device
+## :iphone: Run application on mobile device
 
 For running dev version of the application on mobile devices you need to install
 [Android Studio](https://developer.android.com/studio) or [Xcode](https://developer.apple.com/xcode/).
@@ -48,7 +48,7 @@ for Android or
 npm run dev-ios
 ```
 
-## Major components
+## :bricks: Major components
 
 Simplio list of major components used for handling processes
 
@@ -74,7 +74,7 @@ Simplio uses a number of open source projects to work properly:
 ## :see_no_evil: Changelog
 Simplio latest [changelog](https://github.com/SimplioOfficial/SimplioDevelopmentProgress/blob/master/Complete_list.md).
 
-## License
+## :trollface: License
 
 Copyright 2021 SIMPLIO s.r.o.
 
