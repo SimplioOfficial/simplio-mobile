@@ -1,5 +1,5 @@
-[<p align="center"><img width="80" src="https://simplio.io/images/icons/_logo_white_300x300.png"></p>](https://simplio.io)
-# <div align="center">[Simplio](https://simplio.io)</div>
+[<p align="center"><img src="https://simplio.io/files/wallet-with-token.jpg"></p>](https://simplio.io)
+
 
 ![Platform Support](https://img.shields.io/badge/platform-ios%20|%20android-%23989898)
 ![NodeJS](https://img.shields.io/badge/node-12.14-brightgreen)
@@ -71,8 +71,7 @@ Simplio uses a number of open source projects to work properly:
 * [Ionic](https://ionicframework.com/) - Ionic app development platform for frontend
 * [CMC API](https://coinmarketcap.com/api/) - CoinMarketCap API service
 
-## Changelog
-
+## :see_no_evil: Changelog
 Simplio latest [changelog](https://github.com/SimplioOfficial/SimplioDevelopmentProgress/blob/master/Complete_list.md).
 
 ## License
