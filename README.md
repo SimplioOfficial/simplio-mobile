@@ -71,10 +71,10 @@ Simplio uses a number of open source projects to work properly:
 * [Ionic](https://ionicframework.com/) - Ionic app development platform for frontend
 * [CMC API](https://coinmarketcap.com/api/) - CoinMarketCap API service
 
-## :see_no_evil: Changelog
+## :eyes: Changelog
 Simplio latest [changelog](https://github.com/SimplioOfficial/SimplioDevelopmentProgress/blob/master/Complete_list.md).
 
-## :hankey: License
+## :police_officer: License
 
 Copyright 2021 SIMPLIO s.r.o.
 
