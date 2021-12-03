@@ -62,7 +62,7 @@ Simplio list of major components used for handling processes
 
 ### web3.js
 
-## Simplio resources
+## :building_construction: Simplio resources
 
 Simplio uses a number of open source projects to work properly: 
 
