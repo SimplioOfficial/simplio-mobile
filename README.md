@@ -35,18 +35,17 @@ Simplio development version should be started and tested in browser with command
 npm start
 ```
 
-## Build and run Android version
+## Run application on mobile device
 
-Use the ionic cordova to create Android build:
-
+For running dev version of the application on mobile devices you need to install
+[Android Studio](https://developer.android.com/studio) or [Xcode](https://developer.apple.com/xcode/).
+Connect your device and run either
 ```bash
-ionic cordova build android
+npm run dev-md
 ```
-
-Run build on Android device:
-
+for Android or
 ```bash
-ionic cordova run android
+npm run dev-ios
 ```
 
 ## Major components
@@ -63,24 +62,20 @@ Simplio list of major components used for handling processes
 
 ### web3.js
 
-
-## Routing
-
-
 ## Simplio resources
 
 Simplio uses a number of open source projects to work properly: 
 
-* [AngularJS](https://angularjs.org/) - HTML enhanced for web apps!
+* [Angular](https://angular.io/) - HTML enhanced for web apps!
 * [node.js](https://nodejs.org/) - evented I/O for the backend
 * [Ionic](https://ionicframework.com/) - Ionic app development platform for frontend
 * [CMC API](https://coinmarketcap.com/api/) - CoinMarketCap API service
 
 ## Changelog
 
-Simplio latest [changelog](https://discuss.simplio.io/d/5-simplio-changelog).
+Simplio latest [changelog](https://github.com/SimplioOfficial/SimplioDevelopmentProgress/blob/master/Complete_list.md).
 
 ## License
 
-Copyright 2021 SIMPLIO s.r.o., All rights reserved.
+Copyright 2021 SIMPLIO s.r.o.
 
