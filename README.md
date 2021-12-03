@@ -1,22 +1,22 @@
-# Simplio
+# [<img width="28" src="https://simplio.io/images/icons/_logo_white_300x300.png"> Simplio](https://simplio.io/)
+![Platform Support](https://img.shields.io/badge/platform-ios%20|%20android-%23989898)
+![NodeJS](https://img.shields.io/badge/node-12.14-brightgreen)
+![Ionic](https://img.shields.io/badge/ionic%20CLI-6-blue)
+![Discord](https://img.shields.io/discord/859581142159065128)
+
 
 Simplio is a multiasset cryptocurrency wallet with swap and debit card support. Users remain in control of their public and private keys without relying on a third-party custodian.
+Simplio Wallet is running under Android and iOS mobile platforms. You can also get other information from our [website](https://simplio.
+io/). 
 
-
-[![Platform Support](https://img.shields.io/badge/platform-ios%20|%20android-%23989898)](https://img.shields.io/badge/platform-ios%20|%20android-%23989898)
-[![NodeJS](https://img.shields.io/badge/node-%3E%3D%206.0.0-brightgreen)](https://img.shields.io/badge/node-%3E%3D%206.0.0-brightgreen)
-[![Ionic](https://img.shields.io/badge/ionic-5.0-blue)](https://img.shields.io/badge/ionic-5.0-blue)
+It is available for both [Android](https://play.google.com/store/apps/details?id=wallet.simplio.app)
+and [iOS](https://apps.apple.com/us/app/simplio-wallet/id1580073536)
 
 
 ## Supported chains
 
-Simplio Wallet supports more than 50 blockchains: Bitcoin, Ethereum, Binance Chain, and most major blockchain platforms. The full list is here.
-
-Simplio is running under Android and iOS mobile platforms.
-
-[Android](https://play.google.com/store/apps/details?id=wallet.simplio.app)
-
-[iOS](https://apps.apple.com/us/app/simplio-wallet/id1580073536)
+Simplio Wallet supports more than 50 blockchains: Bitcoin, Ethereum,
+Binance Chain, and most major blockchain platforms. The full list is [here](https://github.com/ciripel/script_generated_files/blob/master/full_list.md).
 
 ## Install development version
 
