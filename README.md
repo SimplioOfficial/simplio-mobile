@@ -4,7 +4,7 @@
 ![Platform Support](https://img.shields.io/badge/platform-ios%20|%20android-%23989898)
 ![NodeJS](https://img.shields.io/badge/node-12.14-brightgreen)
 ![Ionic](https://img.shields.io/badge/ionic%20CLI-6-blue)
-![Discord](https://img.shields.io/discord/859581142159065128)
+[![Discord](https://img.shields.io/discord/859581142159065128)](https://discord.com/invite/aKhjuwZmdP)
 
 
 Simplio is a multiasset cryptocurrency wallet with swap and debit card support. Users remain in control of their public and private keys without relying on a third-party custodian.
