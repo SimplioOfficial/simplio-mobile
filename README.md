@@ -27,7 +27,7 @@ Simplio development version should be installed via Node Package Manager:
 npm install
 ```
 
-## :godmode: Start development version
+## :wrench: Start development version
 
 Simplio development version should be started and tested in browser with command:
 
@@ -74,7 +74,7 @@ Simplio uses a number of open source projects to work properly:
 ## :see_no_evil: Changelog
 Simplio latest [changelog](https://github.com/SimplioOfficial/SimplioDevelopmentProgress/blob/master/Complete_list.md).
 
-## :trollface: License
+## :hankey: License
 
 Copyright 2021 SIMPLIO s.r.o.
 
