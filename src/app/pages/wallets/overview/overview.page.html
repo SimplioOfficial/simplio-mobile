@@ -73,7 +73,7 @@
   </ng-template>
 
   <ng-template #emptyRef>
-    <sio-page [hasHeader]="true">
+    <sio-page [hasHeader]="true" [scrollableY]="false">
       <ng-template ngProjectAs="sio-header" [ngTemplateOutlet]="headerRef"></ng-template>
       <ion-grid class="empty-qr">
         <ion-row *ngIf="isInitialized" (click)="copy(wallet?.mainAddress)">
