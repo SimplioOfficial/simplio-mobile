@@ -113,5 +113,6 @@
         <string>YES</string>
     <key>FirebaseAutomaticScreenReportingEnabled</key>
         <string>$AUTOMATIC_SCREEN_REPORTING_ENABLED</string>
+    <key>ITSAppUsesNonExemptEncryption</key><false/>
 </dict>
 </plist>
