@@ -102,5 +102,5 @@ Session.vim
 # proj ignore
 src/api/uglify
 src/assets/js/api.js
-
+package-lock.json
 src/assets/appConfig.json
