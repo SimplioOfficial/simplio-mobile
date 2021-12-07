@@ -291,23 +291,29 @@ export class HomePage extends TrackedPage implements OnInit {
             const sortedTxs: Transaction[] = sortBy(tx.data, 'unix').reverse();
             let wTxs = wallet.transactions
               ? wallet.transactions.filter(
-                  e => sortedTxs.findIndex(ee => ee.hash === e.hash) === -1,
-                )
+                e => sortedTxs.findIndex(ee => ee.hash === e.hash) === -1,
+              )
               : [];
             const unconfirmed = sortedTxs.filter(e => e.confirmed === false).length;
+            const pending = wTxs.filter(e => e.confirmed === false).length;
             const combinedTxs = sortBy([...wTxs, ...sortedTxs], 'unix')
               .reverse()
               .slice(0, 20);
 
-            if (wallet.lasttx !== sortedTxs[0].hash || wallet.unconfirmed !== unconfirmed) {
-              wallet.transactions = combinedTxs;
-              if (tx.endBlock) {
-                wallet.lastblock = tx.endBlock;
-              } else {
-                wallet.lastblock = sortedTxs[0].block;
+            if (wallet.lasttx !== sortedTxs[0].hash || wallet.unconfirmed !== unconfirmed || pending != unconfirmed) {
+              if (pending != unconfirmed && wTxs.length > 0 && wTxs[0].block > sortedTxs[0].block) {
+                // do not update data if there's still pending transaction and no new transaction after last transaction time
               }
-              wallet.lasttx = sortedTxs[0].hash;
-              wallet.unconfirmed = unconfirmed;
+              else {
+                wallet.transactions = combinedTxs;
+                if (tx.endBlock) {
+                  wallet.lastblock = tx.endBlock;
+                } else {
+                  wallet.lastblock = sortedTxs[0].block;
+                }
+                wallet.lasttx = sortedTxs[0].hash;
+                wallet.unconfirmed = unconfirmed;
+              }
               let explorers = this.networkService.getCoinExplorers(wallet.ticker, wallet.type);
               if (!!explorers?.length) {
                 explorers = explorers.filter(e => e.type === explorers[0].type);
