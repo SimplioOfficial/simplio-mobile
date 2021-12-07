@@ -540,6 +540,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
         lasttx: this.unsignedTransaction.wallet.lasttx,
         api: this.unsignedTransaction.wallet.api,
         feeContractAddress: this._feeWallet.contractaddress, // for paying fee in token only for SPL token
+        addressType: this.unsignedTransaction.wallet.addressType
       })
       .then(res => {
         console.log('Transaction txid', res);

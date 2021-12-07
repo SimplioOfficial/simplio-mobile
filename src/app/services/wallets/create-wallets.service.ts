@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Abi, AddressType, Wallet, WalletType } from 'src/app/interface/data';
+import { Abi, Wallet, WalletType } from 'src/app/interface/data';
 import { Acc } from 'src/app/interface/user';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
@@ -12,6 +12,7 @@ import { AbiService } from '../apiv2/connection/abi.service';
 import { CoinsService } from '../apiv2/connection/coins.service';
 import { CoinItem } from 'src/assets/json/coinlist';
 import { BackendService } from '../apiv2/blockchain/backend.service';
+import { AddressType } from '@simplio/backend/interface/data';
 
 @Injectable({
   providedIn: 'root',
@@ -129,7 +130,6 @@ export class CreateWalletService implements WalletsCreator {
       if (!UtilsService.isSolanaToken(walletData.value().type)) {
         walletData.setIsInitialized(true);
       }
-
       walletData.setMnemo(mnemo);
     } catch (err) {
       throw err;
@@ -151,6 +151,7 @@ export class CreateWalletService implements WalletsCreator {
       type: walletData.value().type,
       contractAddress: walletData.value().contractaddress,
       api: walletData.value().api,
+      addressType: walletData.value().addressType
     }).then(async data => {
       walletData.pushAddress({
         address: data.address,

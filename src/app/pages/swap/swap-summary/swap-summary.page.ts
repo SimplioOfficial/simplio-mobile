@@ -518,6 +518,7 @@ export class SwapSummaryPage implements OnInit, OnDestroy {
         contractAddress: this.swapTx.source.wallet.contractaddress,
         lasttx: this.swapTx.source.wallet.lasttx,
         api: this.swapTx.source.wallet.api,
+        addressType: this.swapTx.source.wallet.addressType
       });
 
       console.log('Swap txid', txid);

@@ -1,4 +1,4 @@
-import { WalletAddress, WalletType, Wallet } from 'src/app/interface/data';
+import { WalletAddress, WalletType, Wallet, AddressType } from 'src/app/interface/data';
 import { Acc } from 'src/app/interface/user';
 import { datedUUID } from 'src/app/services/utils.service';
 
@@ -21,6 +21,7 @@ export class WalletData {
   private _origin = '';
   private _isInitialized = false;
   private _uniqueId = 0;
+  private _addressType = AddressType.HD;
 
   constructor(private _account: Acc) {}
 
@@ -52,6 +53,7 @@ export class WalletData {
       origin: this._origin,
       isInitialized: this._isInitialized,
       uniqueId: this._uniqueId,
+      addressType: this._addressType
     };
   }
 
@@ -87,6 +89,11 @@ export class WalletData {
 
   setContractAddress(addr: string): this {
     this._contractAddress = addr;
+    return this;
+  }
+
+  setAddressType(addrType: AddressType): this {
+    this._addressType = addrType;
     return this;
   }
 
