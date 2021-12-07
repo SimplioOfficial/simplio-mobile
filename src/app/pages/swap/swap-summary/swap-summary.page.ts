@@ -496,6 +496,7 @@ export class SwapSummaryPage implements OnInit, OnDestroy {
       const { type: wType } = this.swapTx.source.wallet;
 
       const txid = await this.backendService.createTransaction({
+        _uuid: this.swapTx.source.wallet._uuid,
         seeds: this.swapTx.source.mnemo,
         explorer: this.swapTx.source.explorer,
         addresses: this.swapTx.source.wallet.addresses,

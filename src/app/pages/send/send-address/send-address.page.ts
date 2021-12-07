@@ -518,6 +518,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
     this.broadcasting = true;
     return this.backendService
       .createTransaction({
+        _uuid: this.unsignedTransaction.wallet._uuid,
         seeds: this.unsignedTransaction.mnemo,
         explorer: this.unsignedTransaction.explorer,
         addresses: this.unsignedTransaction.wallet.addresses,

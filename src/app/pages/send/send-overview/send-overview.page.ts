@@ -96,6 +96,7 @@ export class SendOverviewPage implements OnInit {
     this.disabledBroadcast = true;
     this.backendService
       .createTransaction({
+        _uuid: this.sendData.wallet._uuid,
         seeds: this.sendData.mnemo,
         explorer: this.sendData.explorer,
         addresses: this.sendData.wallet.addresses,

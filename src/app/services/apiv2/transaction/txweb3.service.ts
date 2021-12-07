@@ -19,12 +19,6 @@ export class Txweb3Service extends TxBase {
 
   init() {}
 
-  getLastBlock(type: WalletType): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.backendService.web3.getLib(type).eth.getBlockNumber().then(resolve).catch(reject);
-    });
-  }
-
   async getTxs(data: {
     walletUnit: TransactionData;
     explorers: Explorer[];
@@ -32,7 +26,7 @@ export class Txweb3Service extends TxBase {
   }): Promise<TransactionDataResponse> {
     // return new Promise((resolve, reject) => {
     try {
-      const lastBlock = await this.getLastBlock(data.walletUnit.type);
+      const lastBlock = await this.backendService.getLastWeb3Block(data.walletUnit.type);
       let url = data.explorers[0].api_transaction
         .replace('<address>', data.walletUnit.addresses[0])
         .replace('<start>', '0')
@@ -80,7 +74,7 @@ export class Txweb3Service extends TxBase {
   }): Promise<TransactionDataResponse[]> {
     // return new Promise((resolve, reject) => {
     try {
-      const lastBlock = await this.getLastBlock(data.walletUnits[0].type);
+      const lastBlock = await this.backendService.getLastWeb3Block(data.walletUnits[0].type);
       // const startBlock = lastBlock - 6500 * 30; // scan the last 30 days
       const startBlock = Math.min(...data.walletUnits.map(e => e.lastBlock));
       // const startBlock = 0;
