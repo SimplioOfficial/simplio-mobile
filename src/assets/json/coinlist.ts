@@ -11,7 +11,7 @@ export interface CoinItem {
   contractAddress?: string;
   api?: string;
   origin?: string;
-  addressType?: AddressType
+  addressType?: AddressType;
 }
 
 export const coins: CoinItem[] = [
@@ -844,6 +844,14 @@ export const coins: CoinItem[] = [
     name: 'Solana',
     ticker: coinNames.SOL,
     unique_id: 4,
+  },
+  // SOL1 - the one with slice instead of HD implementation (must be deleted in 0.4.0)
+  {
+    type: WalletType.SOLANA,
+    name: 'Solana-type1',
+    ticker: coinNames.SOL1,
+    unique_id: 4,
+    addressType: AddressType.DEFAULT
   },
   {
     type: WalletType.SOLANA_TOKEN,

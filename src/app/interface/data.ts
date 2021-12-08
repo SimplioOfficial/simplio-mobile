@@ -36,7 +36,7 @@ export interface Wallet {
   transactions?: Transaction[];
   isInitialized: boolean;
   uniqueId: number;
-  addressType: AddressType
+  addressType: AddressType;
 }
 export interface WalletAddress {
   _uuid: UUID; // Wallets uuid that the address belongs to
