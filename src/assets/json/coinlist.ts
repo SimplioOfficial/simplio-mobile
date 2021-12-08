@@ -1,5 +1,5 @@
 import internal from 'assert';
-import { WalletType } from 'src/app/interface/data';
+import { AddressType, WalletType } from 'src/app/interface/data';
 import { coinNames, coinOrigin } from '../../app/services/api/coins';
 
 export interface CoinItem {
@@ -11,6 +11,7 @@ export interface CoinItem {
   contractAddress?: string;
   api?: string;
   origin?: string;
+  addressType?: AddressType
 }
 
 export const coins: CoinItem[] = [
