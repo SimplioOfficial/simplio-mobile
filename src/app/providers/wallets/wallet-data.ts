@@ -93,7 +93,7 @@ export class WalletData {
   }
 
   setAddressType(addrType: AddressType): this {
-    this._addressType = addrType;
+    this._addressType = addrType ?? AddressType.HD;
     return this;
   }
 

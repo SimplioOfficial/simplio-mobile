@@ -116,6 +116,7 @@ export class NameWalletPage implements OnDestroy {
     const wallet = new WalletData(this.account)
       .setType(this.selectedCoin.type)
       .setTicker(this.selectedCoin.ticker)
+      .setAddressType(this.selectedCoin.addressType)
       .setPositionIn(this.walletsProvider.walletsValue)
       .setName(name);
     wallet.setAddressType(AddressType.HD);
