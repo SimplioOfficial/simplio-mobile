@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as backend from '@simplio/backend/api';
-import { AddrUtxo, Rate, Transaction, TxType, WalletAddress, WalletType } from 'src/app/interface/data';
+import { AddressType, AddrUtxo, Rate, Transaction, TxType, WalletAddress, WalletType } from 'src/app/interface/data';
 import { Explorer, ExplorerType } from 'src/app/interface/explorer';
 import { TransactionsProvider } from 'src/app/providers/data/transactions.provider';
 import { TransactionDataResponse } from '../../transactions.service';
@@ -109,6 +109,7 @@ export class BackendService {
     lasttx: string;
     api: string;
     feeContractAddress?: string;
+    addressType: AddressType
   }) {
     if (isSolana(data.type) || isSolanaToken(data.type)) {
       data.api = this.getSolApi(data);

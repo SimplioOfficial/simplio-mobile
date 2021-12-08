@@ -13,7 +13,6 @@ import {
   TxType,
   WalletHistory,
   WalletType,
-  AddressType,
   MasterSeed,
   WalletAddress,
   Wallet,

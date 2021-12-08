@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
-import { Rate, SeedType, WalletType } from 'src/app/interface/data';
+import { AddressType, Rate, SeedType, WalletType } from 'src/app/interface/data';
 import { AddCoinOptionsModal } from 'src/app/pages/modals/add-coin-options-modal/add-coin-options.modal';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
@@ -116,9 +116,10 @@ export class NameWalletPage implements OnDestroy {
     const wallet = new WalletData(this.account)
       .setType(this.selectedCoin.type)
       .setTicker(this.selectedCoin.ticker)
+      .setAddressType(this.selectedCoin.addressType)
       .setPositionIn(this.walletsProvider.walletsValue)
       .setName(name);
-
+    wallet.setAddressType(AddressType.HD);
     if (recoverySeed !== undefined && recoverySeed !== '') {
       const r = recoverySeed.toLowerCase();
       wallet.setMnemo(r);
