@@ -850,7 +850,7 @@ export const coins: CoinItem[] = [
     type: WalletType.SOLANA,
     name: 'Solana-type1',
     ticker: coinNames.SOL1,
-    unique_id: 4,
+    unique_id: 10999,
     addressType: AddressType.DEFAULT
   },
   {
@@ -1099,6 +1099,14 @@ export const coins: CoinItem[] = [
     ticker: coinNames.SBR,
     unique_id: 10031,
     contractAddress: 'Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1',
+    origin: coinOrigin.Native,
+  },
+  {
+    type: WalletType.SOLANA_TOKEN,
+    name: 'Coban',
+    ticker: coinNames.COBAN,
+    unique_id: 10032,
+    contractAddress: '7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY',
     origin: coinOrigin.Native,
   },
 

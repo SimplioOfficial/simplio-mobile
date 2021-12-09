@@ -27,6 +27,7 @@ export const coinNames = {
   CEL: 'CEL',
   CHSB: 'CHSB',
   CHZ: 'CHZ',
+  COBAN: 'COBAN',
   COMP: 'COMP',
   COPE: 'COPE',
   CRO: 'CRO',
