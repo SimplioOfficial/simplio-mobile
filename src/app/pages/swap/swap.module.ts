@@ -18,38 +18,36 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'overview',
-    pathMatch: 'full',
+    pathMatch: 'full'
   },
   {
     path: 'overview',
     component: SwapPage,
-    data: { tapbar: true },
+    data: { tapbar: true }
   },
   {
     path: 'exchange',
     canActivate: [ResponsibilityAgreementGuard],
     resolve: {
       wallets: WalletsDataResolver,
-      pairs: getSwapDataResolverOf(SwapType.Single),
+      pairs: getSwapDataResolverOf(SwapType.Single)
     },
     loadChildren: () => import('./exchange/exchange.module').then(m => m.ExchangePageModule),
-    data: { tapbar: false },
+    data: { tapbar: false }
   },
   {
     path: 'confirm',
-    loadChildren: () =>
-      import('./swap-confirm/swap-confirm.module').then(m => m.SwapConfirmPageModule),
-    data: { tapbar: false },
+    loadChildren: () => import('./swap-confirm/swap-confirm.module').then(m => m.SwapConfirmPageModule),
+    data: { tapbar: false }
   },
   {
     path: 'update',
     resolve: {
-      pairs: getSwapDataResolverOf(SwapType.Single),
+      pairs: getSwapDataResolverOf(SwapType.Single)
     },
-    loadChildren: () =>
-      import('./swap-update/swap-update.module').then(m => m.SwapUpdatePageModule),
-    data: { tapbar: false },
-  },
+    loadChildren: () => import('./swap-update/swap-update.module').then(m => m.SwapUpdatePageModule),
+    data: { tapbar: false }
+  }
 ];
 
 @NgModule({
@@ -63,11 +61,11 @@ const routes: Routes = [
     SwapDetailModalModule,
     RouterModule.forChild(routes),
     TranslateModule.forChild({
-      extend: true,
-    }),
+      extend: true
+    })
   ],
   entryComponents: [SwapPage],
   declarations: [SwapPage],
-  bootstrap: [SwapPage],
+  bootstrap: [SwapPage]
 })
 export class SwapPageModule {}

@@ -18,8 +18,7 @@ h1 {
 
 ion-list.has-tapbar {
   padding-bottom: calc(
-    var(--sizing-element-medium) + (var(--sizing-element-medium) / 2) +
-      constant(safe-area-inset-bottom)
+    var(--sizing-element-medium) + (var(--sizing-element-medium) / 2) + constant(safe-area-inset-bottom)
   ) !important;
   padding-bottom: calc(
     var(--sizing-element-medium) + (var(--sizing-element-medium) / 2) + env(safe-area-inset-bottom)
@@ -130,12 +129,12 @@ ion-segment {
   position: fixed;
   background: var(--ion-background-color);
   z-index: 10;
-  width: 100%;  
+  width: 100%;
   --offset-bottom: auto!important;
   --overflow: hidden;
   overflow: auto;
   &::-webkit-scrollbar {
-    display: none;    
+    display: none;
   }
 }
 ion-segment-button{
@@ -143,10 +142,10 @@ ion-segment-button{
   --indicator-height: 1px;
   margin: 30px 0 0 0;
 }
-section.container {
+section.tab-container{
   margin-top: 87px;
-  padding: 0 20px;
 }
+
 ion-label {
   padding: 0px 20px;
 }

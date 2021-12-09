@@ -1,0 +1,28 @@
+<div
+  class="thumbnail-container"
+  [class]="{ 'has-notification': !transaction.confirmed }"
+  [attr.data-notification-type]="getNotificationType(transaction)"
+>
+  <sio-wallet-thumbnail [iconID]="transaction.ticker"></sio-wallet-thumbnail>
+</div>
+
+<div class="title" *ngIf="!showHash">
+  <p>{{ transaction.address | address: 3 }}</p> 
+  <span>{{ transaction.ticker }}</span>
+</div>
+<div class="title" *ngIf="showHash">
+  <p>{{ transaction.hash | address: 3 }}</p>
+  <span>{{ transaction.ticker }}</span>
+</div>
+<div class="balance">
+  <p [className]="statusClass">
+    {{ transaction.amount | balance: transaction.ticker:2:18 }}
+    {{ transaction.ticker }}
+  </p>
+  <span *ngIf="transaction.confirmed; else unconfirmedRef">{{ transaction.date | date: 'MMM dd, yyyy, HH:mm' }}</span>
+  <ng-template #unconfirmedRef>
+    <span>{{ unconfirmedMsg }}</span>
+  </ng-template>
+</div>
+
+<ng-content></ng-content>

@@ -19,7 +19,8 @@ import { getSwapStatusTranslations } from 'src/app/services/swap/utils';
 import { UtilsService } from 'src/app/services/utils.service';
 import { TrackedPage } from '../../classes/trackedPage';
 import { flatten } from 'lodash';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { Transaction, TxType } from 'src/app/interface/data';
+import { coinNames } from 'src/app/services/api/coins';
 
 const DEFAULTS = {
   currentPage: 0,
@@ -28,13 +29,13 @@ const DEFAULTS = {
   canLoad: true,
   isLoadingInit: false,
   isLoadingHistory: false,
-  swapHistory: [],
+  swapHistory: []
 };
 
 @Component({
   selector: 'swap-page',
   templateUrl: './swap.page.html',
-  styleUrls: ['./swap.page.scss'],
+  styleUrls: ['./swap.page.scss']
 })
 export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   private get _nextPage(): number {
@@ -50,14 +51,11 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     private swapProvider: SwapProvider,
     private singleSwap: SingleSwapService,
     private utils: UtilsService,
-    private plt: PlatformProvider,
-    private authService: AuthenticationService,
+    private plt: PlatformProvider
   ) {
     super();
     this.subscription.add(this.swapProvider.allPendingSwaps$.subscribe(_ => this.loadData()));
-    this.subscription.add(
-      this.settingsProvider.notificationCount$.subscribe(count => (this.notificationCount = count)),
-    );
+    this.subscription.add(this.settingsProvider.notificationCount$.subscribe(count => (this.notificationCount = count)));
   }
   readonly swapStatusTranslations = getSwapStatusTranslations(this.$);
 
@@ -68,6 +66,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   mode = this.settingsProvider.settingsValue.theme.mode;
   feePolicy = this.settingsProvider.settingsValue.feePolicy;
 
+  segment = "swaps";
   currentPage = DEFAULTS.currentPage;
   isEmpty = DEFAULTS.isEmpty;
   isLoading = DEFAULTS.isLoading;
@@ -82,9 +81,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
 
   private _swapHistory = new BehaviorSubject<SwapReportPage[]>(DEFAULTS.swapHistory);
 
-  private startHistory = !!this.swapProvider.swapHistoryValue
-    ? [this.swapProvider.swapHistoryValue]
-    : [];
+  private startHistory = !!this.swapProvider.swapHistoryValue ? [this.swapProvider.swapHistoryValue] : [];
   swapHistory$ = this._swapHistory.pipe(
     filter(pages => !!pages),
     startWith(this.startHistory),
@@ -97,13 +94,27 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       }
       return pages;
     }),
-    map(pages =>
-      pages.filter(
-        (page, i, pagesArray) => pagesArray.findIndex(page2 => page2.SagaId === page.SagaId) === i,
-      ),
-    ),
+    map(pages => pages.filter((page, i, pagesArray) => pagesArray.findIndex(page2 => page2.SagaId === page.SagaId) === i))
   );
-
+  private _transactions = new BehaviorSubject<Transaction[]>([       
+    {
+    _uuid: '1', // uuid of a wallet
+    type: TxType.RECEIVE,
+    ticker: coinNames.ETH,
+    address: 'dasdasdasdasdas',
+    amount: 0.5,
+    hash: 'dsadas',
+    unix: 123,
+    date: new Date().toDateString(),
+    confirmed: true,
+    block: 1234, // slot in solana
+    }
+  
+  ]);
+  
+  dummytx$ = this._transactions.asObservable()
+  transactions$ = this._transactions;
+  
   pendingSwaps$ = this.swapProvider.pendingSwaps$.pipe(
     map(pages => {
       if (pages.length >= 2) {
@@ -114,13 +125,13 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       } else {
         return pages;
       }
-    }),
+    })
   );
 
   isEmpty$ = combineLatest([this.pendingSwaps$, this.swapHistory$]).pipe(
     map(([p, h]) => [!!p.length, !!h.length]),
     map(v => v.every((val: boolean) => !val)),
-    map(v => !v),
+    map(v => !v)
   );
 
   subscription = new Subscription();
@@ -135,7 +146,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     // resistanceRatio: 0.1,
     // preventInteractionOnTransition: true,
     freeMode: true,
-    slidesPerView: 'auto',
+    slidesPerView: 'auto'
     // wrapperClass: 'pending-swaps-slider-wrapper'
     // spaceBetween: 20
   };
@@ -159,17 +170,13 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       .then(() => this._isLoadingHistory.next(false));
   }
 
-  private async _fetchSwapHistory(data: {
-    pageNumber: number;
-    clean?: boolean;
-  }): Promise<SwapReportPage> {
+  private async _fetchSwapHistory(data: { pageNumber: number; clean?: boolean }): Promise<SwapReportPage> {
     const d = { pageNumber: 1, clean: false, ...data };
     const statuses = [SwapStatusText.Completed, SwapStatusText.Failed, SwapStatusText.Expired];
     try {
-      await this.authService.checkToken();
       const page = await this.singleSwap.report({
         pageNumber: d.pageNumber,
-        swapStatus: statuses,
+        swapStatus: statuses
       });
 
       // fixes bug DEVELOPMENT-261 on  ios
@@ -190,16 +197,10 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
 
   private async _fetchPendingSwaps(clean = true): Promise<SwapReportPage> {
     try {
-      const query = [
-        SwapStatusText.Validating,
-        SwapStatusText.Pending,
-        SwapStatusText.Swapping,
-        SwapStatusText.Withdrawing,
-      ];
-      await this.authService.checkToken();
+      const query = [SwapStatusText.Validating, SwapStatusText.Pending, SwapStatusText.Swapping, SwapStatusText.Withdrawing];
       const page = await this.singleSwap.report({
         pageNumber: 1,
-        swapStatus: query,
+        swapStatus: query
       });
 
       if (clean) {
@@ -235,10 +236,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
 
   loadData(clean = false): Promise<[SwapReportPage, SwapReportPage]> {
     if (clean) this._setDefaults();
-    return Promise.all([
-      this._fetchSwapHistory({ pageNumber: this._nextPage, clean }),
-      this._fetchPendingSwaps(clean),
-    ]);
+    return Promise.all([this._fetchSwapHistory({ pageNumber: this._nextPage, clean }), this._fetchPendingSwaps(clean)]);
   }
 
   doRefresh(e) {
@@ -256,7 +254,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       componentProps: { swapTx: swapTransaction },
       swipeToClose: true,
       cssClass: 'slide-modal',
-      mode: 'ios',
+      mode: 'ios'
     });
     await modal.present();
 
@@ -286,8 +284,22 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   async openSettings() {
     await this.router.navigate(['/home', 'user'], {
       state: {
-        origin: this.location.path(),
-      },
+        origin: this.location.path()
+      }
     });
+  }
+  async openStakeDetails() {
+    await this.router.navigate(['/stake-details'], {
+      state: {
+        origin: this.location.path()
+      }
+    });
+  }
+  segmentChanged(ev: any) {
+    console.log('Segment changed', ev);
+  }
+
+  async openTransaction(tx: Transaction): Promise<void> {
+    console.log("Opending tx:", tx)
   }
 }
