@@ -107,8 +107,13 @@ export class UtilsService {
   static isToken(type) {
     return isSolanaToken(type) || isErcToken(type);
   }
+
   static isSolana(type) {
     return type === WalletType.SOLANA || type === WalletType.SOLANA_DEV;
+  }
+
+  static isSolanaDev(type) {
+    return type === WalletType.SOLANA_DEV || type === WalletType.SOLANA_TOKEN_DEV;
   }
 
   static isPolkadot(type) {

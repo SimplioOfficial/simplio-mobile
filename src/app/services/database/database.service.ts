@@ -94,7 +94,7 @@ export class DatabaseService implements DatabaseStruct {
       .then(a => [key, a]);
   }
 
-  private async _loadWallet(w: WalletSqlData, addresses: WallletAddressSqlData[]) {
+  private async _loadWallet(w: WalletSqlData, addresses: WallletAddressSqlData[]): Promise<Wallet> {
     const addrs = filterWalletAddresses(w._uuid, addresses);
     return {
       _p: w._p,
@@ -119,8 +119,11 @@ export class DatabaseService implements DatabaseStruct {
       uniqueId: w.unique_id,
       isInitialized: toBool(w.is_initialized),
       transactions: await this._getTransactions(w._uuid),
+      addressType: w.address_type,
+      api: w.apiurl
     };
   }
+
   loadWallets(key: DataLoaderKeys = 'wallets'): Promise<[DataLoaderKeys, Wallet[]]> {
     return Promise.all([this._getWallets(), this._getAddresses()])
       .then<Wallet[]>(([wallets, addresses]) => {
@@ -285,6 +288,7 @@ export class DatabaseService implements DatabaseStruct {
       origin: wallet.origin,
       unique_id: wallet.uniqueId,
       is_initialized: fromBool(wallet.isInitialized),
+      address_type: wallet.addressType
     };
     const sqlKeys = Object.keys(data);
     const sqlValues = Object.values(data);
@@ -539,6 +543,7 @@ export class DatabaseService implements DatabaseStruct {
       origin: wallet.origin,
       unique_id: wallet.uniqueId,
       is_initialized: fromBool(wallet.isInitialized),
+      address_type: wallet.addressType
     };
     const sqlKeys = Object.keys(data);
     const sqlValues = Object.values(data);

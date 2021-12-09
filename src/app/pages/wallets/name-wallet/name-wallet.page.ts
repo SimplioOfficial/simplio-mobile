@@ -119,7 +119,7 @@ export class NameWalletPage implements OnDestroy {
       .setAddressType(this.selectedCoin.addressType)
       .setPositionIn(this.walletsProvider.walletsValue)
       .setName(name);
-    wallet.setAddressType(AddressType.HD);
+
     if (recoverySeed !== undefined && recoverySeed !== '') {
       const r = recoverySeed.toLowerCase();
       wallet.setMnemo(r);
