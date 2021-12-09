@@ -146,6 +146,7 @@ export class WalletService {
         seeds: this.getSeeds(wallet.mnemo, idt),
         ticker: wallet.ticker,
         uuid: wallet._uuid,
+        addressType: wallet.addressType
       })
         .then(bal => {
           wallet.balance = bal;
@@ -202,6 +203,7 @@ export class WalletService {
         type: wallet.type,
         contractAddress: wallet.contractaddress,
         address: wallet.mainAddress,
+        api: wallet.api
       });
       wallet.tokenAddress = tokenAddress.toString();
     }

@@ -308,7 +308,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
           ) {
             throw new Error(this.instant(this.$.INSUFFICIENT_AMOUNT));
           }
-          if (res.fees > this.unsignedTransaction.feepipe.wallet.balance) {
+          if (res.fees > this.unsignedTransaction.feepipe.wallet.balance && !UtilsService.isSolanaDev(this.wallet.type)) {
             throw new Error(
               this._createFeeErrorMsg(this.unsignedTransaction.feepipe.wallet, res.fees),
             );
@@ -620,7 +620,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
             const solWallet = this._wallets.find(
               e => e.ticker === coinNames.SOL && UtilsService.isSolana(e.type),
             );
-            if (!solWallet || minimumRent > solWallet.balance) {
+            if (!solWallet || (minimumRent > solWallet.balance && !UtilsService.isSolanaDev(wallet.type))) {
               const errorMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_ERROR);
               throw new Error(
                 errorMsg.replace(
@@ -643,6 +643,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
                   api: wallet.api,
                   contractAddress: wallet.contractaddress,
                   seeds: this.ioService.decrypt(wallet.mnemo, idt),
+                  addressType: this.wallet.addressType
                 });
                 await this.dismissLoading();
                 await this._calculateFee();

@@ -175,7 +175,7 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
             const solWallet = this.wallets.find(
               e => e.ticker === coinNames.SOL && UtilsService.isSolana(e.type),
             );
-            if (!solWallet || minimumRent > solWallet.balance) {
+            if (!solWallet || (minimumRent > solWallet.balance && !UtilsService.isSolanaDev(this.wallet.type))) {
               let errorMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_ERROR);
               throw new Error(
                 errorMsg.replace(
@@ -197,6 +197,7 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
                 api: this.wallet.api,
                 contractAddress: this.wallet.contractaddress,
                 seeds: this.io.decrypt(this.wallet.mnemo, idt),
+                addressType: this.wallet.addressType
               })
               .then(_ => {
                 this.checker.checkTransactions(

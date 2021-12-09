@@ -472,7 +472,7 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
             const solWallet = this._wallets.find(
               e => e.ticker === coinNames.SOL && UtilsService.isSolana(e.type),
             );
-            if (!solWallet || minimumRent > solWallet.balance) {
+            if (!solWallet || (minimumRent > solWallet.balance && !UtilsService.isSolanaDev(this._wallet.type))) {
               const errorMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_ERROR);
               throw new Error(
                 errorMsg.replace(
@@ -494,6 +494,7 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
                 api: this._wallet.api,
                 contractAddress: this._wallet.contractaddress,
                 seeds: this.io.decrypt(this._wallet.mnemo, idt),
+                addressType: this._wallet.addressType
               })
               .then(_ => {
                 this.checker.checkTransactions(
