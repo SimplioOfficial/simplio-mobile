@@ -308,7 +308,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
           ) {
             throw new Error(this.instant(this.$.INSUFFICIENT_AMOUNT));
           }
-          if (res.fees > this.unsignedTransaction.feepipe.wallet.balance) {
+          if (res.fees > this.unsignedTransaction.feepipe.wallet.balance && !UtilsService.isSolanaDev(this.wallet.type)) {
             throw new Error(
               this._createFeeErrorMsg(this.unsignedTransaction.feepipe.wallet, res.fees),
             );
