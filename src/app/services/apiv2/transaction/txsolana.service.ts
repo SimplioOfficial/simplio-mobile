@@ -14,7 +14,7 @@ export class TxsolanaService extends TxBase {
     super('TxSolana');
   }
 
-  init() {}
+  init() { }
 
   getHistoryToken(data: {
     tokenId: string;
@@ -164,7 +164,7 @@ export class TxsolanaService extends TxBase {
           return t;
         }, []);
         const addrs = solanaTxs.txs.reduce((a, curr) => {
-          a.push(curr.address);
+          if (!a.includes(curr.address)) a.push(curr.address);
           return a;
         }, []);
         if (txs.length > 0) {
@@ -178,7 +178,7 @@ export class TxsolanaService extends TxBase {
                 explorer: null,
                 solanaTxs: txs,
               },
-              address: addrs,
+              addresses: addrs,
               ticker: data.walletUnit.ticker,
               uuid: data.walletUnit._uuid,
               api: data.walletUnit.api,
@@ -294,6 +294,9 @@ export class TxsolanaService extends TxBase {
             let amount = 0;
             if (meta) {
               amount = meta.preBalances[0] - meta.postBalances[0];
+              if(amount > 0){
+                amount -= meta.fee;
+              }
             }
             const sender = trans.message.accountKeys[0].pubkey.toBase58();
             let receiver = trans.message.accountKeys[1].pubkey.toBase58();
@@ -378,7 +381,7 @@ export class TxsolanaService extends TxBase {
 
   async parseTxsToken(data: {
     txs: TransactionAPI;
-    address: string[];
+    addresses: string[];
     uuid: string;
     ticker: string;
     api: string;
@@ -404,29 +407,44 @@ export class TxsolanaService extends TxBase {
               trans.message.instructions.some((e: solanaWeb3.ParsedInstruction) => {
                 parsed = this._parseInstruction(e);
                 if (parsed.sender === '' || parsed.receiver === '') {
+                  parsed = {
+                    amount: 0,
+                    receiver: '',
+                    sender: '',
+                  };
                   const innerInstructions = meta.innerInstructions;
+                  var currParsed;
+                  var oldParsed;
                   innerInstructions.some((e: any) => {
                     const instructions = e.instructions;
                     if (instructions) {
                       instructions.some((ee: solanaWeb3.ParsedInstruction) => {
-                        parsed = this._parseInstruction(ee);
-                        if (parsed.sender !== '' || parsed.receiver !== '') {
-                          return true;
+                        currParsed = this._parseInstruction(ee);
+                        if (data.addresses.find(
+                          e => e.toString() === (currParsed.sender).toString(),
+                        )) {
+                          parsed.amount -= currParsed.amount;
+                          if (parsed.amount < 0) {
+                            parsed.sender = currParsed.sender;
+                            parsed.receiver = currParsed.receiver;
+                          }
+                        }
+                        else if (data.addresses.find(
+                          e => e.toString() === (currParsed.receiver).toString(),
+                        )) {
+                          parsed.amount += currParsed.amount;
+                          if (parsed.amount > 0) {
+                            parsed.sender = currParsed.sender;
+                            parsed.receiver = currParsed.receiver;
+                          }
                         }
                       });
-                    }
-                    if (parsed.sender !== '' || parsed.receiver !== '') {
-                      return true;
                     }
                   });
                 }
               });
-              const isSender = !!data.address.find(
-                e => e.toString() === (parsed.sender || data.address[0]).toString(),
-              );
-              const isReceiver = !!data.address.find(
-                e => e.toString() === (parsed.receiver || data.address[0]).toString(),
-              );
+              const isSender = parsed.amount <= 0;
+              const isReceiver = parsed.amount >= 0;
               if (isSender && isReceiver) {
                 action = TxType.MOVE;
               } else if (isSender && !isReceiver) {
@@ -439,8 +457,8 @@ export class TxsolanaService extends TxBase {
                 type: action,
                 ticker: data.ticker,
                 address:
-                  action == TxType.RECEIVE ? parsed.sender : parsed.receiver || data.address[0],
-                amount: parsed.amount || 0,
+                  action == TxType.RECEIVE ? parsed.sender : parsed.receiver || data.addresses[0],
+                amount: Math.abs(parsed.amount) || 0,
                 hash: signature,
                 unix: tx.blockTime,
                 confirmed: true,
