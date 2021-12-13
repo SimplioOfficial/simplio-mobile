@@ -1,0 +1,56 @@
+<sio-simple-page>
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.SUMMARY | translate }}</span>
+
+    <sio-header-button slot="header-right" [enable]="false"> </sio-header-button>
+  </sio-header>
+
+  <main>
+    <div class="overview">
+      <ion-grid>
+        <ion-row>
+          <ion-col class="thumbnail">
+            <sio-wallet-thumbnail [iconID]="wallet.ticker" scale="large">
+              <sio-wallet-thumbnail *ngIf="isToken" [iconID]="tokenId" scale="tiny"></sio-wallet-thumbnail>
+            </sio-wallet-thumbnail>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <ion-grid class="detail">
+      <ion-row class="headerfee">
+        <ion-col size="6">
+          <span>{{ $.AMOUNT | translate }}</span>
+        </ion-col>
+        <ion-col size="6" text-right>
+          <p>{{ amount | balance: wallet.ticker:wallet.type:wallet.decimal }} {{ wallet.ticker }}</p>
+          <!-- <p>{{ sourceFiat | fiat: locale:'USD' }}</p> -->
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="headerfee">
+        <ion-col size="6">
+          <span>{{ $.APY | translate }}</span>
+        </ion-col>
+        <ion-col size="6" text-right>
+          <ng-container *ngIf="apy$ | async as apy; else apyLoading">
+            <p>{{ apy }} %</p>
+          </ng-container>
+          <ng-template #apyLoading>
+            <div class="apy--loading loading-anim"></div>
+          </ng-template>
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+  </main>
+
+  <div slot="footer" class="footer-padding">
+    <ion-button expand="block" mode="ios" (click)="onSubmit()">{{ $.STAKING | translate }}</ion-button>
+  </div>
+</sio-simple-page>

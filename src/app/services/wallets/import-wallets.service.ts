@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AddressType, Wallet } from 'src/app/interface/data';
+import { Wallet } from 'src/app/interface/data';
 import { Acc } from 'src/app/interface/user';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';

@@ -26,6 +26,7 @@ export class SwapDetailModal implements OnInit {
   @Input() progress = 0;
 
   expanded = false;
+  locale = 'USD'
   txFeePipe;
   items: TransactionProgressItem[] = [];
   private _actions = new BehaviorSubject<Action[]>([]);

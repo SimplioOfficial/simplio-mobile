@@ -9,6 +9,7 @@ import { SioListModule } from 'src/app/components/list-items/sio-list.module';
 import { SioLayoutModule } from 'src/app/components/layout/sio-layout.module';
 import { ResponsibilityAgreementGuard } from 'src/app/guards/responsibility-agreement.guard';
 import { InitTutorialModalModule } from 'src/app/pages/modals/tutorials/init-tutorial-modal/init-tutorial.module';
+import { WalletsGeneralResolver } from 'src/app/resolvers/wallets-general.resolver';
 
 const routes: Routes = [
   {
@@ -34,12 +35,18 @@ const routes: Routes = [
   },
   {
     path: 'send',
+    resolve: {
+      wallets: WalletsGeneralResolver,
+    },
     loadChildren: () => import('../send/send.module').then(m => m.SendPageModule),
     canActivate: [ResponsibilityAgreementGuard],
     data: { tapbar: false },
   },
   {
     path: 'receive',
+    resolve: {
+      wallets: WalletsGeneralResolver,
+    },
     canActivate: [ResponsibilityAgreementGuard],
     loadChildren: () => import('../receive/receive.module').then(m => m.ReceivePageModule),
     data: { tapbar: false },

@@ -24,7 +24,7 @@
         formControlName="amount"
         [max]="selectedWallet?.balance || 0"
         (maxClicked)="onMaxClick($event)"
-        [wallet]="wallet"
+        [wallet]="selectedWallet"
         [rate]="rate"
       >
       </sio-value>

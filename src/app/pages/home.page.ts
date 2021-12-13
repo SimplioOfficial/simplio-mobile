@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { combineLatest, Subscription, timer } from 'rxjs';
@@ -29,7 +28,6 @@ import { SettingsProvider } from 'src/app/providers/data/settings.provider';
 import { TransactionsProvider } from 'src/app/providers/data/transactions.provider';
 import { Translate } from 'src/app/providers/translate/';
 import { CreateWalletService } from 'src/app/services/wallets/create-wallets.service';
-import { findPrimaryWallet } from 'src/app/services/wallets/utils';
 import { CheckWalletsService } from 'src/app/services/wallets/check-wallets.service';
 import { PlatformProvider } from 'src/app/providers/platform/platform';
 import { ActionsModal, ActionsModalProps } from 'src/app/pages/modals/actions-modal/actions.modal';
@@ -63,21 +61,33 @@ export class HomePage extends TrackedPage implements OnInit {
       title: this.$.instant(this.$.SEND),
       icon: 'arrow-up',
       cssClass: ['transaction-action-sheet', 'sio-t-btn--action-send'],
-      handler: () => this._navigateWithWallet('home', 'wallets', 'send'),
+      handler: () => this.router.navigate(['home', 'wallets', 'send'], {
+        queryParamsHandling: 'merge',
+      }),
     },
     {
       title: this.$.instant(this.$.RECEIVE),
       icon: 'arrow-down',
       cssClass: ['transaction-action-sheet'],
-      handler: () => this._navigateWithWallet('home', 'wallets', 'receive'),
+      handler: () => this.router.navigate(['home', 'wallets', 'receive'], {
+        queryParamsHandling: 'merge',
+      }),
     },
     {
       title: this.$.instant(this.$.SWAP),
       icon: 'repeat',
       cssClass: ['transaction-action-sheet'],
-      handler: () => {
-        this._navigateSwap('home', 'swap', 'exchange');
-      },
+      handler: () => this.router.navigate(['home', 'swap', 'exchange'], {
+        queryParamsHandling: 'merge',
+      }),
+    },
+    {
+      title: this.$.instant(this.$.STAKING),
+      icon: 'flash-outline',
+      cssClass: ['transaction-action-sheet'],
+      handler: () => this.router.navigate(['home', 'swap', 'stake'], {
+        queryParamsHandling: 'merge',
+      }),
     },
   ];
 
@@ -190,7 +200,6 @@ export class HomePage extends TrackedPage implements OnInit {
   instant = s => this.translateService.instant(s);
 
   constructor(
-    private location: Location,
     private router: Router,
     private acc: AccountService,
     private plt: PlatformProvider,
@@ -291,23 +300,29 @@ export class HomePage extends TrackedPage implements OnInit {
             const sortedTxs: Transaction[] = sortBy(tx.data, 'unix').reverse();
             let wTxs = wallet.transactions
               ? wallet.transactions.filter(
-                  e => sortedTxs.findIndex(ee => ee.hash === e.hash) === -1,
-                )
+                e => sortedTxs.findIndex(ee => ee.hash === e.hash) === -1,
+              )
               : [];
             const unconfirmed = sortedTxs.filter(e => e.confirmed === false).length;
+            const pending = wTxs.filter(e => e.confirmed === false).length;
             const combinedTxs = sortBy([...wTxs, ...sortedTxs], 'unix')
               .reverse()
               .slice(0, 20);
 
-            if (wallet.lasttx !== sortedTxs[0].hash || wallet.unconfirmed !== unconfirmed) {
-              wallet.transactions = combinedTxs;
-              if (tx.endBlock) {
-                wallet.lastblock = tx.endBlock;
-              } else {
-                wallet.lastblock = sortedTxs[0].block;
+            if (wallet.lasttx !== sortedTxs[0].hash || wallet.unconfirmed !== unconfirmed || pending != unconfirmed) {
+              if (pending != unconfirmed && wTxs.length > 0 && wTxs[0].block > sortedTxs[0].block) {
+                // do not update data if there's still pending transaction and no new transaction after last transaction time
               }
-              wallet.lasttx = sortedTxs[0].hash;
-              wallet.unconfirmed = unconfirmed;
+              else {
+                wallet.transactions = combinedTxs;
+                if (tx.endBlock) {
+                  wallet.lastblock = tx.endBlock;
+                } else {
+                  wallet.lastblock = sortedTxs[0].block;
+                }
+                wallet.lasttx = sortedTxs[0].hash;
+                wallet.unconfirmed = unconfirmed;
+              }
               let explorers = this.networkService.getCoinExplorers(wallet.ticker, wallet.type);
               if (!!explorers?.length) {
                 explorers = explorers.filter(e => e.type === explorers[0].type);
@@ -362,37 +377,38 @@ export class HomePage extends TrackedPage implements OnInit {
     this._subscription.unsubscribe();
   }
 
-  _navigateWithWallet(...route) {
-    const wallets = this.walletsProvider.walletsValue;
-    const primaryWallet = this.settingsProvider.settingsValue?.primaryWallet;
-    const overviewWallet = this.walletsProvider.walletValue;
-    const wallet = overviewWallet || findPrimaryWallet(wallets, primaryWallet) || wallets[0];
+  // _navigateWithWallet(...route) {
+  //   const wallets = this.walletsProvider.walletsValue;
+  //   const primaryWallet = this.settingsProvider.settingsValue?.primaryWallet;
+  //   const overviewWallet = this.walletsProvider.walletValue;
+  //   const wallet = overviewWallet || findPrimaryWallet(wallets, primaryWallet) || wallets[0];
 
-    this.router.navigate(route, {
-      state: {
-        wallet,
-        origin: this.location.path(),
-      },
-    });
-  }
+  //   this.router.navigate(route, {
+  //     state: {
+  //       wallet,
+  //       origin: this.location.path(),
+  //     },
+  //   });
+  // }
 
-  _navigateSwap(...route) {
-    const wallets = this.walletsProvider.walletsValue;
-    const primaryWallet = this.settingsProvider.settingsValue?.primaryWallet;
-    const overviewWallet = this.walletsProvider.walletValue;
-    const w = overviewWallet || findPrimaryWallet(wallets, primaryWallet);
-    this.swapProvider.pushSwapData({
-      wallet: w,
-      pair: !!w ? [w, null] : [],
-      amount: 0,
-    });
+  // _navigateSwap(...route) {
+  //   const wallets = this.walletsProvider.walletsValue;
+  //   const primaryWallet = this.settingsProvider.settingsValue?.primaryWallet;
+  //   const overviewWallet = this.walletsProvider.walletValue;
+  //   const w = overviewWallet || findPrimaryWallet(wallets, primaryWallet);
+  //   // this.swapProvider.pushSwapData({
+  //   //   wallet: w,
+  //   //   pair: !!w ? [w, null] : [],
+  //   //   amount: 0,
+  //   // });
 
-    this.router.navigate(route, {
-      state: {
-        origin: this.location.path(),
-      },
-    });
-  }
+  //   this.router.navigate(route, {
+  //     state: {
+  //       origin: this.location.path(),
+  //       wallet: w
+  //     },
+  //   });
+  // }
 
   async showActions() {
     const modal = await this.modalCtrl.create({

@@ -1,0 +1,51 @@
+<sio-simple-page [scroll]="false">
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="cancelTransaction()">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.STAKING | translate }}</span>
+
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <main class="content">
+    <form [formGroup]="formField">
+      <sio-value
+        [ticker]="selectedWallet?.ticker || ''"
+        [currency]="currency"
+        formControlName="amount"
+        [max]="selectedWallet?.balance || 0"
+        (maxClicked)="onMaxClick($event)"
+        [wallet]="selectedWallet"
+        [rate]="rate"
+      >
+      </sio-value>
+    </form>
+
+    <sio-wallet-item-select
+      id="sio-t-btn--select-wallet"
+      [wallet]="selectedWallet"
+      [fiatValue]="selectedFiat | fiat"
+      [rate]="rate"
+      [currency]="currency"
+      [label]="$.SELECT_WALLET | translate"
+      (click)="openSelectWalletModal()"
+    >
+    </sio-wallet-item-select>
+
+    <div class="select-wallet-button">
+      <ion-button
+        [disabled]="!formField.valid"
+        id="sio-t-sub--send"
+        expand="block"
+        mode="ios"
+        (click)="onSubmit()"
+        >{{ $.NEXT | translate }}
+      </ion-button>
+    </div>
+
+    <sio-numpad [num-type]="numTypes.SMALL" (changed)="onAmountChange($event)"></sio-numpad>
+  </main>
+</sio-simple-page>

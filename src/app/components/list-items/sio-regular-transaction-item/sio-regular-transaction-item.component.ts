@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NotificationType } from 'src/app/components/list-items/sio-wallet-item/sio-wallet-item.component';
-import { Transaction, TxType, Wallet, WalletType } from 'src/app/interface/data';
+import { Transaction, TxType, WalletType } from 'src/app/interface/data';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
@@ -14,7 +14,9 @@ export class SioRegularTransactionItemComponent implements OnInit {
   private tokens = [WalletType.SOLANA, WalletType.POLKADOT, WalletType.ETH];
 
   @Input() transaction: Transaction;
-  @Input() wallet: Wallet;
+  @Input() walletType: WalletType;
+  @Input() walletTicker: string;
+  @Input() walletDecimal: number;
   @Input() locale: string;
   @Input('unconfirmed-message') unconfirmedMsg = '';
 
@@ -30,11 +32,11 @@ export class SioRegularTransactionItemComponent implements OnInit {
   }
 
   get isErcToken(): boolean {
-    return this.tokens.includes(this.wallet.type);
+    return this.tokens.includes(this.walletType);
   }
 
   get showHash(): boolean {
-    return UtilsService.isSolana(this.wallet.type) || UtilsService.isPolkadot(this.wallet.type);
+    return UtilsService.isSolana(this.walletType) || UtilsService.isPolkadot(this.walletType);
   }
 
   ngOnInit(): void {}

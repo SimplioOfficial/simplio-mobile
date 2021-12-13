@@ -93,7 +93,7 @@ export const AXS = {
 // BAND PROTOCOL
 export const BAND = {
   color: '#000',
-  graph: '#0ac18e',
+  graph: '#b3b3b3',
   svg: (
     color = '#fff'
   ) => `<svg width="100%" height="100%" viewBox="0 0 32 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
@@ -2822,6 +2822,17 @@ export const SNY = {
 
 // SOL
 export const SOL = {
+  color: '#00FFA3',
+  graph: '#00FFA3',
+  svg: (
+    color = '#000'
+  ) => `<svg width="100%" height="100%" viewBox="0 0 1658 1299" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path d="M269.251,991.25c10,-10 23.75,-15.833 38.333,-15.833l1322.5,-0c24.167,-0 36.25,29.166 19.167,46.25l-261.25,261.25c-10,10 -23.75,15.833 -38.334,15.833l-1322.5,0c-24.166,0 -36.25,-29.167 -19.166,-46.25l261.25,-261.25Zm1118.75,-490.833c-10,-10 -23.75,-15.834 -38.334,-15.834l-1322.5,0c-24.166,0 -36.25,29.167 -19.166,46.25l261.25,261.25c10,10 23.75,15.834 38.333,15.834l1322.5,-0c24.167,-0 36.25,-29.167 19.167,-46.25l-261.25,-261.25Zm-1118.75,-484.584c10.416,-10 24.166,-15.833 38.333,-15.833l1322.5,0c24.167,0 36.25,29.167 19.167,46.25l-261.25,261.25c-10,10 -23.75,15.833 -38.334,15.833l-1322.5,0c-24.166,0 -36.25,-29.166 -19.166,-46.25l261.25,-261.25Z" style="fill:${color};fill-rule:nonzero;" />
+  </svg>`
+};
+
+// SOL1 - the one with slice instead of HD implementation (must be deleted in 0.4.0)
+export const SOL1 = {
   color: '#00FFA3',
   graph: '#232323',
   svg: (

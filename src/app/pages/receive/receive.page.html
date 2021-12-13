@@ -52,7 +52,7 @@
   <div slot="footer">
     <!-- Wallet Selection -->
     <sio-wallet-item-select
-      [wallet]="wallet"
+      [wallet]="wallet$ | async"
       [fiatValue]="fiatValue | fiat"
       [rate]="rate"
       [currency]="currency"

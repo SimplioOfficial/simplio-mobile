@@ -95,6 +95,7 @@ export const coinNames = {
   SNX: 'SNX',
   SNY: 'SNY',
   SOL: 'SOL',
+  SOL1: 'SOL1', // must be deleted in 0.4.0
   SRM: 'SRM',
   SUSHI: 'SUSHI',
   TEL: 'TEL',
@@ -124,6 +125,7 @@ export const platformList = {
   ETH: 'ETH',
   BSC: 'BSC',
   SOL: 'SOL',
+  SOL_DEV: 'SOL Dev',
 };
 
 export const coinOrigin = {

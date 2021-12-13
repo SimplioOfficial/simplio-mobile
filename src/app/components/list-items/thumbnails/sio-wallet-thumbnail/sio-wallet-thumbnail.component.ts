@@ -15,7 +15,7 @@ import { coinNames } from '../../../../services/api/coins';
 @Component({
   selector: 'sio-wallet-thumbnail',
   templateUrl: './sio-wallet-thumbnail.component.html',
-  styleUrls: ['../generic-thumbnail.scss'],
+  styleUrls: ['./sio-wallet-thumbnail.component.scss', '../generic-thumbnail.scss'],
 })
 export class SioWalletThumbnailComponent implements OnChanges, AfterViewInit {
   @Input() iconID = '';

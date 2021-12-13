@@ -63,6 +63,7 @@ export type WalletSqlData = {
   origin: string;
   unique_id: number;
   is_initialized: number;
+  address_type: number;
 };
 
 export type WallletAddressSqlData = {

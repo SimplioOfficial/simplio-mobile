@@ -1,12 +1,11 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { pipeAmount, UtilsService } from 'src/app/services/utils.service';
-import { WalletType, Rate, FeeResponse, FeeName } from 'src/app/interface/data';
+import { WalletType, Rate, FeeResponse, FeeName, WalletsData } from 'src/app/interface/data';
 import { WalletService } from 'src/app/services/wallet.service';
 import { Wallet } from 'src/app/interface/data';
 import { TransactionOptionsModal } from 'src/app/pages/modals/transaction-options-modal/transaction-options.modal';
@@ -14,18 +13,19 @@ import { TransactionWalletsModal } from 'src/app/pages/modals/transaction-wallet
 import { SioValueComponent } from 'src/app/components/form/sio-value/sio-value.component';
 import { SettingsProvider } from 'src/app/providers/data/settings.provider';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
-import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
 import { isGreaterThan, isLowerThan } from 'src/shared/validators';
 import { Translate } from 'src/app/providers/translate/';
 import { getPrice } from 'src/app/services/wallets/utils';
-import { RateService } from 'src/app/services/apiv2/connection/rate.service';
 import { TxcoinService } from 'src/app/services/apiv2/transaction/txcoin.service';
 import { NetworkService } from 'src/app/services/apiv2/connection/network.service';
 import { Feev2Service } from 'src/app/services/apiv2/connection/feev2.service';
 import { SioNumpadComponent } from 'src/app/components/form/sio-numpad/sio-numpad.component';
 import { coinNames } from '../../services/api/coins';
-import { TranslateService } from '@ngx-translate/core';
 import { TrackedPage } from '../../classes/trackedPage';
+
+type RouteData = {
+  wallets: WalletsData;
+};
 
 @Component({
   selector: 'app-send',
@@ -33,6 +33,7 @@ import { TrackedPage } from '../../classes/trackedPage';
   styleUrls: ['./send.page.scss'],
 })
 export class SendPage extends TrackedPage implements OnDestroy {
+  private _wallets: Wallet[] = [];
   private _fees: FeeResponse;
 
   readonly numTypes = SioNumpadComponent.TYPES;
@@ -47,8 +48,6 @@ export class SendPage extends TrackedPage implements OnDestroy {
   currency = this.settingsProvider.settingsValue.currency;
   locale = this.settingsProvider.settingsValue.language;
   feePolicy = this.settingsProvider.settingsValue.feePolicy;
-  wallets: Wallet[] = [];
-  wallet: Wallet = null;
 
   @ViewChild(SioValueComponent) valueComponent: SioValueComponent;
 
@@ -63,25 +62,16 @@ export class SendPage extends TrackedPage implements OnDestroy {
     },
   );
 
-  wallets$ = this.walletsProvider.wallets$.subscribe(w => (this.wallets = w));
+  private _routeData = this.route.data
+    .pipe(filter(d => !!d))
+    .subscribe(this._onRouteDataSubscription.bind(this));
 
-  private _wallet = new BehaviorSubject<Wallet>(
-    this.router.getCurrentNavigation().extras.state?.wallet || this.walletsProvider.walletValue,
-  );
-  wallet$ = this._wallet
-    .pipe(
-      tap(w => {
-        this.wallet = w;
-        this.rate = this.getPrice(this.rateService.rateValue, w.ticker, this.currency);
-        this.formField.patchValue({ wallet: w });
-      }),
-    )
-    .subscribe();
-
-  instant = s => this.translateService.instant(s);
+  private _walletChange = this.formField.valueChanges.pipe(
+  ).subscribe(console.log)
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private fb: FormBuilder,
     private modalCtrl: ModalController,
     private loadingController: LoadingController,
@@ -89,21 +79,18 @@ export class SendPage extends TrackedPage implements OnDestroy {
     private feeService: Feev2Service,
     private settingsProvider: SettingsProvider,
     private utilsService: UtilsService,
-    private rateService: RateService,
     private dataService: DataService,
     private authProvider: AuthenticationProvider,
     public $: Translate,
-    private walletsProvider: WalletsProvider,
     private txcoin: TxcoinService,
     private networkService: NetworkService,
-    private translateService: TranslateService,
   ) {
     super();
     this.feeService.getFee().then(res => (this._fees = res));
   }
 
   get selectedWallet(): Wallet {
-    return this.formField.get('wallet').value;
+    return this.formField?.get('wallet')?.value ?? null;
   }
 
   get feeLevelName(): string {
@@ -117,8 +104,13 @@ export class SendPage extends TrackedPage implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.wallet$.unsubscribe();
-    this.wallets$.unsubscribe();
+    this._routeData.unsubscribe();
+    this._walletChange.unsubscribe();
+  }
+
+  private _onRouteDataSubscription({ wallets: w }: RouteData) {
+    this._wallets = w.wallets;
+    this.formField.patchValue({ wallet: w.primaryWallet });
   }
 
   onAmountChange(value: number) {
@@ -132,23 +124,20 @@ export class SendPage extends TrackedPage implements OnDestroy {
   private _navigateWithUrl(url) {
     return this.router.navigate(url, {
       state: {
-        wallet: this.wallet,
+        wallet: this.selectedWallet,
         origin: this._originUrl,
       },
     });
   }
-  /**
-   *
-   * @todo too complex logic. Simplify!
-   */
+
   async onSubmit() {
-    if (UtilsService.isCoin(this.wallet.type)) {
+    if (UtilsService.isCoin(this.selectedWallet?.type)) {
       await this.presentLoading();
     }
     this.dataService.initTransaction();
 
     try {
-      const { amount, feeLevelName: fl } = this.formField.value;
+      const { amount, feeLevelName: fl, wallet } = this.formField.value;
       const { idt } = this.authProvider.accountValue;
 
       const fiatAmount = parseFloat((amount * this.rate).toFixed(8));
@@ -159,11 +148,11 @@ export class SendPage extends TrackedPage implements OnDestroy {
       };
 
       this.dataService.unsignedTransaction.feepipe = {
-        ticker: this.wallet.ticker,
-        type: this.wallet.type,
-        decimal: this.wallet.decimal,
+        ticker: wallet.ticker,
+        type: wallet.type,
+        decimal: wallet.decimal,
       };
-      switch (this.wallet.type) {
+      switch (wallet.type) {
         case WalletType.BSC_TOKEN:
           this.dataService.unsignedTransaction.feepipe = {
             ticker: coinNames.BNB,
@@ -190,28 +179,28 @@ export class SendPage extends TrackedPage implements OnDestroy {
           break;
       }
       this.dataService.unsignedTransaction.mnemo = this.walletService.getSeeds(
-        this.wallet.mnemo,
+        wallet.mnemo,
         idt,
       );
       this.dataService.unsignedTransaction.amount = amount;
-      this.dataService.unsignedTransaction.wallet = this.wallet;
+      this.dataService.unsignedTransaction.wallet = wallet;
 
       this.dataService.unsignedTransaction.fee.price = await this.feeService.getFeePrice(
-        this.wallet.ticker,
-        this.wallet.type,
+        wallet.ticker,
+        wallet.type,
         fl,
       );
       this.dataService.unsignedTransaction.fee.minFee = this.feeService.getMinFee(
-        this.wallet.ticker,
+        wallet.ticker,
       );
 
       this.dataService.unsignedTransaction.isMax = this.isMax;
       // Routing to address page
-      if (UtilsService.isCoin(this.wallet.type)) {
-        let explorers = this.networkService.getCoinExplorers(this.wallet.ticker, this.wallet.type);
+      if (UtilsService.isCoin(wallet.type)) {
+        let explorers = this.networkService.getCoinExplorers(wallet.ticker, wallet.type);
         explorers = explorers.filter(e => e.type === explorers[0].type);
         this.txcoin
-          .getUtxo({ explorers, addresses: this.wallet.addresses.map(a => a.address) })
+          .getUtxo({ explorers, addresses: wallet.addresses.map(a => a.address) })
           .then(res => {
             if (res.utxos.length > 0) {
               this.dataService.unsignedTransaction.utxo = res.utxos;
@@ -261,14 +250,14 @@ export class SendPage extends TrackedPage implements OnDestroy {
 
   async openSelectWalletModal() {
     const modal = await this._presentModal(TransactionWalletsModal, {
-      wallets: this.wallets.filter(w => w !== this.selectedWallet),
+      wallets: this._wallets.filter(w => w !== this.selectedWallet),
       currency: this.currency,
     });
     modal
       .onWillDismiss()
       .then(wallet => {
-        if (wallet.data) {
-          this._wallet.next(wallet.data);
+        if (!!wallet.data) {
+          this.formField.patchValue({ wallet: wallet.data })
 
           const coin = wallet.data.ticker.toLowerCase();
           if (this._fees[coin]) {
@@ -285,7 +274,7 @@ export class SendPage extends TrackedPage implements OnDestroy {
   }
 
   private _validateSuficiencty(c: FormControl): Validators {
-    return Validators.max(this.wallet?.balance || 0)(c);
+    return Validators.max(this.selectedWallet?.balance || 0)(c);
   }
 
   getPrice(rates: Rate[], ticker: string, currency: string): number {
@@ -299,7 +288,7 @@ export class SendPage extends TrackedPage implements OnDestroy {
 
   async presentLoading() {
     this.loading = await this.loadingController.create({
-      message: this.instant(this.$.PREPARING_DATA),
+      message: this.$.instant(this.$.PREPARING_DATA),
       duration: 25000,
     });
     await this.loading.present();

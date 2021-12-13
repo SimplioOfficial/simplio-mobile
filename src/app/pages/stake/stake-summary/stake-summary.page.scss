@@ -1,0 +1,37 @@
+ion-grid {
+  --ion-grid-padding: var(--spacing-small);
+}
+
+ion-col span {
+  font-size: 14px;
+  color: var(--ion-color-step-500);
+}
+
+p {
+  margin: 0;
+}
+
+.detail {
+  ion-row {
+    padding: var(--spacing-tiny) 0;
+    border-top: solid 1px var(--ion-color-border);
+  }
+}
+
+ion-col[text-right] {
+  text-align: right;
+  span {
+    display: block;
+  }
+}
+
+.overview {
+  display: grid;
+  place-content: center;
+  padding: var(--spacing-medium) var(--spacing-small);
+}
+
+.apy--loading {
+  display: block;
+  height: 100%;
+}

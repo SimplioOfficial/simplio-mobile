@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import * as backend from '@simplio/backend/api';
-import { AddrUtxo, Rate, WalletAddress, WalletType } from 'src/app/interface/data';
+import { AddressType, AddrUtxo, Rate, Transaction, TxType, WalletAddress, WalletType } from 'src/app/interface/data';
 import { Explorer, ExplorerType } from 'src/app/interface/explorer';
-import { isCoin, isSolana, isSolanaToken } from '../../utils.service';
+import { TransactionsProvider } from 'src/app/providers/data/transactions.provider';
+import { TransactionDataResponse } from '../../transactions.service';
+import { isCoin, isErcCoin, isErcToken, isSolana, isSolanaToken } from '../../utils.service';
 import { NetworkService } from '../connection/network.service';
 import { TxblockbookService } from '../transaction/txblockbook.service';
 import { TxinsightService } from '../transaction/txinsight.service';
@@ -19,11 +21,12 @@ export class BackendService {
   private vAddress: backend.ValidateaddressService;
   private dec: backend.DecimalsService;
   private tx: backend.Createtransaction;
-
+  private stk: backend.StakeService;
   constructor(
     private networkService: NetworkService,
     private txblockbook: TxblockbookService,
     private txinsight: TxinsightService,
+    private txs: TransactionsProvider
   ) {
     this.blib = new backend.BitcoreLib();
     this.blibC = new backend.BitcoreLibCustom();
@@ -31,6 +34,7 @@ export class BackendService {
     this.sol = new backend.Solana();
     this.dot = new backend.Polkadot();
     this.w3 = new backend.Web3Sio();
+    this.stk = new backend.StakeService(this.sol);
     this.vAddress = new backend.ValidateaddressService(
       this.blibZ,
       this.blib,
@@ -82,7 +86,16 @@ export class BackendService {
     return this.tx;
   }
 
+  get stake(){
+    return this.stk;
+  }
+
+  getLastWeb3Block(type: WalletType): Promise<any> {
+      return this.web3.getLib(type).eth.getBlockNumber();
+  }
+
   async createTransaction(data: {
+    _uuid: string;
     seeds: string;
     ticker: string;
     addresses: WalletAddress[];
@@ -101,12 +114,36 @@ export class BackendService {
     lasttx: string;
     api: string;
     feeContractAddress?: string;
+    addressType: AddressType
   }) {
     if (isSolana(data.type) || isSolanaToken(data.type)) {
       data.api = this.getSolApi(data);
     }
     const txResponse = await this.transaction.createTransaction(data);
-    if (isCoin(data.type)) {
+    if(isErcToken(data.type) || isErcCoin(data.type)){
+      const currBlock = await this.getLastWeb3Block(data.type)
+      const tx: Transaction = {
+        _uuid: data._uuid,
+        address: data.addresses[0].address,
+        amount: data.amount,
+        block: currBlock,
+        confirmed: false,
+        date: "",
+        unix: Math.floor(Date.now() / 1000),
+        hash: txResponse,
+        ticker: data.ticker,
+        type: TxType.UNKNOWN,
+      }
+
+      let txDataResponse: TransactionDataResponse = {
+        _uuid: data._uuid,
+        data: [tx],
+        endBlock: currBlock,
+      }
+      this.txs.pushTransactions(txDataResponse);
+      return txResponse;
+    }
+    else if (isCoin(data.type)) {
       switch (data.explorer.type) {
         case ExplorerType.BLOCKBOOK:
           return this.txblockbook.broadcastTx({ explorer: data.explorer, rawtx: txResponse });

@@ -10,7 +10,6 @@ import { SioLayoutModule } from 'src/app/components/layout/sio-layout.module';
 import { SioListModule } from 'src/app/components/list-items/sio-list.module';
 import { VerifyIdentityModal } from './verify-identity.modal';
 import { SioFormModule } from 'src/app/components/form/sio-form.module';
-import { SioIllustrationModule } from 'src/app/components/illustrations/sio-illustration.module';
 
 @NgModule({
   imports: [
@@ -21,7 +20,6 @@ import { SioIllustrationModule } from 'src/app/components/illustrations/sio-illu
     SioLayoutModule,
     SioListModule,
     SioFormModule,
-    SioIllustrationModule,
     TranslateModule.forChild({
       extend: true,
     }),

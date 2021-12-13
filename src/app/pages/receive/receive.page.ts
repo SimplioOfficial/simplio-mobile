@@ -1,14 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { LoadingController, ModalController, NavController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { copyInputMessage, pipeAmount, UtilsService } from 'src/app/services/utils.service';
 import { SettingsProvider } from 'src/app/providers/data/settings.provider';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
 import { Translate } from 'src/app/providers/translate/';
-import { Rate, Wallet, WalletType } from 'src/app/interface/data';
+import { Rate, Wallet, WalletsData, WalletType } from 'src/app/interface/data';
 import { TransactionWalletsModal } from 'src/app/pages/modals/transaction-wallets-modal/transaction-wallets.modal';
 import { getPrice } from 'src/app/services/wallets/utils';
 import { IoService } from 'src/app/services/io.service';
@@ -20,43 +20,38 @@ import { CheckWalletsService } from 'src/app/services/wallets/check-wallets.serv
 import { TrackedPage } from '../../classes/trackedPage';
 import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
 
+type RouteData = {
+  wallets: WalletsData;
+};
+
 @Component({
   selector: 'app-receive',
   templateUrl: './receive.page.html',
   styleUrls: ['./receive.page.scss'],
 })
 export class ReceivePage extends TrackedPage implements OnDestroy {
+
+  private _wallets: Wallet[] = [];
+  private _wallet = new BehaviorSubject<Wallet>(null); 
+  wallet$ = this._wallet.pipe(
+    tap(w => {
+      this.rate = this.getPrice(this.rateService.rateValue, w.ticker, this.currency);
+    }),
+  );
+
+  private _routeData = this.route.data
+    .pipe(filter(d => !!d))
+    .subscribe(this._onRouteDataSubscription.bind(this));
+
   private loading;
   currency = this.settingsProvider.settingsValue.currency;
   locale = this.settingsProvider.settingsValue.language;
-  wallets: Wallet[] = [];
-  wallet: Wallet = null;
   rate = 0;
   private _originUrl = this.router.getCurrentNavigation().extras.state?.origin || '/home/wallets';
-  private _wallet = new BehaviorSubject<Wallet>(
-    this.router.getCurrentNavigation().extras.state?.wallet,
-  );
-  wallet$ = this._wallet
-    .pipe(
-      tap(w => {
-        this.wallet = w;
-        this.rate = this.getPrice(this.rateService.rateValue, w.ticker, this.currency);
-      }),
-    )
-    .subscribe();
-
-  wallets$ = this.walletsProvider.wallets$.subscribe(w => {
-    this.wallets = w;
-    if (this.wallet) {
-      this.wallet = w.find(e => e._uuid === this.wallet._uuid);
-    }
-  });
-
-  instant = s => this.translateService.instant(s);
 
   constructor(
     private router: Router,
-    private walletsProvider: WalletsProvider,
+    private route: ActivatedRoute,
     private authProvider: AuthenticationProvider,
     private rateService: RateService,
     private utilsService: UtilsService,
@@ -65,8 +60,6 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
     private modalCtrl: ModalController,
     private io: IoService,
     private backendService: BackendService,
-    private navCtrl: NavController,
-    private translateService: TranslateService,
     private checker: CheckWalletsService,
     public $: Translate,
     private loadingController: LoadingController,
@@ -76,16 +69,23 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.wallet$.unsubscribe();
-    this.wallets$.unsubscribe();
+    this._routeData.unsubscribe();
   }
 
-  get isInitialized() {
-    if (!UtilsService.isSolanaToken(this.wallet.type)) {
-      return true;
-    } else {
-      return this.wallet.isInitialized;
-    }
+  get selectedWallet(): Wallet {
+    return this._wallet.value;
+  }
+
+  get isInitialized(): boolean {
+    if (!this.selectedWallet?.type) return false;
+
+    if (!UtilsService.isSolanaToken(this.selectedWallet.type)) return true;
+    return this.selectedWallet.isInitialized;
+  }
+
+  private _onRouteDataSubscription({ wallets: w }: RouteData) {
+    this._wallets = w.wallets;
+    this._wallet.next(w.primaryWallet);
   }
 
   async cancelTransaction() {
@@ -118,22 +118,21 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
   }
 
   get currentAddress(): string {
-    return this.wallet?.mainAddress || '';
+    return this.selectedWallet?.mainAddress || '';
   }
 
   get fiatValue(): number {
-    if (!this.wallet) return 0;
-    const { balance, ticker, type, decimal } = this.wallet;
+    if (!this.selectedWallet) return 0;
+    const { balance, ticker, type, decimal } = this.selectedWallet;
     return pipeAmount(balance, ticker, type, decimal, true) * this.rate;
   }
 
   private openModal(modalComponent): Promise<any> {
-    const wallets = this.wallets.filter(w => w._uuid !== this.wallet._uuid);
     return this.modalCtrl
       .create({
         component: modalComponent,
         componentProps: {
-          wallets,
+          wallets: this._wallets.filter(w => w._uuid !== this.selectedWallet._uuid),
           currency: this.currency,
         },
       })
@@ -145,9 +144,9 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
 
   async presentCreateTokenAccountPrompt() {
     const minimumRent = await this.backendService.solana.getMinimumRentExemption({
-      api: this.wallet.api,
+      api: this.selectedWallet.api,
     });
-    const alertMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_FEE);
+    const alertMsg = this.$.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_FEE);
 
     const alert = await this.utilsService.createAlert({
       header: this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT,
@@ -172,19 +171,19 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
           handler: async () => {
             const { idt } = this.authProvider.accountValue;
 
-            const solWallet = this.wallets.find(
+            const solWallet = this._wallets.find(
               e => e.ticker === coinNames.SOL && UtilsService.isSolana(e.type),
             );
-            if (!solWallet || minimumRent > solWallet.balance) {
-              let errorMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_ERROR);
+            if (!solWallet || (minimumRent > solWallet.balance && !UtilsService.isSolanaDev(this.selectedWallet.type))) {
+              let errorMsg = this.$.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_ERROR);
               throw new Error(
                 errorMsg.replace(
                   '<value>',
                   pipeAmount(
                     minimumRent,
-                    this.wallet.ticker,
-                    this.wallet.type,
-                    this.wallet.decimal,
+                    this.selectedWallet.ticker,
+                    this.selectedWallet.type,
+                    this.selectedWallet.decimal,
                     true,
                   ).toString(),
                 ),
@@ -193,15 +192,16 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
             await this.presentLoading(this.$.INITIALIZING_TOKEN);
             this.backendService.solana
               .createTokenAddress({
-                address: this.wallet.mainAddress,
-                api: this.wallet.api,
-                contractAddress: this.wallet.contractaddress,
-                seeds: this.io.decrypt(this.wallet.mnemo, idt),
+                address: this.selectedWallet.mainAddress,
+                api: this.selectedWallet.api,
+                contractAddress: this.selectedWallet.contractaddress,
+                seeds: this.io.decrypt(this.selectedWallet.mnemo, idt),
+                addressType: this.selectedWallet.addressType
               })
               .then(_ => {
                 this.checker.checkTransactions(
                   {
-                    wallets: [this.wallet],
+                    wallets: [this.selectedWallet],
                     important: true,
                   },
                   () => {
@@ -223,7 +223,7 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
 
   async presentLoading(msg) {
     this.loading = await this.loadingController.create({
-      message: this.instant(msg),
+      message: this.$.instant(msg),
       duration: 25000,
     });
     await this.loading.present();

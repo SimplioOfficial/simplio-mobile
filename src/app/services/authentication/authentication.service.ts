@@ -73,7 +73,7 @@ export class AuthenticationService {
   async login(cred: AccountCredentials, opt: Partial<AfterLoginOptions> = {}): Promise<Acc> {
     try {
       const cr = await this._login(cred);
-      console.log(cr);
+      // console.log(cr);
       const accountLog = await this.io.getLatestAccountLog(cred.userId);
 
       const o: AfterLoginOptions = {

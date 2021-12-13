@@ -36,6 +36,7 @@ export interface Wallet {
   transactions?: Transaction[];
   isInitialized: boolean;
   uniqueId: number;
+  addressType: AddressType;
 }
 export interface WalletAddress {
   _uuid: UUID; // Wallets uuid that the address belongs to
@@ -52,8 +53,8 @@ export interface Address {
 }
 
 export enum AddressType {
-  Change,
-  External,
+  DEFAULT = 1,
+  HD
 }
 
 export enum WalletType {
@@ -611,3 +612,14 @@ export interface SolFeeToken {
   ticker: string;
   type: WalletType;
 }
+
+export interface Stake {
+  amount: number;
+  contractAddress: string;
+  lastPayment: number;
+  poolAccount: string;
+  stakingAccount: string;
+  stakingOwner: string;
+  startTime: number;
+  withdrawAccount: string;
+}  

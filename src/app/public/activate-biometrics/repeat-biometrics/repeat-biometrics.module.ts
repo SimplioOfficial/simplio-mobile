@@ -5,7 +5,6 @@ import { IonicModule } from '@ionic/angular';
 import { SioLayoutModule } from 'src/app/components/layout/sio-layout.module';
 import { RepeatBiometricsPage } from './repeat-biometrics.page';
 import { TranslateModule } from '@ngx-translate/core';
-import { SioIllustrationModule } from 'src/app/components/illustrations/sio-illustration.module';
 
 const routes: Routes = [
   {
@@ -18,7 +17,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     IonicModule,
-    SioIllustrationModule,
     SioLayoutModule,
     RouterModule.forChild(routes),
     TranslateModule.forChild({

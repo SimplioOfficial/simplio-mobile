@@ -18,7 +18,7 @@
 
 <div class="balance">
   <p [className]="statusClass">
-    {{ transaction.amount | balance: wallet.ticker:wallet.type:wallet.decimal }}
+    {{ transaction.amount | balance: walletTicker:walletType:walletDecimal }}
     {{ transaction.ticker }}
   </p>
   <span *ngIf="transaction.confirmed; else unconfirmedRef">{{

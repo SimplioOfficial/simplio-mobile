@@ -313,7 +313,11 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     if (!this.reorderGroup.disabled) return;
 
     this.walletsProvider.pushWallet(wallet);
-    await this.router.navigate(['/home', 'wallets', wallet.name, 'overview']);
+    await this.router.navigate(['/home', 'wallets', wallet.name, 'overview'], {
+      queryParams: {
+        overview: wallet.name,
+      },
+    });
   }
 
   async openSettings() {
