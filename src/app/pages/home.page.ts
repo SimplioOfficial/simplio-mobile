@@ -52,7 +52,7 @@ import { sortBy } from 'lodash';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage extends TrackedPage implements OnInit {
-  private readonly REQUEST_PIN_TIMEOUT = 15000;
+  private readonly REQUEST_PIN_TIMEOUT = 15 * 60000; // 15 mins
   private _subscription = new Subscription();
   isConnected$ = this.plt.isConnected$;
   private _loading: any;
