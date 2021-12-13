@@ -175,7 +175,7 @@ export class CreateWalletService implements WalletsCreator {
   addWallet(wallet: WalletData): Promise<Wallet> {
     console.log('Adding wallet', wallet);
     const w = wallet.value();
-    return Promise.all([this.io.addWallet(w)]).then(([w, _]) => {
+    return Promise.all([this.io.addWallet(w)]).then(([w]) => {
       this.walletsProvider.pushNewWallet(w);
       return w;
     });
