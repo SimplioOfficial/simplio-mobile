@@ -59,7 +59,10 @@ export const isLocked =
   (wallet: Wallet): boolean => {
     const up = (s: string) => s.toUpperCase();
     const dw = defaultWallets.find(
-      d => up(d.ticker) === up(wallet.ticker) && d.type === wallet.type && !UtilsService.isSolana(wallet.type),
+      d =>
+        up(d.ticker) === up(wallet.ticker) &&
+        d.type === wallet.type &&
+        !UtilsService.isSolana(wallet.type),
     );
     return dw?.isLocked ?? false;
   };

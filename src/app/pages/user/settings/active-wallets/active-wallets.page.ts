@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { tap } from 'rxjs/operators';
 import { Wallet } from 'src/app/interface/data';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
 import { Translate } from 'src/app/providers/translate/';
@@ -18,9 +19,26 @@ const isLockedWallet = isLocked(Object.values(defaultWallets));
   styleUrls: ['./active-wallets.page.scss'],
 })
 export class ActiveWalletsPage {
-  wallets$: Observable<Wallet[]> = this.walletsProvider.allWallets$;
+  wallets$: Observable<Wallet[]> = this.walletsProvider.allWallets$.pipe(
+    tap(wallets => {
+      this.isLockedWalletArr = [];
+      wallets.forEach(w => this.isLockedWalletArr.push(this.isLocked(w)));
+
+      this.canLockDefaultWallet =
+        this.isLockedWalletArr
+          .map((isLocked, i) => {
+            if (isLocked) {
+              return wallets[i].isActive;
+            }
+
+            return false;
+          })
+          .filter(a => a).length > 1;
+    }),
+  );
 
   canLockDefaultWallet = false;
+  isLockedWalletArr = [];
 
   constructor(
     private router: Router,
@@ -31,8 +49,7 @@ export class ActiveWalletsPage {
     public $: Translate,
   ) {
     this.canLockDefaultWallet =
-      this.walletsProvider.walletsValue.map(w => this.isLocked(w)).filter(w => w === true).length >
-      1;
+      this.walletsProvider.walletsValue.map(w => isLockedWallet(w)).filter(w => w).length > 1;
   }
 
   isLocked(wallet: Wallet): boolean {
@@ -43,9 +60,6 @@ export class ActiveWalletsPage {
     try {
       const updatedProperties = { isActive: checked };
       await this.wallets.updateWallet(wallet._uuid, updatedProperties, false);
-      this.canLockDefaultWallet =
-        this.walletsProvider.walletsValue.map(w => this.isLocked(w)).filter(w => w === true)
-          .length > 1;
     } catch (err) {
       console.error(err);
       await this.utils.showToast(this.$.UPDATING_HAS_FAILED, 1500, 'warning');

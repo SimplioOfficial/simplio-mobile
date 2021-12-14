@@ -9,7 +9,7 @@
     <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
   </sio-header>
 
-  <ion-item-sliding *ngFor="let w of wallets$ | async">
+  <ion-item-sliding *ngFor="let w of wallets$ | async; let i = index">
     <ion-item>
       <sio-wallet-item
         [id]="w.uniqueId"
@@ -19,9 +19,9 @@
         [isContent]="true"
       >
         <ion-toggle
-          *ngIf="!(isLocked(w) && !canLockDefaultWallet && w.isActive); else lockRef"
+          *ngIf="!(isLockedWalletArr[i] && !canLockDefaultWallet && w.isActive); else lockRef"
           [checked]="w.isActive"
-          [disabled]="isLocked(w) && !canLockDefaultWallet && w.isActive"
+          [disabled]="isLockedWalletArr[i] && !canLockDefaultWallet && w.isActive"
           color="primary"
           (ionChange)="toggle($event.detail, w)"
         ></ion-toggle>
@@ -33,7 +33,7 @@
       </sio-wallet-item>
     </ion-item>
 
-    <ion-item-options *ngIf="!isLocked(w); else lockRefSwipeOption" side="end">
+    <ion-item-options *ngIf="!isLockedWalletArr[i]; else lockRefSwipeOption" side="end">
       <ion-item-option>
         <div class="option-button" (click)="deleteWallet(w)"><ion-icon name="trash"></ion-icon></div
       ></ion-item-option>

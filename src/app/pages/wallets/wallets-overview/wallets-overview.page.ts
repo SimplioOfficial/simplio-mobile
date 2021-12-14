@@ -98,7 +98,7 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
   wallets$: Observable<Wallet[]> = this.walletsProvider.wallets$.pipe(
     map(w => sortBy(w, '_p')),
-    tap(w => (this._wallets = this.sortWallet(w))),
+    tap(w => (this._wallets = w)),
   );
 
   totalBalance$ = this.wallets$.pipe(
@@ -158,18 +158,6 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
         ?.price ?? 1
     );
   }
-
-  sortWallet = (w: Wallet[]) => {
-    const priority = this.utilsService.getPriority().reverse();
-    priority.forEach(e => {
-      const idx = w.findIndex(ee => ee.ticker.toLowerCase() === e.toLowerCase());
-      if (idx > -1) {
-        const ww = w.splice(idx, 1);
-        w.unshift(ww[0]);
-      }
-    });
-    return w;
-  };
 
   ngOnInit() {
     this._setChartColor();
@@ -274,10 +262,30 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
   doReorder(event) {
     const { from, to, complete } = event;
-    const clone = { ...this._wallets[from] };
-    this._wallets.splice(from, 1);
-    this._wallets.splice(to, 0, clone);
-    this._wallets.map((w, i) => (w._p = i + 1));
+
+    // UGLY but with better PERFORMANCE
+    const updatedWallets: Wallet[] = [];
+    let walletOrder = 1;
+    this._wallets.forEach((wallet, index) => {
+      if (index === from) {
+        // do nothing
+      } else if (index === to) {
+        updatedWallets.push(this._wallets[from]);
+        updatedWallets.push(this._wallets[index]);
+
+        updatedWallets[walletOrder - 1]._p = walletOrder;
+        updatedWallets[walletOrder]._p = walletOrder + 1;
+
+        walletOrder += 2;
+      } else {
+        updatedWallets.push(this._wallets[index]);
+        updatedWallets[walletOrder - 1]._p = walletOrder;
+        walletOrder++;
+      }
+    });
+
+    this._wallets = updatedWallets;
+
     complete();
   }
 
