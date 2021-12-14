@@ -7,14 +7,14 @@ import { WalletsResolver } from 'src/app/resolvers/wallets.resolver';
   providedIn: 'root',
 })
 export class WalletsGeneralResolver extends WalletsResolver {
+
+  wallets = this.walletsProvider.walletsValue.filter(w => w.isInitialized);
+
   constructor(
     protected settingsProvider: SettingsProvider,
-    protected walletsProvider: WalletsProvider,
+    private walletsProvider: WalletsProvider,
   ) {
-    super(
-      settingsProvider, 
-      walletsProvider.walletsValue.filter(w => w.isInitialized),
-    );
+    super(settingsProvider);
   }
 
 }

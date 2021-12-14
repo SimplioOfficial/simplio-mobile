@@ -10,19 +10,18 @@ import { isErcCoin, isErcToken, isSolana, isToken } from 'src/app/services/utils
 
 export class WalletsStakeResolver extends WalletsResolver {
 
+  wallets = this.walletsProvider.walletsValue.filter(w => 
+    isToken(w.type) ||
+    isSolana(w.type) ||
+    isErcCoin(w.type) ||
+    isErcToken(w.type)
+  );
+
   constructor(
     protected settingsProvider: SettingsProvider,
-    protected walletsProvider: WalletsProvider,
+    private walletsProvider: WalletsProvider,
   ) {
-    super(
-      settingsProvider, 
-      walletsProvider.walletsValue.filter(w => 
-        isToken(w.type) ||
-        isSolana(w.type) ||
-        isErcCoin(w.type) ||
-        isErcToken(w.type)
-      )
-    );
+    super(settingsProvider);
   }
 
 }

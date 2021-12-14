@@ -10,10 +10,10 @@ import { coinNames } from '../services/api/coins';
 })
 export class WalletsResolver implements Resolve<Observable<WalletsData> | WalletsData> {
 
+  wallets: Wallet[] = [];
+
   constructor(
     protected settingsProvider: SettingsProvider,
-    protected wallets: Wallet[] = [],
-    protected oveview: Wallet = null,
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<WalletsData> | WalletsData {
