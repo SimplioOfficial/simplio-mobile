@@ -89,7 +89,7 @@
         [has-ripple]="reorderGroup.disabled"
         [currency]="settings ? settings.currency : 'USD'"
         [locale]="settings ? settings.language : 'EN'"
-        [notification-type]="getNoticationType(w)"
+        [notification-type]="getNotificationType(w)"
         appLongPress
         (pressTime)="onLongPress($event)"
       >

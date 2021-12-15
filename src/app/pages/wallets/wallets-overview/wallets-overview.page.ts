@@ -52,6 +52,7 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     tap(() => this.initTut.create(InitTutorialModal)),
   );
   private _wallets: Wallet[] = [];
+  private _walletsBeforeReorder: Wallet[] = [];
   private _rates: Rate[] = [];
   rate$ = this.rateService.pureRate$.pipe(
     skipWhile(() => !this._wallets.length),
@@ -265,7 +266,7 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
     // UGLY but with better PERFORMANCE
     const updatedWallets: Wallet[] = [];
-    let walletOrder = 1;
+    let walletOrder = Math.min(...this._wallets.map(w => w._p));
     this._wallets.forEach((wallet, index) => {
       if (index === from) {
         // do nothing
@@ -290,9 +291,16 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   doneReorderGroup() {
-    this.walletService.updateWallets(this._wallets, () => {
-      this.reorderGroup.disabled = true;
-    });
+    const updatedWalletIds = this._walletsBeforeReorder
+      .filter(w2 => !!this._wallets.find(w => w._uuid === w2._uuid && w._p !== w2._p))
+      .map(w => w._uuid);
+
+    this.walletService.updateWallets(
+      this._wallets.filter(w => updatedWalletIds.includes(w._uuid)),
+      () => {
+        this.reorderGroup.disabled = true;
+      },
+    );
   }
 
   getFiatValue(w: Wallet): number {
@@ -332,7 +340,7 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  getNoticationType(wallet: Wallet): NotificationType {
+  getNotificationType(wallet: Wallet): NotificationType {
     return this._wallets
       .filter(c => c && wallet && c._uuid === wallet._uuid)
       .filter((c, i) => (i === 0 ? c : []))
@@ -374,6 +382,7 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   private _toggleReorderGroup(state: boolean) {
     if (!this.reorderGroup) return;
     this.reorderGroup.disabled = !state;
+    this._walletsBeforeReorder = JSON.parse(JSON.stringify(this._wallets));
   }
 
   private async hide() {

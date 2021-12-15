@@ -101,6 +101,10 @@ export class NameWalletPage implements OnDestroy {
   }
 
   async addCoin() {
+    if (!this.isValid || (this.showAdvanced && this.recoverySeed === '')) {
+      return;
+    }
+
     const loading = await this.loadingCtrl.create({ duration: 40000 });
     await loading.present();
 

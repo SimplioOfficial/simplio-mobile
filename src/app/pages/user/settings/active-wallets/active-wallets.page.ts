@@ -59,6 +59,7 @@ export class ActiveWalletsPage {
   async toggle({ checked }, wallet: Wallet) {
     try {
       const updatedProperties = { isActive: checked };
+      this.walletsProvider.updateWallet({ ...wallet, ...updatedProperties });
       await this.wallets.updateWallet(wallet._uuid, updatedProperties, false);
     } catch (err) {
       console.error(err);

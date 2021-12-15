@@ -130,6 +130,15 @@ export class WalletsProvider {
     return rescanning;
   }
 
+  updateWallet(wallet: Wallet): Wallet {
+    const index = this._wallets.value.findIndex(w => w._uuid === wallet._uuid);
+    const updatedWallets = this._wallets.value;
+    updatedWallets[index] = wallet;
+    this._wallets.next(updatedWallets);
+
+    return wallet;
+  }
+
   get walletHistoryValue(): WalletHistory[] {
     return this.walletHistory.value || [];
   }
