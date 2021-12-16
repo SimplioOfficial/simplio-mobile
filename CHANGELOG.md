@@ -8,7 +8,8 @@
   - added BRD, WIN, OCEAN, COTI, NU, COCOS, IOTX, PYR, RAD, POND,
   - added SANTOS, PORTO, LAZIO, JASMY, RNDR, MITH, TVK, POWR, BADGER, CHESS,
   - added DODO, LIT, BAKE, AGLD, AKRO, WRX, KEY, BZRX, BLZ, ALPHA,
-  - added POLS, KEEP, PNT, PLA, LINA
+  - added POLS, KEEP, PNT, PLA, LINA, SOLR, COBAN
+  - added MDF, BNX, VITE, MFT, INJ, MTL, BEL
 
 # 0.2.0 (2021-12-02)
 * Initial simplio-wallet commit
