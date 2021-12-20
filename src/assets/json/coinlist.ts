@@ -534,6 +534,13 @@ export const coins: CoinItem[] = [
     unique_id: 30063,
     contractAddress: '0x8443f091997f06a61670b735ed92734f5628692f',
   },
+  {
+    type: WalletType.BSC_TOKEN,
+    name: 'Dego Finance',
+    ticker: coinNames.DEGO,
+    unique_id: 30064,
+    contractAddress: '0x3fda9383a84c05ec8f7630fe10adf1fac13241cc',
+  },
 
   // DOT & DOT TOKENS
   // {
@@ -1451,6 +1458,41 @@ export const coins: CoinItem[] = [
     ticker: coinNames.BEL,
     unique_id: 20129,
     contractAddress: '0xa91ac63d040deb1b7a5e4d4134ad23eb0ba07e14',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Dego Finance',
+    ticker: coinNames.DEGO,
+    unique_id: 20130,
+    contractAddress: '0x88ef27e69108b2633f8e1c184cc37940a075cc02',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'SuperRare',
+    ticker: coinNames.RARE,
+    unique_id: 20131,
+    contractAddress: '0xba5BDe662c17e2aDFF1075610382B9B691296350',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Aavegotchi',
+    ticker: coinNames.GHST,
+    unique_id: 20132,
+    contractAddress: '0x3F382DbD960E3a9bbCeaE22651E88158d2791550',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Keep3rV1',
+    ticker: coinNames.KP3R,
+    unique_id: 20133,
+    contractAddress: '0x1ceb5cb57c4d4e2b2433641b95dd330a33185a44',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Merit Circle',
+    ticker: coinNames.MC,
+    unique_id: 20134,
+    contractAddress: '0x949d48eca67b17269629c7194f4b727d4ef9e5d6',
   },
 
   // ETC coin
