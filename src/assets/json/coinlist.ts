@@ -541,6 +541,42 @@ export const coins: CoinItem[] = [
     unique_id: 30064,
     contractAddress: '0x3fda9383a84c05ec8f7630fe10adf1fac13241cc',
   },
+  {
+    type: WalletType.BSC_TOKEN,
+    name: 'Beefy Finance',
+    ticker: coinNames.BIFI,
+    unique_id: 30065,
+    contractAddress: '0xCa3F508B8e4Dd382eE878A314789373D80A5190A',
+  },
+  {
+    type: WalletType.BSC_TOKEN,
+    name: 'DeXe',
+    ticker: coinNames.DEXE,
+    unique_id: 30066,
+    contractAddress: '0x039cb485212f996a9dbb85a9a75d898f94d38da6',
+  },
+  {
+    type: WalletType.BSC_TOKEN,
+    name: 'Venus',
+    ticker: coinNames.XVS,
+    unique_id: 30067,
+    contractAddress: '0xcf6bb5389c92bdda8a3747ddb454cb7a64626c63',
+  },
+  {
+    type: WalletType.BSC_TOKEN,
+    name: 'Kyber Network Crystal v2',
+    ticker: coinNames.KNC,
+    unique_id: 30068,
+    contractAddress: '0xfe56d5892bdffc7bf58f2e84be1b2c32d21c308b',
+  },
+  {
+    type: WalletType.BSC_TOKEN,
+    name: 'Toko Token',
+    ticker: coinNames.TKO,
+    unique_id: 30069,
+    contractAddress: '0x9f589e3eabe42ebc94a44727b3f3531c0c877809',
+  },
+
 
   // DOT & DOT TOKENS
   // {
@@ -1494,6 +1530,56 @@ export const coins: CoinItem[] = [
     unique_id: 20134,
     contractAddress: '0x949d48eca67b17269629c7194f4b727d4ef9e5d6',
   },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Gifto',
+    ticker: coinNames.GTO,
+    unique_id: 20135,
+    contractAddress: '0xc5bbae50781be1669306b9e001eff57a2957b09d',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'DeXe',
+    ticker: coinNames.DEXE,
+    unique_id: 20136,
+    contractAddress: '0xde4EE8057785A7e8e800Db58F9784845A5C2Cbd6',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Tellor',
+    ticker: coinNames.TRB,
+    unique_id: 20137,
+    contractAddress: '0x88dF592F8eb5D7Bd38bFeF7dEb0fBc02cf3778a0',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Tribe',
+    ticker: coinNames.TRIBE,
+    unique_id: 20138,
+    contractAddress: '0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Gitcoin',
+    ticker: coinNames.GTC,
+    unique_id: 20139,
+    contractAddress: '0xde30da39c46104798bb5aa3fe8b9e0e1f348163f',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Kyber Network Crystal v2',
+    ticker: coinNames.KNC,
+    unique_id: 20140,
+    contractAddress: '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'StaFi',
+    ticker: coinNames.FIS,
+    unique_id: 20141,
+    contractAddress: '0xef3a930e1ffffacd2fc13434ac81bd278b0ecc8d',
+  },
+
 
   // ETC coin
   {
