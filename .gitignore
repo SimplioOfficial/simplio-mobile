@@ -102,5 +102,4 @@ Session.vim
 # proj ignore
 src/api/uglify
 src/assets/js/api.js
-
 src/assets/appConfig.json

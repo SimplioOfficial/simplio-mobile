@@ -96,6 +96,7 @@ export class SendOverviewPage implements OnInit {
     this.disabledBroadcast = true;
     this.backendService
       .createTransaction({
+        _uuid: this.sendData.wallet._uuid,
         seeds: this.sendData.mnemo,
         explorer: this.sendData.explorer,
         addresses: this.sendData.wallet.addresses,
@@ -114,6 +115,7 @@ export class SendOverviewPage implements OnInit {
         lasttx: this.sendData.wallet.lasttx,
         api: this.sendData.wallet.api,
         feeContractAddress: 'BVe7rDXoCm6UhWh1P5mTnVZAnov6MFxGzykqNmhLB7HH',
+        addressType: this.sendData.wallet.addressType
       })
       .then(res => {
         this.check(this.sendData.wallet);

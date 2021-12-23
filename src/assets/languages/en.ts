@@ -714,4 +714,5 @@ export default {
   TRANSACTION_FEE: 'Transaction fee',
   WITHDRAWAL_FEE: 'Withdrawal fee',
   SWAP_FEE: 'Swap fee',
+  DESTINATION_FIAT_AMOUNT_MUST_BE_LARGER_THAN_ZERO: 'We have encountered error, please contact support. Error code 0x01'
 };

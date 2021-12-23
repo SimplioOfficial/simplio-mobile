@@ -107,8 +107,13 @@ export class UtilsService {
   static isToken(type) {
     return isSolanaToken(type) || isErcToken(type);
   }
+
   static isSolana(type) {
     return type === WalletType.SOLANA || type === WalletType.SOLANA_DEV;
+  }
+
+  static isSolanaDev(type) {
+    return type === WalletType.SOLANA_DEV || type === WalletType.SOLANA_TOKEN_DEV;
   }
 
   static isPolkadot(type) {
@@ -144,12 +149,12 @@ export class UtilsService {
   }
 
   static div10(amount: string, decimal: number): string {
-    var arr = [...amount];
+    const arr = [...amount];
     if (!arr.includes('.')) {
       arr.splice(arr.length, 0, '.');
     }
     while (decimal > 0) {
-      var idx = arr.indexOf('.');
+      const idx = arr.indexOf('.');
       if (idx === 0) {
         arr.splice(0, 0, '0');
       } else {
@@ -157,7 +162,7 @@ export class UtilsService {
         [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
       }
     }
-    var idx = arr.indexOf('.');
+    const idx = arr.indexOf('.');
     if (idx === 0) {
       arr.splice(0, 0, '0');
     }
@@ -165,9 +170,9 @@ export class UtilsService {
   }
 
   static mul10(amount: string, decimal: number): string {
-    var arr = [...amount];
+    const arr = [...amount];
     while (decimal > 0) {
-      var idx = arr.indexOf('.');
+      const idx = arr.indexOf('.');
       if (idx === -1) {
         arr.splice(arr.length, 0, '0');
       } else {
@@ -178,7 +183,7 @@ export class UtilsService {
       }
       decimal--;
     }
-    var idx = arr.indexOf('.');
+    const idx = arr.indexOf('.');
     if (idx === arr.length - 1) {
       arr.splice(arr.length - 1, 1);
     }
@@ -359,12 +364,6 @@ export class UtilsService {
         .catch(error => reject(error));
     });
   }
-
-  getPriority(): string[] {
-    const arr = [];
-    arr.push('SIO');
-    return arr;
-  }
 }
 
 export const validateSeeds = (mnemo: string) => {
@@ -491,12 +490,12 @@ export const pipeAmount = (
 };
 
 export const div10 = (amount: string, decimal: number): string => {
-  var arr = [...amount];
+  const arr = [...amount];
   if (!arr.includes('.')) {
     arr.splice(arr.length, 0, '.');
   }
   while (decimal > 0) {
-    var idx = arr.indexOf('.');
+    const idx = arr.indexOf('.');
     if (idx === 0) {
       arr.splice(0, 0, '0');
     } else {
@@ -504,7 +503,7 @@ export const div10 = (amount: string, decimal: number): string => {
       [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
     }
   }
-  var idx = arr.indexOf('.');
+  const idx = arr.indexOf('.');
   if (idx === 0) {
     arr.splice(0, 0, '0');
   }
@@ -512,9 +511,9 @@ export const div10 = (amount: string, decimal: number): string => {
 };
 
 export const mul10 = (amount: string, decimal: number): string => {
-  var arr = [...amount];
+  const arr = [...amount];
   while (decimal > 0) {
-    var idx = arr.indexOf('.');
+    const idx = arr.indexOf('.');
     if (idx === -1) {
       arr.splice(arr.length, 0, '0');
     } else {
@@ -525,7 +524,7 @@ export const mul10 = (amount: string, decimal: number): string => {
     }
     decimal--;
   }
-  var idx = arr.indexOf('.');
+  const idx = arr.indexOf('.');
   if (idx === arr.length - 1) {
     arr.splice(arr.length - 1, 1);
   }

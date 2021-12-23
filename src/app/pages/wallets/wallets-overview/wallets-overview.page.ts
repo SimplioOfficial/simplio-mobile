@@ -52,6 +52,7 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     tap(() => this.initTut.create(InitTutorialModal)),
   );
   private _wallets: Wallet[] = [];
+  private _walletsBeforeReorder: Wallet[] = [];
   private _rates: Rate[] = [];
   rate$ = this.rateService.pureRate$.pipe(
     skipWhile(() => !this._wallets.length),
@@ -98,7 +99,7 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
   wallets$: Observable<Wallet[]> = this.walletsProvider.wallets$.pipe(
     map(w => sortBy(w, '_p')),
-    tap(w => (this._wallets = this.sortWallet(w))),
+    tap(w => (this._wallets = w)),
   );
 
   totalBalance$ = this.wallets$.pipe(
@@ -158,18 +159,6 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
         ?.price ?? 1
     );
   }
-
-  sortWallet = (w: Wallet[]) => {
-    const priority = this.utilsService.getPriority().reverse();
-    priority.forEach(e => {
-      const idx = w.findIndex(ee => ee.ticker.toLowerCase() === e.toLowerCase());
-      if (idx > -1) {
-        const ww = w.splice(idx, 1);
-        w.unshift(ww[0]);
-      }
-    });
-    return w;
-  };
 
   ngOnInit() {
     this._setChartColor();
@@ -274,17 +263,44 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
   doReorder(event) {
     const { from, to, complete } = event;
-    const clone = { ...this._wallets[from] };
-    this._wallets.splice(from, 1);
-    this._wallets.splice(to, 0, clone);
-    this._wallets.map((w, i) => (w._p = i + 1));
+
+    // UGLY but with better PERFORMANCE
+    const updatedWallets: Wallet[] = [];
+    let walletOrder = Math.min(...this._wallets.map(w => w._p));
+    this._wallets.forEach((wallet, index) => {
+      if (index === from) {
+        // do nothing
+      } else if (index === to) {
+        updatedWallets.push(this._wallets[from]);
+        updatedWallets.push(this._wallets[index]);
+
+        updatedWallets[walletOrder - 1]._p = walletOrder;
+        updatedWallets[walletOrder]._p = walletOrder + 1;
+
+        walletOrder += 2;
+      } else {
+        updatedWallets.push(this._wallets[index]);
+        updatedWallets[walletOrder - 1]._p = walletOrder;
+        walletOrder++;
+      }
+    });
+
+    this._wallets = updatedWallets;
+
     complete();
   }
 
   doneReorderGroup() {
-    this.walletService.updateWallets(this._wallets, () => {
-      this.reorderGroup.disabled = true;
-    });
+    const updatedWalletIds = this._walletsBeforeReorder
+      .filter(w2 => !!this._wallets.find(w => w._uuid === w2._uuid && w._p !== w2._p))
+      .map(w => w._uuid);
+
+    this.walletService.updateWallets(
+      this._wallets.filter(w => updatedWalletIds.includes(w._uuid)),
+      () => {
+        this.reorderGroup.disabled = true;
+      },
+    );
   }
 
   getFiatValue(w: Wallet): number {
@@ -324,7 +340,7 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  getNoticationType(wallet: Wallet): NotificationType {
+  getNotificationType(wallet: Wallet): NotificationType {
     return this._wallets
       .filter(c => c && wallet && c._uuid === wallet._uuid)
       .filter((c, i) => (i === 0 ? c : []))
@@ -366,6 +382,7 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   private _toggleReorderGroup(state: boolean) {
     if (!this.reorderGroup) return;
     this.reorderGroup.disabled = !state;
+    this._walletsBeforeReorder = JSON.parse(JSON.stringify(this._wallets));
   }
 
   private async hide() {

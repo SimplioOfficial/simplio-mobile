@@ -3,6 +3,7 @@ import { Acc } from 'src/app/interface/user';
 import { BalancePipe } from 'src/app/pipes/balance.pipe';
 import { DefaultWalletFactory } from 'src/app/providers/wallets/default-wallets';
 import { WalletData } from 'src/app/providers/wallets/wallet-data';
+import { UtilsService } from '../utils.service';
 
 export const createDefaultWalletData = (account: Acc, wf: DefaultWalletFactory): WalletData => {
   const wallet = new WalletData(account);
@@ -52,12 +53,16 @@ export const searchBy = <T>(data: T[], ...keys: string[]): ((s: string) => T[]) 
   };
 };
 
+// @TODO: user can delete sol wallet to support hd wallet until version 0.4.0
 export const isLocked =
   (defaultWallets: DefaultWalletFactory[]) =>
   (wallet: Wallet): boolean => {
     const up = (s: string) => s.toUpperCase();
     const dw = defaultWallets.find(
-      d => up(d.ticker) === up(wallet.ticker) && d.type === wallet.type,
+      d =>
+        up(d.ticker) === up(wallet.ticker) &&
+        d.type === wallet.type &&
+        !UtilsService.isSolana(wallet.type),
     );
     return dw?.isLocked ?? false;
   };

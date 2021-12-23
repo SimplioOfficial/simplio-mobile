@@ -196,7 +196,8 @@ CREATE TABLE IF NOT EXISTS walls(
   apiurl text,
   origin TEXT,
   is_initialized INTEGER DEFAULT 1,
-  unique_id INTEGER
+  unique_id INTEGER,
+  address_type INTEGER DEFAULT 2 -- default HD wallet
 );
 
 -- Wallet Addresses
