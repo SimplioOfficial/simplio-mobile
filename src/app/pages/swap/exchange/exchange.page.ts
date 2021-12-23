@@ -143,10 +143,7 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
         p =>
           p.SourceCurrency === this.sourceWallet.ticker &&
           p.SourceCurrencyNetwork ===
-          getCurrencyNetwork(this.sourceWallet.type, this.sourceWallet.ticker) &&
-          p.TargetCurrency === this.destinationWallet.ticker &&
-          p.TargetCurrencyNetwork ===
-          getCurrencyNetwork(this.destinationWallet.type, this.destinationWallet.ticker),
+          getCurrencyNetwork(this.sourceWallet.type, this.sourceWallet.ticker) && p.TargetCurrency === this.destinationWallet.ticker && p.TargetCurrencyNetwork === getCurrencyNetwork(this.destinationWallet.type, this.destinationWallet.ticker),
       ) || null
     );
   }
@@ -204,6 +201,7 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
       fee: [0, [Validators.required]],
       swapResponse: [null, [Validators.required]],
       destinationFiatValue: [0, [Validators.required]],
+      sourceFiatValue: [0, [Validators.required]],
     },
     {
       validators: [
@@ -418,7 +416,9 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
       if (data.SourceAmount > 0) {
         const convertRes = await this.singleSwap.convert(data);
         this.formField.patchValue({
-          swapResponse: convertRes, destinationFiatValue: getPrice(this._rates, data.SourceCurrency, 'USD')
+          swapResponse: convertRes,
+          sourceFiatValue: getPrice(this._rates, data.SourceCurrency, 'USD'),
+          destinationFiatValue: getPrice(this._rates, data.TargetCurrency, 'USD')
         });
       } else {
         this._cleanData();
@@ -669,7 +669,8 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
             fee: 0,
             feeWallet: null,
             swapResponse: null,
-            destinationFiatValue: 0
+            destinationFiatValue: 0,
+            sourceFiatValue: 0
           });
           this.setValue(0);
         }
