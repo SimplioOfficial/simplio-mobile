@@ -714,4 +714,5 @@ export default {
   TRANSACTION_FEE: 'Transaction fee',
   WITHDRAWAL_FEE: 'Withdrawal fee',
   SWAP_FEE: 'Swap fee',
+  DESTINATION_FIAT_AMOUNT_MUST_BE_LARGER_THAN_ZERO: 'Destination fiat amount must be larger than zero'
 };
