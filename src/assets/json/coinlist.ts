@@ -576,6 +576,34 @@ export const coins: CoinItem[] = [
     unique_id: 30069,
     contractAddress: '0x9f589e3eabe42ebc94a44727b3f3531c0c877809',
   },
+  {
+    type: WalletType.BSC_TOKEN,
+    name: 'Burger Swap',
+    ticker: coinNames.BURGER,
+    unique_id: 30070,
+    contractAddress: '0xAe9269f27437f0fcBC232d39Ec814844a51d6b8f',
+  },
+  {
+    type: WalletType.BSC_TOKEN,
+    name: 'Dusk Network',
+    ticker: coinNames.DUSK,
+    unique_id: 30071,
+    contractAddress: '0xb2bd0749dbe21f623d9baba856d3b0f0e1bfec9c',
+  },
+  {
+    type: WalletType.BSC_TOKEN,
+    name: 'Chromia',
+    ticker: coinNames.CHR,
+    unique_id: 30072,
+    contractAddress: '0xf9CeC8d50f6c8ad3Fb6dcCEC577e05aA32B224FE',
+  },
+  {
+    type: WalletType.BSC_TOKEN,
+    name: 'SuperFarm',
+    ticker: coinNames.SUPER,
+    unique_id: 30073,
+    contractAddress: '0x51ba0b044d96c3abfca52b64d733603ccc4f0d4d',
+  },
 
 
   // DOT & DOT TOKENS
@@ -1579,6 +1607,71 @@ export const coins: CoinItem[] = [
     unique_id: 20141,
     contractAddress: '0xef3a930e1ffffacd2fc13434ac81bd278b0ecc8d',
   },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'IRISnet',
+    ticker: coinNames.IRIS,
+    unique_id: 20142,
+    contractAddress: '0x76C4A2B59523eaE19594c630aAb43288dBB1463f',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Utrust',
+    ticker: coinNames.UTK,
+    unique_id: 20143,
+    contractAddress: '0xdc9Ac3C20D1ed0B540dF9b1feDC10039Df13F99c',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Dusk Network',
+    ticker: coinNames.DUSK,
+    unique_id: 20144,
+    contractAddress: '0x940a2db1b7008b6c776d4faaca729d6d4a4aa551',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Chromia',
+    ticker: coinNames.CHR,
+    unique_id: 20145,
+    contractAddress: '0x8a2279d4a90b6fe1c4b30fa660cc9f926797baa2',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'TrueFi',
+    ticker: coinNames.TRU,
+    unique_id: 20146,
+    contractAddress: '0x4c19596f5aaff459fa38b0f7ed92f11ae6543784',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'SuperFarm',
+    ticker: coinNames.SUPER,
+    unique_id: 20147,
+    contractAddress: '0xe53ec727dbdeb9e2d5456c3be40cff031ab40a55',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'district0x',
+    ticker: coinNames.DNT,
+    unique_id: 20148,
+    contractAddress: '0x0abdace70d3790235af448c88547603b945604ea',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Everipedia',
+    ticker: coinNames.IQ,
+    unique_id: 20149,
+    contractAddress: '0x579cea1889991f68acc35ff5c3dd0621ff29b0c9',
+  },
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'Waltonchain',
+    ticker: coinNames.WTC,
+    unique_id: 20150,
+    contractAddress: '0xb7cb1c96db6b22b0d3d9536e0108d062bd488f74',
+  },
+
+
 
 
   // ETC coin
