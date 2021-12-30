@@ -36,7 +36,7 @@ export class AuthenticationService {
     private swapProvider: SwapProvider,
     private http: HttpFallbackService,
     private acc: AccountService
-  ) {}
+  ) { }
 
   serverUrl() {
     return this._refreshServerUrl;
@@ -71,7 +71,7 @@ export class AuthenticationService {
   async login(cred: AccountCredentials, opt: Partial<AfterLoginOptions> = {}): Promise<Acc> {
     try {
       const cr = await this._login(cred);
-      console.log(cr);
+      // console.log(cr);
       const accountLog = await this.io.getLatestAccountLog(cred.userId);
 
       const o: AfterLoginOptions = {
@@ -172,7 +172,7 @@ export class AuthenticationService {
       };
       throw err;
     });
-      
+
   }
 
   private _loginv2(cred: AccountCredentials): Promise<AccountCredentialsResponse> {
@@ -256,7 +256,7 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, body, { headers })
-      
+
       .then(res => {
         this._refreshServerUrl = url;
         return res;
