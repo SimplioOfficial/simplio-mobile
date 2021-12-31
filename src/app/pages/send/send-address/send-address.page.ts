@@ -121,7 +121,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.filteredContacts = this.contacts || [];
     let f = this.coinsService.getFeeSolCoins();
-    f = f.filter(e => !this._solFeeList.find(ee => e.ticker === ee.ticker));
+    f = f?.filter(e => !this._solFeeList.find(ee => e.ticker === ee.ticker));
     this._solFeeList = this._solFeeList.concat(f);
     this._solTokenFeePercentage = this.coinsService.getFeePercentageSolCoins();
   }
@@ -211,14 +211,13 @@ export class SendAddressPage implements OnInit, OnDestroy {
         chainMsg = feeWallet.ticker;
         break;
     }
-    return `Insufficient amount, you need more ${chainMsg} in address ${
-      feeWallet.mainAddress
-    } for the fee or decrease fee level, current balance ${tf(
-      feeWallet.balance,
-      feeWallet.ticker,
-      feeWallet.type,
-      feeWallet.decimal,
-    )} , expected balance ${tf(feeAmount, feeWallet.ticker, feeWallet.type, feeWallet.decimal)}`;
+    return `Insufficient amount, you need more ${chainMsg} in address ${feeWallet.mainAddress
+      } for the fee or decrease fee level, current balance ${tf(
+        feeWallet.balance,
+        feeWallet.ticker,
+        feeWallet.type,
+        feeWallet.decimal,
+      )} , expected balance ${tf(feeAmount, feeWallet.ticker, feeWallet.type, feeWallet.decimal)}`;
   }
 
   private async _calculateFee() {
@@ -296,12 +295,13 @@ export class SendAddressPage implements OnInit, OnDestroy {
             gasLimit: res.gasLimit,
             gasPrice: res.gasPrice,
           };
-          if (
-            isToken(wallet.type) &&
-            this.dataService.unsignedTransaction.signature.amount >
+          if (isToken(wallet.type)) {
+            if (
+              this.dataService.unsignedTransaction.signature.amount >
               this.dataService.unsignedTransaction.wallet.balance
-          ) {
-            throw new Error(this.instant(this.$.INSUFFICIENT_AMOUNT));
+            ) {
+              throw new Error(this.instant(this.$.INSUFFICIENT_AMOUNT));
+            }
           } else if (
             this.dataService.unsignedTransaction.signature.amount + res.fees >
             this.dataService.unsignedTransaction.wallet.balance
@@ -425,7 +425,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
    * @todo resolve a 'prompt' state for permission PWA and native
    * @note on native platform should prompt automatically
    */
-  private _grantCameraPermission(onSuccess = (r: any) => {}, onError = (err: any) => {}) {
+  private _grantCameraPermission(onSuccess = (r: any) => { }, onError = (err: any) => { }) {
     Camera.checkPermissions().then(({ camera }) => {
       if (camera === 'granted') {
         return onSuccess(camera);
