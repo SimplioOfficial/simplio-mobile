@@ -271,16 +271,12 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
       if (index === from) {
         // do nothing
       } else if (index === to) {
-        updatedWallets.push(this._wallets[from]);
-        updatedWallets.push(this._wallets[index]);
-
-        updatedWallets[walletOrder - 1]._p = walletOrder;
-        updatedWallets[walletOrder]._p = walletOrder + 1;
+        updatedWallets.push({ ...this._wallets[index], _p: walletOrder });
+        updatedWallets.push({ ...this._wallets[from], _p: walletOrder + 1 });
 
         walletOrder += 2;
       } else {
-        updatedWallets.push(this._wallets[index]);
-        updatedWallets[walletOrder - 1]._p = walletOrder;
+        updatedWallets.push({ ...this._wallets[index], _p: walletOrder });
         walletOrder++;
       }
     });
