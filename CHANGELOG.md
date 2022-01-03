@@ -1,3 +1,6 @@
+# 0.3.0 (2022-01-03)
+* [DEVELOPMENT-292] Fix wallet reordering for _p = 0
+
 # 0.2.1 (2021-12-15)
 * [DEVELOPMENT-283] Improve performance for wallet reordering & active wallets settings
 * [DEVELOPMENT-275] Disable scrolling on receive page
