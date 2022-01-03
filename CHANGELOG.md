@@ -3,6 +3,7 @@
 * [DEVELOPMENT-289] Fix HTTP Post retries
 * [DEVELOPMENT-277] Add automatic move to next word in seed recovery
 * [DEVELOPMENT-285] Automatically scroll to previously selected wallet on detail closing
+* [DEVELOPMENT-282] Fix solana swaps in dark mode
 
 # 0.2.1 (2021-12-15)
 * [DEVELOPMENT-283] Improve performance for wallet reordering & active wallets settings
