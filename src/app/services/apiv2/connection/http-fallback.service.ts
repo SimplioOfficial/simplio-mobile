@@ -2,25 +2,30 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HttpFallbackService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  private _get<T>(data: { url: string, option?: any, count: number, timeout?: number }): Promise<T> {
+  private _get<T>(data: {
+    url: string;
+    option?: any;
+    count: number;
+    timeout?: number;
+  }): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.http.get<T>(data.url, data.option).toPromise()
+      this.http
+        .get<T>(data.url, data.option)
+        .toPromise()
         .then((res: any) => resolve(res))
         .catch(err => {
           if (data.count > 5) {
             reject(err);
-          }
-          else {
+          } else {
             setTimeout(() => {
               data.count++;
               this._get<T>(data).then(resolve).catch(reject);
-            }, data.timeout ?? 3000)
+            }, data.timeout ?? 3000);
           }
         });
     });
@@ -30,19 +35,28 @@ export class HttpFallbackService {
     return this._get<T>({ url, option, count: 0 });
   }
 
-  private _post<T>(data: { url: string, body: any, option?: any, count: number, timeout?: number }): Promise<T> {
+  private _post<T>(data: {
+    url: string;
+    body: any;
+    option?: any;
+    retry: number;
+    timeout?: number;
+    iteration?: number;
+  }): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.http.post<T>(data.url, data.body, data.option).toPromise()
+      this.http
+        .post<T>(data.url, data.body, data.option)
+        .toPromise()
         .then((res: any) => resolve(res))
         .catch(err => {
-          if (data.count > 5) {
+          if (data.iteration ?? 1 > data.retry) {
             reject(err);
-          }
-          else {
+          } else {
             setTimeout(() => {
-              data.count++;
-              this._post<T>(data).then(resolve).catch(reject);
-            }, data.timeout ?? 3000)
+              this._post<T>({ ...data, iteration: data.iteration ? data.iteration + 1 : 2 })
+                .then(resolve)
+                .catch(reject);
+            }, data.timeout ?? 3000);
           }
         });
     });
@@ -50,23 +64,33 @@ export class HttpFallbackService {
 
   post<T>(url: string, body: any, option?): Promise<T> {
     return this._post<T>({
-      url, body, option, count: 0
-    })
+      url,
+      body,
+      option,
+      retry: 0,
+    });
   }
 
-  private _put<T>(data: { url: string, body: any, option?: any, count: number, timeout?: number }): Promise<T> {
+  private _put<T>(data: {
+    url: string;
+    body: any;
+    option?: any;
+    count: number;
+    timeout?: number;
+  }): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.http.put<T>(data.url, data.body, data.option).toPromise()
+      this.http
+        .put<T>(data.url, data.body, data.option)
+        .toPromise()
         .then((res: any) => resolve(res))
         .catch(err => {
           if (data.count > 5) {
             reject(err);
-          }
-          else {
+          } else {
             setTimeout(() => {
               data.count++;
               this._put<T>(data).then(resolve).catch(reject);
-            }, data.timeout ?? 3000)
+            }, data.timeout ?? 3000);
           }
         });
     });
@@ -76,19 +100,25 @@ export class HttpFallbackService {
     return this._put<T>({ url, body, option, count: 0 });
   }
 
-  private _delete<T>(data: { url: string, option?: any, count: number, timeout?: number }): Promise<T> {
+  private _delete<T>(data: {
+    url: string;
+    option?: any;
+    count: number;
+    timeout?: number;
+  }): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.http.delete<T>(data.url, data.option).toPromise()
+      this.http
+        .delete<T>(data.url, data.option)
+        .toPromise()
         .then((res: any) => resolve(res))
         .catch(err => {
           if (data.count > 5) {
             reject(err);
-          }
-          else {
+          } else {
             setTimeout(() => {
               data.count++;
               this._delete<T>(data).then(resolve).catch(reject);
-            }, data.timeout ?? 3000)
+            }, data.timeout ?? 3000);
           }
         });
     });
@@ -98,19 +128,26 @@ export class HttpFallbackService {
     return this._delete<T>({ url, option, count: 0 });
   }
 
-  private _request<T>(data: { request: string, url: string, option?: any, count: number, timeout?: number }): Promise<T> {
+  private _request<T>(data: {
+    request: string;
+    url: string;
+    option?: any;
+    count: number;
+    timeout?: number;
+  }): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.http.request<T>(data.request, data.url, data.option).toPromise()
+      this.http
+        .request<T>(data.request, data.url, data.option)
+        .toPromise()
         .then((res: any) => resolve(res))
         .catch(err => {
           if (data.count > 5) {
             reject(err);
-          }
-          else {
+          } else {
             setTimeout(() => {
               data.count++;
               this._delete<T>(data).then(resolve).catch(reject);
-            }, data.timeout ?? 3000)
+            }, data.timeout ?? 3000);
           }
         });
     });
@@ -118,7 +155,10 @@ export class HttpFallbackService {
 
   request<T>(request: string, url: string, option?): Promise<T> {
     return this._request<T>({
-      request, url, option, count: 0
-    })
+      request,
+      url,
+      option,
+      count: 0,
+    });
   }
 }
