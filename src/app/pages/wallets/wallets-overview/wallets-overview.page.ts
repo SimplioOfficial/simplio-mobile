@@ -118,6 +118,8 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   private hideAnimation2: Animation;
   private showAnimation2: Animation;
 
+  private selectedWalletId = this.router.getCurrentNavigation().extras.state?.walletId;
+
   private readonly ANIMATION_DURATION = 100; // ms
 
   constructor(
@@ -238,6 +240,15 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
         { offset: 1, top: `0px`, height: `${scrollableHeaderHeight}px` },
       ])
       .beforeStyles({ position: 'relative' });
+
+    // scroll to previously selected wallet
+    if (!!this.selectedWalletId) {
+      setTimeout(() => {
+        const element = document.getElementById(`wallet-${this.selectedWalletId}`);
+        element.focus();
+        element.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
   }
 
   ngOnDestroy() {

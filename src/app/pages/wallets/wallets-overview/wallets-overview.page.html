@@ -79,7 +79,7 @@
   <section #reorderSection style="padding-bottom: 15px">
     <ion-reorder-group #reorderGroup (ionItemReorder)="doReorder($event.detail)">
       <sio-wallet-item
-        [id]="w.uid"
+        id="{{ 'wallet-' + w.uniqueId }}"
         *ngFor="let w of wallets$ | async"
         [wallet]="w"
         (click)="openWallet(w)"

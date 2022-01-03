@@ -58,7 +58,7 @@
 
   <ng-template #headerRef>
     <sio-header>
-      <sio-header-button slot="header-left" [routerLink]="['/home', 'wallets']">
+      <sio-header-button slot="header-left" (click)="back()">
         <ion-icon name="arrow-back-outline"></ion-icon>
       </sio-header-button>
 
