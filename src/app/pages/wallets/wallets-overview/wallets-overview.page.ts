@@ -282,8 +282,13 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
       if (index === from) {
         // do nothing
       } else if (index === to) {
-        updatedWallets.push({ ...this._wallets[index], _p: walletOrder });
-        updatedWallets.push({ ...this._wallets[from], _p: walletOrder + 1 });
+        if (from > to) {
+          updatedWallets.push({ ...this._wallets[from], _p: walletOrder });
+          updatedWallets.push({ ...this._wallets[index], _p: walletOrder + 1 });
+        } else {
+          updatedWallets.push({ ...this._wallets[index], _p: walletOrder });
+          updatedWallets.push({ ...this._wallets[from], _p: walletOrder + 1 });
+        }
 
         walletOrder += 2;
       } else {
@@ -293,7 +298,6 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this._wallets = updatedWallets;
-
     complete();
   }
 
