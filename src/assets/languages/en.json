@@ -329,7 +329,7 @@
   "RECOVERY_INTRO_DESC": "",
   "RECOVERY_INTRO_TITLE": "Use your recovery phrase to restore the content of a previous wallet?",
   "RECOVERY_PHRASE": "Recovery phrase",
-  "RECOVERY_SEED_INSERT": "Enter your recovery phrase word by word.",
+  "RECOVERY_SEED_INSERT": "Enter your recovery phrase word by word. (or you can separate them by space)",
   "RECOVER_PASSWORD_IS_NOT_CORRECT": "Recover password is not correct",
   "RED": "Red",
   "REFERENCE_CODE": "Reference code",
