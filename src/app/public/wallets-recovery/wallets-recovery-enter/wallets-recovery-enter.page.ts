@@ -109,7 +109,9 @@ export class WalletsRecoveryEnterPage implements OnDestroy {
     } else {
       this._pushSeedValue(index, value);
 
-      this.openModal(index + 1, this.seedValue[index + 1]);
+      if (index + 1 < this.LENGTH) {
+        this.openModal(index + 1, this.seedValue[index + 1]);
+      }
     }
   }
 
