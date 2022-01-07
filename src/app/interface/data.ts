@@ -131,6 +131,7 @@ export interface TransactionAPI {
   items?: TransactionAPIItem[];
   tokenItem?: EthTransaction[];
   solanaTxs?: any;
+  safecoinTxs?: any;
   polkadotTxs?: any[];
 }
 

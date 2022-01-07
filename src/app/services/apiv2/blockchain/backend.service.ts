@@ -4,8 +4,7 @@ import { AddressType, AddrUtxo, Rate, Transaction, TxType, WalletAddress, Wallet
 import { Explorer, ExplorerType } from 'src/app/interface/explorer';
 import { TransactionsProvider } from 'src/app/providers/data/transactions.provider';
 import { TransactionDataResponse } from '../../transactions.service';
-import { isCoin, isErcCoin, isErcToken, isSolana, isSolanaToken } from '../../utils.service';
-import { isSafecoin, isSafecoinToken } from '@simplio/backend/utils'
+import { isCoin, isErcCoin, isErcToken, isSolana, isSolanaToken, isSafecoin, isSafecoinToken } from '@simplio/backend/utils'
 import { NetworkService } from '../connection/network.service';
 import { TxblockbookService } from '../transaction/txblockbook.service';
 import { TxinsightService } from '../transaction/txinsight.service';
