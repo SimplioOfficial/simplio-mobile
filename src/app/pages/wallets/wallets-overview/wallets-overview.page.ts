@@ -118,6 +118,8 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
   private hideAnimation2: Animation;
   private showAnimation2: Animation;
 
+  private selectedWalletId = this.router.getCurrentNavigation().extras.state?.walletId;
+
   private readonly ANIMATION_DURATION = 100; // ms
 
   constructor(
@@ -238,6 +240,15 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
         { offset: 1, top: `0px`, height: `${scrollableHeaderHeight}px` },
       ])
       .beforeStyles({ position: 'relative' });
+
+    // scroll to previously selected wallet
+    if (!!this.selectedWalletId) {
+      setTimeout(() => {
+        const element = document.getElementById(`wallet-${this.selectedWalletId}`);
+        element.focus();
+        element.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
   }
 
   ngOnDestroy() {
@@ -271,22 +282,22 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
       if (index === from) {
         // do nothing
       } else if (index === to) {
-        updatedWallets.push(this._wallets[from]);
-        updatedWallets.push(this._wallets[index]);
-
-        updatedWallets[walletOrder - 1]._p = walletOrder;
-        updatedWallets[walletOrder]._p = walletOrder + 1;
+        if (from > to) {
+          updatedWallets.push({ ...this._wallets[from], _p: walletOrder });
+          updatedWallets.push({ ...this._wallets[index], _p: walletOrder + 1 });
+        } else {
+          updatedWallets.push({ ...this._wallets[index], _p: walletOrder });
+          updatedWallets.push({ ...this._wallets[from], _p: walletOrder + 1 });
+        }
 
         walletOrder += 2;
       } else {
-        updatedWallets.push(this._wallets[index]);
-        updatedWallets[walletOrder - 1]._p = walletOrder;
+        updatedWallets.push({ ...this._wallets[index], _p: walletOrder });
         walletOrder++;
       }
     });
 
     this._wallets = updatedWallets;
-
     complete();
   }
 

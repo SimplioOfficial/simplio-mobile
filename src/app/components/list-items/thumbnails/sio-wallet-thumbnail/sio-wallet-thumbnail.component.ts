@@ -11,7 +11,8 @@ import {
 } from '@angular/core';
 import { SvgIcon } from 'src/assets/icon/icons';
 import { coinNames }from "@simplio/backend/api/utils/coins"
-
+import { ThemeMode } from '../../../../interface/settings';
+import { SettingsProvider } from '../../../../providers/data/settings.provider';
 @Component({
   selector: 'sio-wallet-thumbnail',
   templateUrl: './sio-wallet-thumbnail.component.html',
@@ -23,7 +24,11 @@ export class SioWalletThumbnailComponent implements OnChanges, AfterViewInit {
   @ViewChild('svg', { static: false }) svg: ElementRef;
   backgroundColor: string;
 
-  constructor() {}
+  private mode: ThemeMode;
+
+  constructor(private settingsProvider: SettingsProvider) {
+    this.mode = this.settingsProvider.settingsValue.theme.mode;
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.iconID) {
@@ -43,7 +48,7 @@ export class SioWalletThumbnailComponent implements OnChanges, AfterViewInit {
         const m = mod[typeof iconID === 'string' ? iconID.toUpperCase() : coinNames.SIO] as SvgIcon;
         this.svg.nativeElement.innerHTML = m?.svg() ?? '';
         this.backgroundColor = m?.color ?? '';
-        this.coloring.emit(m?.graph);
+        this.coloring.emit(this.mode === ThemeMode.light ? m?.graph : m?.dark_graph);
       })
       .catch(err => {
         console.error(err);

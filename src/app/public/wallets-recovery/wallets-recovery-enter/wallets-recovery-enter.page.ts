@@ -101,13 +101,11 @@ export class WalletsRecoveryEnterPage implements OnDestroy {
     if (!modified) return;
 
     const splt = value.split(' ');
-    if (!environment.production && (splt.length === 12 || splt.length === 24)) {
-      let index = 0;
-      splt.forEach(element => {
-        this._pushSeedValue(index++, element);
-      });
-    } else {
-      this._pushSeedValue(index, value);
+    splt.forEach((word, i) => this._pushSeedValue(index + i, word));
+
+    const nextIndex = index + splt.length;
+    if (nextIndex < this.LENGTH) {
+      this.openModal(nextIndex, null);
     }
   }
 

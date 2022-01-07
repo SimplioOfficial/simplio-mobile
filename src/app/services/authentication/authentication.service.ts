@@ -35,8 +35,8 @@ export class AuthenticationService {
     private authProvider: AuthenticationProvider,
     private swapProvider: SwapProvider,
     private http: HttpFallbackService,
-    private acc: AccountService
-  ) { }
+    private acc: AccountService,
+  ) {}
 
   serverUrl() {
     return this._refreshServerUrl;
@@ -54,7 +54,9 @@ export class AuthenticationService {
       password,
     };
 
-    return this.http.post<AccountCredentialsResponse>(url, cred, { headers }).then(res => !!res.refresh_token);
+    return this.http
+      .post<AccountCredentialsResponse>(url, cred, { headers })
+      .then(res => !!res.refresh_token);
   }
 
   isValid(token: string): boolean {
@@ -145,19 +147,11 @@ export class AuthenticationService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.post<AccountCredentialsResponse>(url, cred, { headers }).catch((err: HttpErrorResponse) => {
-      if (err.status === 401) {
-        let customErr = new HttpErrorResponse({
-          headers: err.headers,
-          url: err.url,
-          status: err.status,
-          statusText: err.statusText,
-          error: Object.freeze({
-            code: 'NO_SUCH_USER'
-          })
-        });
-        if (err.error.includes('verify your email')) {
-          customErr = new HttpErrorResponse({
+    return this.http
+      .post<AccountCredentialsResponse>(url, cred, { headers })
+      .catch((err: HttpErrorResponse) => {
+        if (err.status === 401) {
+          let customErr = new HttpErrorResponse({
             headers: err.headers,
             url: err.url,
             status: err.status,
@@ -166,13 +160,22 @@ export class AuthenticationService {
               code: 'NO_SUCH_USER',
             }),
           });
+          if (err.error.includes('verify your email')) {
+            customErr = new HttpErrorResponse({
+              headers: err.headers,
+              url: err.url,
+              status: err.status,
+              statusText: err.statusText,
+              error: Object.freeze({
+                code: 'NO_SUCH_USER',
+              }),
+            });
 
-          throw new IdentityVerificationError(customErr, this.$);
+            throw new IdentityVerificationError(customErr, this.$);
+          }
         }
-      };
-      throw err;
-    });
-
+        throw err;
+      });
   }
 
   private _loginv2(cred: AccountCredentials): Promise<AccountCredentialsResponse> {
