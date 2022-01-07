@@ -16,6 +16,7 @@ export class BackendService {
   private blibC: backend.BitcoreLibCustom;
   private blibZ: backend.BitcoreZcashy;
   private sol: backend.Solana;
+  private safe: backend.Safecoin;
   private dot: backend.Polkadot;
   private w3: backend.Web3Sio;
   private vAddress: backend.ValidateaddressService;
@@ -33,6 +34,7 @@ export class BackendService {
     this.blibZ = new backend.BitcoreZcashy();
     this.sol = new backend.Solana();
     this.dot = new backend.Polkadot();
+    this.safe = new backend.Safecoin();
     this.w3 = new backend.Web3Sio();
     this.vAddress = new backend.ValidateaddressService(
       this.blibZ,
@@ -40,15 +42,17 @@ export class BackendService {
       this.blibC,
       this.w3,
       this.sol,
+      this.safe,
       this.dot,
     );
-    this.dec = new backend.DecimalsService(this.sol, this.w3);
+    this.dec = new backend.DecimalsService(this.sol, this.safe, this.w3);
     this.tx = new backend.Createtransaction(
       this.blibZ,
       this.blib,
       this.blibC,
       this.w3,
       this.sol,
+      this.safe,
       this.dot,
     );
   }
