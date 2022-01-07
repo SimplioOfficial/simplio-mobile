@@ -9,8 +9,9 @@ import {
   ViewChild,
 } from '@angular/core';
 // import { SwapStatusText } from 'src/app/interface/swap.js';
-
 import { SvgIcon } from 'src/assets/icon/icons';
+import { ThemeMode } from '../../../interface/settings';
+import { SettingsProvider } from '../../../providers/data/settings.provider';
 
 @Component({
   selector: 'sio-progress-circle',
@@ -44,12 +45,15 @@ export class SioProgressCircleComponent implements AfterViewInit, OnChanges {
   @Input('progress') private inputProgress = 0;
   private circumference = 0;
 
+  private mode: ThemeMode;
   private _color: string;
   get fill(): string {
     return this._color;
   }
 
-  constructor() {}
+  constructor(private settingsProvider: SettingsProvider) {
+    this.mode = this.settingsProvider.settingsValue.theme.mode;
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.progress) {
@@ -63,10 +67,13 @@ export class SioProgressCircleComponent implements AfterViewInit, OnChanges {
       return;
     }
 
-    this._importIcon(this.ticker).then(({ svg, graph }) => {
+    this._importIcon(this.ticker).then(({ svg, graph, dark_graph }) => {
       const circle = this.loadingEl.nativeElement;
-      circle.style.stroke = graph;
-      this._color = graph;
+      if (!dark_graph) {
+        dark_graph = graph;
+      }
+      circle.style.stroke = this.mode === ThemeMode.light ? graph : dark_graph;
+      this._color = ThemeMode.light ? graph : dark_graph;
       if (this.showCoinIcon) {
         this.svgEl.nativeElement.innerHTML = svg();
       }

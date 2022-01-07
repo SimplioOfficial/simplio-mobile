@@ -54,6 +54,7 @@ export class SioSwapPendingItemComponent {
   }
 
   updateColor(color: string) {
+    console.log(57, color);
     this._color = color;
   }
 }
