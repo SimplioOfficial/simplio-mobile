@@ -70,7 +70,7 @@ export class Feev2Service {
       if (ticker === coinNames.BTC) {
         return this.getBtcFee().then(res => Math.trunc(res.priority * this.getRatio(feeLevel)));
       } else {
-        price = this.fee[ticker.toLowerCase()].value;
+        price = this.fee[ticker.toLowerCase()]?.value || 10000;
         return Promise.resolve(Math.trunc(price * this.getRatio(feeLevel)));
       }
     } else if (UtilsService.isErcCoin) {
@@ -84,7 +84,7 @@ export class Feev2Service {
   }
 
   getMinFee(ticker: string) {
-    return this.fee[ticker.toLowerCase()]?.minFee;
+    return this.fee[ticker.toLowerCase()]?.minFee || 0;
   }
 
   estimatedFee(data: {
