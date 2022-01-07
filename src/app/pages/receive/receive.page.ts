@@ -15,7 +15,7 @@ import { IoService } from 'src/app/services/io.service';
 import { RateService } from 'src/app/services/apiv2/connection/rate.service';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { TranslateService } from '@ngx-translate/core';
-import { coinNames } from 'src/app/services/api/coins';
+import { coinNames }from "@simplio/backend/api/utils/coins"
 import { CheckWalletsService } from 'src/app/services/wallets/check-wallets.service';
 import { TrackedPage } from '../../classes/trackedPage';
 import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';

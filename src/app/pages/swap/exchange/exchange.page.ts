@@ -57,7 +57,7 @@ import { SioNumpadComponent } from 'src/app/components/form/sio-numpad/sio-numpa
 import { SwapListModal } from '../../modals/swap-list-modal/swap-list.modal';
 import { CoinsService } from 'src/app/services/apiv2/connection/coins.service';
 import { CoinItem } from 'src/assets/json/coinlist';
-import { coinNames } from '../../../services/api/coins';
+import { coinNames }from "@simplio/backend/api/utils/coins"
 import { findWallet, getPrice } from 'src/app/services/wallets/utils';
 
 enum WalletTypes {

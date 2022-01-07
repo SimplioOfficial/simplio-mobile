@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Wallet, WalletsData } from 'src/app/interface/data';
 import { SettingsProvider } from 'src/app/providers/data/settings.provider';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
-import { coinNames } from '../services/api/coins';
+import { coinNames }from "@simplio/backend/api/utils/coins"
 
 @Injectable({
   providedIn: 'root',

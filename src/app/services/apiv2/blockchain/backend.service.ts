@@ -21,7 +21,7 @@ export class BackendService {
   private vAddress: backend.ValidateaddressService;
   private dec: backend.DecimalsService;
   private tx: backend.Createtransaction;
-
+  
   constructor(
     private networkService: NetworkService,
     private txblockbook: TxblockbookService,

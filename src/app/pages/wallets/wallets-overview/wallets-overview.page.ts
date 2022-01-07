@@ -22,7 +22,7 @@ import { InitTutorialModal } from 'src/app/pages/modals/tutorials/init-tutorial-
 import { TutorialsProvider } from 'src/app/providers/data/tutorials.provider';
 import { RateService } from 'src/app/services/apiv2/connection/rate.service';
 import { Feev2Service } from 'src/app/services/apiv2/connection/feev2.service';
-import { coinNames } from '../../../services/api/coins';
+import { coinNames }from "@simplio/backend/api/utils/coins"
 import { sortBy } from 'lodash';
 import { SioPageComponent } from '../../../components/layout/sio-page/sio-page.component';
 import { Animation } from '@ionic/core';

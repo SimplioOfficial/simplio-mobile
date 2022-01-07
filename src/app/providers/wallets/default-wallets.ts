@@ -1,5 +1,5 @@
 import { Wallet, WalletAddress, WalletType } from 'src/app/interface/data';
-import { coinNames } from '../../services/api/coins';
+import { coinNames }from "@simplio/backend/api/utils/coins"
 
 export type DefaultWalletFactory = Pick<Wallet, 'ticker' | 'name' | 'type'> & {
   isLocked: boolean;

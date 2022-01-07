@@ -8,7 +8,7 @@ import {
   SwapStatusTranslations,
 } from 'src/app/interface/swap';
 import { Translate } from 'src/app/providers/translate';
-import { coinNames, platformList } from '../api/coins';
+import { coinNames, platformList } from '@simplio/backend/api/utils/coins';
 
 const up = (s: string) => s.toUpperCase();
 

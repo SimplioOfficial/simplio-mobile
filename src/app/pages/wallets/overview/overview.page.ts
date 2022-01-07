@@ -29,7 +29,7 @@ import { RateService } from 'src/app/services/apiv2/connection/rate.service';
 import { TransactionsProvider } from 'src/app/providers/data/transactions.provider';
 import { IoService } from 'src/app/services/io.service';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
-import { coinNames } from 'src/app/services/api/coins';
+import { coinNames }from "@simplio/backend/api/utils/coins"
 import { TrackedPage } from '../../../classes/trackedPage';
 import { SioPageComponent } from '../../../components/layout/sio-page/sio-page.component';
 import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';

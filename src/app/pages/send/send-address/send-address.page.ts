@@ -25,7 +25,7 @@ import { TransactionsService } from 'src/app/services/transactions.service';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { RateService } from 'src/app/services/apiv2/connection/rate.service';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
-import { coinNames } from 'src/app/services/api/coins';
+import { coinNames }from "@simplio/backend/api/utils/coins"
 import { CheckWalletsService } from 'src/app/services/wallets/check-wallets.service';
 import { MultiFactorAuthenticationService } from 'src/app/services/authentication/mfa.service';
 import { TransactionWalletsModal } from '../../modals/transaction-wallets-modal/transaction-wallets.modal';

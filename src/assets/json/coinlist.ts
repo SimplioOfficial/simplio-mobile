@@ -1,6 +1,6 @@
 import internal from 'assert';
 import { AddressType, WalletType } from 'src/app/interface/data';
-import { coinNames, coinOrigin } from '../../app/services/api/coins';
+import { coinNames, coinOrigin } from '@simplio/backend/api/utils/coins';
 
 export interface CoinItem {
   type: WalletType;

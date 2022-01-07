@@ -23,7 +23,7 @@ import { TxcoinService } from 'src/app/services/apiv2/transaction/txcoin.service
 import { NetworkService } from 'src/app/services/apiv2/connection/network.service';
 import { Feev2Service } from 'src/app/services/apiv2/connection/feev2.service';
 import { SioNumpadComponent } from 'src/app/components/form/sio-numpad/sio-numpad.component';
-import { coinNames } from '../../services/api/coins';
+import { coinNames }from "@simplio/backend/api/utils/coins"
 import { TranslateService } from '@ngx-translate/core';
 import { TrackedPage } from '../../classes/trackedPage';
 

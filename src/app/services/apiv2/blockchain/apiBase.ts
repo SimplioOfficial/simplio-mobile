@@ -1,6 +1,6 @@
 import { validateMnemonic, mnemonicToSeedSync } from 'bip39';
 import { WalletType } from 'src/app/interface/data';
-import { coinNames } from '../../api/coins';
+import { coinNames }from "@simplio/backend/api/utils/coins"
 const bchaddr = require('bchaddrjs');
 
 export abstract class Api {

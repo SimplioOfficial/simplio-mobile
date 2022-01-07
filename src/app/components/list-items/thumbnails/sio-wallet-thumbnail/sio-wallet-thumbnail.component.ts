@@ -10,7 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { SvgIcon } from 'src/assets/icon/icons';
-import { coinNames } from '../../../../services/api/coins';
+import { coinNames }from "@simplio/backend/api/utils/coins"
 
 @Component({
   selector: 'sio-wallet-thumbnail',

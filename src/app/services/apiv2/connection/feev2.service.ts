@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AddrUtxo, FeeName, FeeResponsev2, Rate, WalletType } from 'src/app/interface/data';
 import { environment } from 'src/environments/environment';
-import { coinNames } from '../../api/coins';
+import { coinNames }from "@simplio/backend/api/utils/coins"
 import { UtilsService } from '../../utils.service';
 import { BackendService } from '../blockchain/backend.service';
 

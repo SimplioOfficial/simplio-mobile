@@ -11,8 +11,8 @@ import {
 import { Subscription } from 'rxjs';
 import { Wallet, WalletType } from 'src/app/interface/data';
 import { platform } from 'src/app/services/utils.service';
-import { coinNames } from '../../../services/api/coins';
 
+import { coinNames }from "@simplio/backend/api/utils/coins"
 export enum NotificationType {
   NONE,
   UNCONFIRMED,

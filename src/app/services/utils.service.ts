@@ -9,7 +9,6 @@ import { WalletType, Account } from 'src/app/interface/data';
 import { Translate, ExtendedAlertOptions, sanitizeExtendedInput } from '../providers/translate/';
 
 import { fromPairs, isString, toPairs } from 'lodash';
-import { coinNames } from './api/coins';
 import { validateMnemonic } from 'bip39';
 
 @Injectable({
