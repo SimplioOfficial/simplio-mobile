@@ -29,6 +29,12 @@ export const coins: CoinItem[] = [
     unique_id: 1,
   },
   {
+    type: WalletType.BITCORE_LIB,
+    name: 'Bitcoin Testnet',
+    ticker: coinNames.TBTC,
+    unique_id: 15,
+  },
+  {
     type: WalletType.BITCORE_ZCASHY,
     name: 'BitcoinZ',
     ticker: coinNames.BTCZ,
