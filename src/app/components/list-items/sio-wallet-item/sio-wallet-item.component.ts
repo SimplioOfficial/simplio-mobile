@@ -10,7 +10,7 @@ import {
 
 import { Subscription } from 'rxjs';
 import { Wallet, WalletType } from 'src/app/interface/data';
-import { platform } from 'src/app/services/utils.service';
+import { platform } from '@simplio/backend/utils';
 import { coinNames } from '../../../services/api/coins';
 
 export enum NotificationType {

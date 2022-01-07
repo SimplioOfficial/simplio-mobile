@@ -72,6 +72,8 @@ export enum WalletType {
   SOLANA_TOKEN_DEV = 33,
   POLKADOT = 40,
   TRX = 50,
+  SAFE = 60,
+  SAFE_TOKEN = 61,
   CUSTOM_TOKEN = 999998,
   UNKNOWN = 999999,
 }
@@ -80,6 +82,7 @@ export enum TokenType {
   SOLANA_TOKEN = 'SPL Token',
   ETH_TOKEN = 'ERC20 Token',
   BSC_TOKEN = 'BEP20 Token',
+  SAFE_TOKEN = 'SAFE Token'
 }
 
 export enum SeedType {

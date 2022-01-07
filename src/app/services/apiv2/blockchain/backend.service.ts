@@ -5,6 +5,7 @@ import { Explorer, ExplorerType } from 'src/app/interface/explorer';
 import { TransactionsProvider } from 'src/app/providers/data/transactions.provider';
 import { TransactionDataResponse } from '../../transactions.service';
 import { isCoin, isErcCoin, isErcToken, isSolana, isSolanaToken } from '../../utils.service';
+import { isSafecoin, isSafecoinToken } from '@simplio/backend/utils'
 import { NetworkService } from '../connection/network.service';
 import { TxblockbookService } from '../transaction/txblockbook.service';
 import { TxinsightService } from '../transaction/txinsight.service';
@@ -16,6 +17,7 @@ export class BackendService {
   private blibC: backend.BitcoreLibCustom;
   private blibZ: backend.BitcoreZcashy;
   private sol: backend.Solana;
+  private safe: backend.Safecoin;
   private dot: backend.Polkadot;
   private w3: backend.Web3Sio;
   private vAddress: backend.ValidateaddressService;
@@ -32,6 +34,7 @@ export class BackendService {
     this.blibC = new backend.BitcoreLibCustom();
     this.blibZ = new backend.BitcoreZcashy();
     this.sol = new backend.Solana();
+    this.safe = new backend.Safecoin();
     this.dot = new backend.Polkadot();
     this.w3 = new backend.Web3Sio();
     this.vAddress = new backend.ValidateaddressService(
@@ -40,15 +43,17 @@ export class BackendService {
       this.blibC,
       this.w3,
       this.sol,
+      this.safe,
       this.dot,
     );
-    this.dec = new backend.DecimalsService(this.sol, this.w3);
+    this.dec = new backend.DecimalsService(this.sol, this.safe, this.w3);
     this.tx = new backend.Createtransaction(
       this.blibZ,
       this.blib,
       this.blibC,
       this.w3,
       this.sol,
+      this.safe,
       this.dot,
     );
   }
@@ -67,6 +72,10 @@ export class BackendService {
 
   get solana() {
     return this.sol;
+  }
+
+  get safecoin() {
+    return this.safe;
   }
 
   get polkadot() {
@@ -114,6 +123,9 @@ export class BackendService {
     if (isSolana(data.type) || isSolanaToken(data.type)) {
       data.api = this.getSolApi(data);
     }
+    if (isSafecoin(data.type) || isSafecoinToken(data.type)) {
+      data.api = this.getSafeApi(data);
+    }    
     const txResponse = await this.transaction.createTransaction(data);
     if(isErcToken(data.type) || isErcCoin(data.type)){
       const currBlock = await this.getLastWeb3Block(data.type)
@@ -161,6 +173,9 @@ export class BackendService {
     if (isSolana(data.type) || isSolanaToken(data.type)) {
       data.api = this.getSolApi(data);
     }
+    if (isSafecoin(data.type) || isSafecoinToken(data.type)) {
+      data.api = this.getSafeApi(data);
+    }
     return this.vAddress.validateAddress(data);
   }
 
@@ -170,7 +185,12 @@ export class BackendService {
     address: string;
     api?: string;
   }) {
-    data.api = this.getSolApi(data);
+    if (isSolana(data.type) || isSolanaToken(data.type)) {
+      data.api = this.getSolApi(data);
+    }
+    if (isSafecoin(data.type) || isSafecoinToken(data.type)) {
+      data.api = this.getSafeApi(data);
+    }
     return this.solana.getTokenAddress(data);
   }
 
@@ -236,6 +256,19 @@ export class BackendService {
           // only support when sending token, not support swap
           return this.solana.estimatedFeeInToken(data);
         }
+      case WalletType.SAFE:
+      case WalletType.SAFE_TOKEN:
+        data.api = this.getSafeApi(data);
+        if (!data.tokenData || !data.tokenData.ticker) {
+          if (data.ismax) {
+            return this.safecoin.estimatedFeeMax(data);
+          } else {
+            return this.safecoin.estimatedFee(data);
+          }
+        } else {
+          // only support when sending token, not support swap
+          return this.safecoin.estimatedFeeInToken(data);
+        }
     }
   }
 
@@ -243,6 +276,9 @@ export class BackendService {
     if (isSolana(data.type) || isSolanaToken(data.type)) {
       data.api = this.getSolApi(data);
     }
+    if (isSolana(data.type) || isSafecoinToken(data.type)) {
+      data.api = this.getSafeApi(data);
+    }  
     return this.decimals.getDecimals(data);
   }
 
@@ -267,4 +303,27 @@ export class BackendService {
       return ex.api;
     }
   }
+
+    getSafeApi(data: { important?: boolean; api?: string }) {
+    if (data.api && !!data.api.trim()) {
+      return data.api;
+    }
+    let explorers = this.networkService.getCoinExplorers(undefined, WalletType.SAFE);
+    if (!data.important) {
+      function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+      }
+      explorers = explorers.filter(e => e.priority >= 2);
+      while (explorers.length > 0) {
+        let rnd = getRandomInt(explorers.length);
+        if (explorers[rnd].priority >= 2) {
+          return explorers[rnd].api;
+        }
+      }
+    } else {
+      const ex = explorers.find(e => e.priority === 1);
+      return ex.api;
+    }
+  }
+
 }

@@ -162,6 +162,8 @@ export const coinNames = {
   RLY: 'RLY',
   RNDR: 'RNDR',
   RSR: 'RSR',
+  SAFE: 'SAFE',
+  SAFETOK: 'SAFETOK', //must be deleted after Safe Token Testing
   SAND: 'SAND',
   SANTOS: 'SANTOS',
   SBR: 'SBR',
@@ -225,6 +227,7 @@ export const platformList = {
   ETH: 'ETH',
   BSC: 'BSC',
   SOL: 'SOL',
+  SAFE: 'SAFE',
 };
 
 export const coinOrigin = {
