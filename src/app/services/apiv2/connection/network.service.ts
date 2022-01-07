@@ -266,6 +266,6 @@ export class NetworkService {
   postCustom<T>(url: string, params, contentType): Promise<T> {
     const rUrl = this.platformProvider.isCordova ? url : environment.CORS_ANYWHERE + url;
     const headers = this.httpService.getHttpHeaders(contentType);
-    return this._postCustom(url, params, { headers }, 0);
+    return this._postCustom(rUrl, params, { headers }, 0);
   }
 }
