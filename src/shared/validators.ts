@@ -284,18 +284,18 @@ export const checkWord = (c: AbstractControl): null | ValidatorResponse => {
     result: false,
     msg: '',
   };
-  return validateWord(word.trim()) ? null : invalidRes;
+  return validateWord(word?.trim().toLowerCase()) ? null : invalidRes;
 };
 
 export const validateWord = (word: string) => {
-  const split = word.split(' ');
+  const split = word?.split(' ');
   // if (!environment.production) {
   //   if (split.length === 24 || split.length === 12) {
   //     return true;
   //   }
   // }
 
-  if (split.length > 1) {
+  if (!!split && split.length > 1) {
     let result = true;
     split.forEach(word => (result = result && validateWord(word)));
 

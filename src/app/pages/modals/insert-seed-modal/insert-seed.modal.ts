@@ -38,7 +38,7 @@ export class InsertSeedModal implements AfterViewInit {
   onDismissModal(modified = false): void {
     this.modalCtrl.dismiss({
       index: this.index,
-      value: this.formField.get('word').value.trim(),
+      value: this.formField.get('word').value?.trim().toLowerCase(),
       modified,
     });
   }
