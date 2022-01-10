@@ -2,6 +2,7 @@ import internal from 'assert';
 import { AddressType, WalletType } from 'src/app/interface/data';
 import { coinNames, coinOrigin } from '@simplio/backend/api/utils/coins';
 
+export const testCoins: CoinItem[] = []
 export interface CoinItem {
   type: WalletType;
   name: string;
