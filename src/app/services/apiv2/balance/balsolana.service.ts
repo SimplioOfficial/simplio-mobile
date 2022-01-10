@@ -66,22 +66,19 @@ export class BalsolanaService extends BalBase {
     addressType: AddressType
   }): Promise<number> {
     const connection = this.backendService.solana.getConnection(data);
-    const publickey = await this.backendService.solana.getAddress({
+    const mainPublickey = await this.backendService.solana.getAddress({
       mnemo: data.seeds,
       addressType: data.addressType
     });
-    const myMint = new solanaWeb3.PublicKey(data.contractAddress);
-    let balance = 0;
+    const publickey = await this.backendService.solana.getTokenAddress({
+      address: mainPublickey.address.toString(),
+      contractAddress: data.contractAddress,
+      api: data.api
+    });
     return connection
-      .getParsedTokenAccountsByOwner(new solanaWeb3.PublicKey(publickey.address), { mint: myMint })
+      .getParsedAccountInfo(publickey)
       .then(res => {
-        if (res.value.length > 0) {
-          const accounts = res.value;
-          accounts.forEach(element => {
-            balance += Number(element.account.data.parsed.info.tokenAmount.amount);
-          });
-        }
-        return balance;
+        return (res.value.data as any).parsed.info.tokenAmount.amount;
       })
       .catch(_ => {
         if (data.count < 5) {

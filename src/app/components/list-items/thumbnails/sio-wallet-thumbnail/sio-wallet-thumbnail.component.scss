@@ -1,0 +1,16 @@
+:host {
+	position: relative;
+	display: block;
+}
+
+.thumbnail {
+  background-color: var(--ion-color-secondary);
+}
+
+.mark {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	transform: translate(25%, 25%);
+	z-index: 1;
+}

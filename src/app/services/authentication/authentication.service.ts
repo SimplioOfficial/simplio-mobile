@@ -16,7 +16,6 @@ import { MultiFactorAuthenticationService } from './mfa.service';
 import { USERS_URLS, USERS_URLS_V2 } from 'src/app/providers/routes/swap.routes';
 import { AccountService } from 'src/app/services/authentication/account.service';
 import { SwapProvider } from '../../providers/data/swap.provider';
-import { HttpService } from '../http.service';
 import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
 
 type AfterLoginOptions = { verify: boolean; isNew: boolean };
@@ -259,7 +258,6 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, body, { headers })
-
       .then(res => {
         this._refreshServerUrl = url;
         return res;

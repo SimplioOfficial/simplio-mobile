@@ -16,7 +16,7 @@ import { SettingsProvider } from '../../../../providers/data/settings.provider';
 @Component({
   selector: 'sio-wallet-thumbnail',
   templateUrl: './sio-wallet-thumbnail.component.html',
-  styleUrls: ['../generic-thumbnail.scss'],
+  styleUrls: ['../generic-thumbnail.scss', '../generic-thumbnail.scss'],
 })
 export class SioWalletThumbnailComponent implements OnChanges, AfterViewInit {
   @Input() iconID = '';

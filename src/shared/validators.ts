@@ -1,6 +1,5 @@
 import { FormControl, AbstractControl } from '@angular/forms';
 import { wordlists } from 'bip39';
-import { result } from 'lodash';
 import { Wallet } from 'src/app/interface/data';
 import { SwapConvertResponse } from 'src/app/interface/swap';
 import { pipeAmount, UtilsService } from 'src/app/services/utils.service';
@@ -289,11 +288,11 @@ export const checkWord = (c: AbstractControl): null | ValidatorResponse => {
 
 export const validateWord = (word: string) => {
   const split = word?.split(' ');
-  // if (!environment.production) {
-  //   if (split.length === 24 || split.length === 12) {
-  //     return true;
-  //   }
-  // }
+  if (!environment.production) {
+    if (split.length === 24 || split.length === 12) {
+      return true;
+    }
+  }
 
   if (!!split && split.length > 1) {
     let result = true;

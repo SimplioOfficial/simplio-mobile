@@ -25,13 +25,17 @@ import { SioWalletColoredThumbnailComponent } from 'src/app/components/list-item
 import { SioLoadingSwapPendingItemComponent } from 'src/app/components/list-items/swap-items/sio-loading-swap-pending-item/sio-loading-swap-pending-item.component';
 import { SioTransactionProgressComponent } from 'src/app/components/list-items/sio-transaction-progress/sio-transaction-progress.component';
 import { SioSwapEmptyComponent } from 'src/app/components/list-items/sio-swap-empty/sio-swap-empty.component';
+import { SioStakeTransactionItemComponent } from './sio-stake-transaction-item/sio-stake-transaction-item.component';
+import { SioStakeItemComponent } from 'src/app/components/list-items/sio-stake-item/sio-stake-item.component';
+import { SioTransactionThumbnailComponent } from 'src/app/components/list-items/thumbnails/sio-transaction-thumbnail/sio-transaction-thumbnail.component';
 
 @NgModule({
-  imports: [SioSharedModule, CommonModule, IonicModule],
+  imports: [SioSharedModule, CommonModule, IonicModule, SioSharedModule],
   declarations: [
     SelectWalletComponent,
     SelectEmptyComponent,
     SioWalletThumbnailComponent,
+    SioTransactionThumbnailComponent,
     SioContactThumbnailComponent,
     SioWalletItemComponent,
     SioTransactionItemComponent,
@@ -51,11 +55,14 @@ import { SioSwapEmptyComponent } from 'src/app/components/list-items/sio-swap-em
     SioLoadingSwapPendingItemComponent,
     SioTransactionProgressComponent,
     SioSwapEmptyComponent,
+    SioStakeTransactionItemComponent,
+    SioStakeItemComponent,
   ],
   exports: [
     SioWalletItemComponent,
     SioTransactionItemComponent,
     SioWalletThumbnailComponent,
+    SioTransactionThumbnailComponent,
     SioWalletItemSelectComponent,
     SioCoinItemComponent,
     SioSwapWalletsSelectComponent,
@@ -71,6 +78,8 @@ import { SioSwapEmptyComponent } from 'src/app/components/list-items/sio-swap-em
     SioLoadingSwapPendingItemComponent,
     SioTransactionProgressComponent,
     SioSwapEmptyComponent,
-  ],
+    SioStakeTransactionItemComponent,
+    SioStakeItemComponent,
+  ]
 })
 export class SioListModule {}

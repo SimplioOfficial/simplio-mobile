@@ -31,6 +31,12 @@ export class InitTutorialModal {
       buttonIcon: 'repeat',
       desc: this.$.TUT_INIT_SWAP,
     },
+    {
+      buttonText: this.$.STAKING,
+      buttonIcon: 'flash',
+      desc: this.$.TUT_INIT_STAKING,
+    },
+
   ];
 
   get buttonText(): string {

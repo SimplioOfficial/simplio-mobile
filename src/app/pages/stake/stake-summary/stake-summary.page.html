@@ -1,0 +1,138 @@
+<sio-simple-page>
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.CONFIRM | translate }}</span>
+
+    <sio-header-button slot="header-right" (click)="update()">
+      <ion-icon name="refresh-outline"></ion-icon>
+    </sio-header-button>
+  </sio-header>
+
+  <main>
+    <div class="overview">
+      <ion-grid>
+        <ion-row>
+          <ion-col class="thumbnail">
+            <sio-wallet-thumbnail
+              class="source-icon"
+              [iconID]="swapTx.source.wallet.ticker"
+              scale="small"
+            ></sio-wallet-thumbnail>
+            <sio-wallet-thumbnail
+              class="target-icon"
+              [iconID]="swapTx.target.wallet.ticker"
+            ></sio-wallet-thumbnail>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <ion-grid class="detail">
+      <ion-row class="headerfee">
+        <ion-col size="6">
+          <span>{{ $.SOURCE | translate }}</span>
+        </ion-col>
+        <ion-col size="6" text-right>
+          <p>
+            {{ sourceAmount }}
+            {{ sourceCoin }}
+          </p>
+          <p>{{ sourceFiat | fiat: locale:'USD' }}</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="headerfee">
+        <ion-col size="6">
+          <span>{{ $.SOURCE_NETWORK | translate }}</span>
+        </ion-col>
+        <ion-col size="6" text-right>
+          <p>{{ sourceNetwork }}</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="headerfee">
+        <ion-col size="6">
+          <span>{{ $.DESTINATION | translate }}</span>
+        </ion-col>
+        <ion-col size="6" text-right>
+          <p>
+            {{ targetGuaranteedWithdrawalAmount }}
+            {{ swapTx.target.wallet.ticker }}
+          </p>
+          <p>{{ targetFiat | fiat: locale:'USD' }}</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="headerfee">
+        <ion-col size="6">
+          <span>{{ $.DESTINATION_NETWORK | translate }}</span>
+        </ion-col>
+        <ion-col size="6" text-right>
+          <p>{{ targetNetwork }}</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="headerfee">
+        <ion-col size="6">
+          <span>{{ $.TOTAL_FEE | translate }}</span>
+        </ion-col>
+        <ion-col size="6" text-right>
+          <p>{{ totalFee | number: '1.1-8' }} {{ sourceCoin }}</p>
+          <p>{{ totalFeeFiat | fiat: locale:'USD' }}</p>
+        </ion-col>
+      </ion-row>
+
+      <ng-container *ngIf="!expanded">
+        <ion-row class="icon"
+          ><ion-col size="24">
+            <ion-icon
+              (click)="expanded = !expanded"
+              name="arrow-down-circle-outline"
+            ></ion-icon> </ion-col
+        ></ion-row>
+      </ng-container>
+
+      <ng-container *ngIf="expanded">
+        <ion-row class="headerfee">
+          <ion-col size="6">
+            <span>{{ $.TRANSACTION_FEE | translate }} ({{ transactionFeeTicker }})</span>
+          </ion-col>
+          <ion-col size="6" text-right>
+            <p>{{ transactionFee | number: '1.1-8' }} {{ transactionFeeTicker }}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row class="headerfee">
+          <ion-col size="6">
+            <span>{{ $.WITHDRAWAL_FEE | translate }} ({{ targetCoin }})</span>
+          </ion-col>
+          <ion-col size="6" text-right>
+            <p>{{ withdrawalFee | number: '1.1-8' }} {{ targetCoin }}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row class="headerfee">
+          <ion-col size="6">
+            <span>{{ $.SWAP_FEE | translate }}</span>
+          </ion-col>
+          <ion-col size="6" text-right>
+            <p>{{ swapFee | number: '1.1-8' }} {{ sourceCoin }}</p>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="icon"
+          ><ion-col size="24">
+            <ion-icon
+              (click)="expanded = !expanded"
+              name="arrow-up-circle-outline"
+            ></ion-icon> </ion-col
+        ></ion-row>
+      </ng-container>
+    </ion-grid>
+  </main>
+
+  <div slot="footer" class="select-wallet-button">
+    <ion-button expand="block" mode="ios" (click)="onSubmit()">{{ $.SWAP | translate }}</ion-button>
+  </div>
+</sio-simple-page>

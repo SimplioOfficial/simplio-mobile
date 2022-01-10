@@ -79,6 +79,14 @@ export class HomePage extends TrackedPage implements OnInit {
         this._navigateSwap('home', 'swap', 'exchange');
       },
     },
+    {
+      title: this.$.instant(this.$.STAKING),
+      icon: 'flash-outline',
+      cssClass: ['transaction-action-sheet'],
+      handler: () => {
+        this._navigateSwap('home', 'swap', 'stake');
+      },
+    },
   ];
 
   tapbarVisibility$ = this.settingsProvider.tapbarVisibility$;
@@ -387,15 +395,16 @@ export class HomePage extends TrackedPage implements OnInit {
     const primaryWallet = this.settingsProvider.settingsValue?.primaryWallet;
     const overviewWallet = this.walletsProvider.walletValue;
     const w = overviewWallet || findPrimaryWallet(wallets, primaryWallet);
-    this.swapProvider.pushSwapData({
-      wallet: w,
-      pair: !!w ? [w, null] : [],
-      amount: 0,
-    });
+    // this.swapProvider.pushSwapData({
+    //   wallet: w,
+    //   pair: !!w ? [w, null] : [],
+    //   amount: 0,
+    // });
 
     this.router.navigate(route, {
       state: {
         origin: this.location.path(),
+        wallet: w
       },
     });
   }

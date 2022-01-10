@@ -612,3 +612,14 @@ export interface SolFeeToken {
   ticker: string;
   type: WalletType;
 }
+
+export interface Stake {
+  amount: number;
+  contractAddress: string;
+  lastPayment: number;
+  poolAccount: string;
+  stakingAccount: string;
+  stakingOwner: string;
+  startTime: number;
+  withdrawAccount: string;
+}  

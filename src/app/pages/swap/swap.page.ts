@@ -16,10 +16,18 @@ import { IdentityVerificationError } from 'src/app/providers/errors/identity-ver
 import { PlatformProvider } from 'src/app/providers/platform/platform';
 import { SingleSwapService } from 'src/app/services/swap/single-swap.service';
 import { getSwapStatusTranslations } from 'src/app/services/swap/utils';
-import { UtilsService } from 'src/app/services/utils.service';
+import { calculateInterest, UtilsService } from 'src/app/services/utils.service';
 import { TrackedPage } from '../../classes/trackedPage';
 import { flatten } from 'lodash';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { Transaction, Wallet, WalletType } from 'src/app/interface/data';
+import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
+import { environment } from 'src/environments/environment';
+import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
+import { IoService } from 'src/app/services/io.service';
+import { coinNames } from 'src/app/services/api/coins';
+import { InterestRate, Stake, Pool } from '@simplio/backend/interface/stake';
+import { NetworkService } from 'src/app/services/apiv2/connection/network.service';
 
 const DEFAULTS = {
   currentPage: 0,
@@ -29,12 +37,13 @@ const DEFAULTS = {
   isLoadingInit: false,
   isLoadingHistory: false,
   swapHistory: [],
+  stakingList: []
 };
 
 @Component({
   selector: 'swap-page',
   templateUrl: './swap.page.html',
-  styleUrls: ['./swap.page.scss'],
+  styleUrls: ['./swap.page.scss']
 })
 export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   private get _nextPage(): number {
@@ -52,17 +61,32 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     private utils: UtilsService,
     private plt: PlatformProvider,
     private authService: AuthenticationService,
+    private backendService: BackendService,
+    private authProvider: AuthenticationProvider,
+    private io: IoService,
+    private networkService: NetworkService
   ) {
     super();
     this.subscription.add(this.swapProvider.allPendingSwaps$.subscribe(_ => this.loadData()));
-    this.subscription.add(
-      this.settingsProvider.notificationCount$.subscribe(count => (this.notificationCount = count)),
-    );
+    this.subscription.add(this.settingsProvider.notificationCount$.subscribe(count => (this.notificationCount = count)));
   }
   readonly swapStatusTranslations = getSwapStatusTranslations(this.$);
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
+  wallets: Wallet[] = [];
+  dummyStake = {
+    amount: 1000,
+    contractAddress: 'test',
+    lastPayment: 200,
+    poolAccount: 'What',
+    stakingAccount: 'What',
+    stakingOwner: 'Me',
+    startTime: 0,
+    withdrawAccount: 'Where',
+  }
+
+  segment = 'swaps';
   currency = this.settingsProvider.settingsValue.currency;
   locale = this.settingsProvider.settingsValue.language;
   mode = this.settingsProvider.settingsValue.theme.mode;
@@ -71,7 +95,8 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   currentPage = DEFAULTS.currentPage;
   isEmpty = DEFAULTS.isEmpty;
   isLoading = DEFAULTS.isLoading;
-
+  isGettingStake = DEFAULTS.isLoading;
+  stakingWalletList = [{ name: coinNames.SIO, type: WalletType.SOLANA_TOKEN_DEV }];
   private _canLoad = new BehaviorSubject(DEFAULTS.canLoad);
   canLoad$ = this._canLoad.asObservable();
 
@@ -81,10 +106,9 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   isLoadingHistory$ = this._isLoadingHistory.asObservable();
 
   private _swapHistory = new BehaviorSubject<SwapReportPage[]>(DEFAULTS.swapHistory);
+  private _stakingList = new BehaviorSubject<Stake[]>(DEFAULTS.stakingList);
 
-  private startHistory = !!this.swapProvider.swapHistoryValue
-    ? [this.swapProvider.swapHistoryValue]
-    : [];
+  private startHistory = !!this.swapProvider.swapHistoryValue ? [this.swapProvider.swapHistoryValue] : [];
   swapHistory$ = this._swapHistory.pipe(
     filter(pages => !!pages),
     startWith(this.startHistory),
@@ -97,11 +121,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       }
       return pages;
     }),
-    map(pages =>
-      pages.filter(
-        (page, i, pagesArray) => pagesArray.findIndex(page2 => page2.SagaId === page.SagaId) === i,
-      ),
-    ),
+    map(pages => pages.filter((page, i, pagesArray) => pagesArray.findIndex(page2 => page2.SagaId === page.SagaId) === i))
   );
 
   pendingSwaps$ = this.swapProvider.pendingSwaps$.pipe(
@@ -114,15 +134,26 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       } else {
         return pages;
       }
-    }),
+    })
   );
 
-  isEmpty$ = combineLatest([this.pendingSwaps$, this.swapHistory$]).pipe(
-    map(([p, h]) => [!!p.length, !!h.length]),
+  stakingWalletList$ = this._stakingList.pipe(
+    map(stakes => {
+      return stakes;
+    })
+  );
+
+  isEmpty$ = combineLatest([this.pendingSwaps$, this.swapHistory$, this.stakingWalletList$]).pipe(
+    map(([p, h, s]) => [!!p.length, !!h.length, !!s.length]),
     map(v => v.every((val: boolean) => !val)),
-    map(v => !v),
+    map(v => !v)
   );
 
+  wallets$ = this.walletsProvider.wallets$.subscribe(async w => {
+    this.wallets = w;
+  });
+
+  poolsInfo: Pool[];
   subscription = new Subscription();
   notificationCount = 0;
 
@@ -135,10 +166,26 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     // resistanceRatio: 0.1,
     // preventInteractionOnTransition: true,
     freeMode: true,
-    slidesPerView: 'auto',
+    slidesPerView: 'auto'
     // wrapperClass: 'pending-swaps-slider-wrapper'
     // spaceBetween: 20
   };
+
+  walletInfo(contractAddress: string) {
+    return this.wallets.find(e => e.contractaddress === contractAddress);
+  }
+
+  calculateEarn(s: Stake, w: Wallet) {
+    const p = this.poolsInfo.find(e => e.mintAddress === w.contractaddress);
+    return calculateInterest(
+      s.lastPayment,
+      Math.floor(Date.now() / 1000),
+      s.amount,
+      w.decimal,
+      p.rate,
+      p.tiers
+    )
+  }
 
   ngOnInit() {
     this._isLoadingInit.next(true);
@@ -159,17 +206,14 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       .then(() => this._isLoadingHistory.next(false));
   }
 
-  private async _fetchSwapHistory(data: {
-    pageNumber: number;
-    clean?: boolean;
-  }): Promise<SwapReportPage> {
+  private async _fetchSwapHistory(data: { pageNumber: number; clean?: boolean }): Promise<SwapReportPage> {
     const d = { pageNumber: 1, clean: false, ...data };
     const statuses = [SwapStatusText.Completed, SwapStatusText.Failed, SwapStatusText.Expired];
     try {
       await this.authService.checkToken();
       const page = await this.singleSwap.report({
         pageNumber: d.pageNumber,
-        swapStatus: statuses,
+        swapStatus: statuses
       });
 
       // fixes bug DEVELOPMENT-261 on  ios
@@ -190,16 +234,11 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
 
   private async _fetchPendingSwaps(clean = true): Promise<SwapReportPage> {
     try {
-      const query = [
-        SwapStatusText.Validating,
-        SwapStatusText.Pending,
-        SwapStatusText.Swapping,
-        SwapStatusText.Withdrawing,
-      ];
+      const query = [SwapStatusText.Validating, SwapStatusText.Pending, SwapStatusText.Swapping, SwapStatusText.Withdrawing];
       await this.authService.checkToken();
       const page = await this.singleSwap.report({
         pageNumber: 1,
-        swapStatus: query,
+        swapStatus: query
       });
 
       if (clean) {
@@ -207,6 +246,35 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       }
 
       return page;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err);
+    }
+  }
+
+  private async _getStaking(idt: string, name: string, type: WalletType) {
+    let wallet = this.wallets.find(e => e.ticker === name && e.type === type);
+    const seeds = this.io.decrypt(wallet.mnemo, idt);
+    return this.backendService.stake.getAllStaking(seeds, environment.PROGRAM_ID, wallet.api);
+  }
+
+  private async _fetchStaking() {
+    try {
+      if (!this.isGettingStake) {
+        this.isGettingStake = true;
+        const { idt } = this.authProvider.accountValue;
+        const promisesToMake = [];
+        this.stakingWalletList.forEach(element => {
+          promisesToMake.push(this._getStaking(idt, element.name, element.type));
+        });
+        return Promise.all(promisesToMake).then((res: Stake[]) => {
+          // console.log("staking info", res.flat());
+          const flat = res.flat().sort((a, b) => a.lastPayment - b.lastPayment);
+          this.isGettingStake = false;
+          this._stakingList.next(flat);
+          return flat;
+        })
+      }
     } catch (err) {
       console.error(err);
       throw new Error(err);
@@ -233,12 +301,9 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     return page;
   }
 
-  loadData(clean = false): Promise<[SwapReportPage, SwapReportPage]> {
+  loadData(clean = false): Promise<[SwapReportPage, SwapReportPage, Stake[], Pool[]]> {
     if (clean) this._setDefaults();
-    return Promise.all([
-      this._fetchSwapHistory({ pageNumber: this._nextPage, clean }),
-      this._fetchPendingSwaps(clean),
-    ]);
+    return Promise.all([this._fetchSwapHistory({ pageNumber: this._nextPage, clean }), this._fetchPendingSwaps(clean), this._fetchStaking(), this._getPoolsInfo()]);
   }
 
   doRefresh(e) {
@@ -256,7 +321,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       componentProps: { swapTx: swapTransaction },
       swipeToClose: true,
       cssClass: 'slide-modal',
-      mode: 'ios',
+      mode: 'ios'
     });
     await modal.present();
 
@@ -283,11 +348,39 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     this.isLoading = DEFAULTS.isLoading;
   }
 
+  private async _getPoolsInfo() {
+    const data: any = await this.networkService.get(environment.POOLS_INFO + "poolsinfo");
+    this.poolsInfo = JSON.parse(this.io.decrypt(data.result, environment.DATA_PASSWORD));
+    return this.poolsInfo;
+  }
+
   async openSettings() {
     await this.router.navigate(['/home', 'user'], {
       state: {
-        origin: this.location.path(),
-      },
+        origin: this.location.path()
+      }
     });
   }
+
+  segmentChanged(ev: any) {
+    // console.log(this.segment);
+    // console.log('Segment changed', ev);
+  }
+
+  async openTransaction(tx: Transaction): Promise<void> {
+    console.log("Opending tx:", tx)
+  }
+
+  async openStakeDetails(s: Stake, w: Wallet) {
+    await this.router.navigate(['/home', 'swap', 'stake-details'], {
+      state: {
+        origin: this.location.path(),
+        wallet: w,
+        stake: s,
+        earned: this.calculateEarn(s, w),
+        pool: this.poolsInfo.find(e => e.mintAddress === w.contractaddress)
+      }
+    });
+  }
+
 }

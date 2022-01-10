@@ -102,4 +102,8 @@ Session.vim
 # proj ignore
 src/api/uglify
 src/assets/js/api.js
+<<<<<<< HEAD
+=======
+
+>>>>>>> wip/staking
 src/assets/appConfig.json

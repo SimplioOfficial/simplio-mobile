@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  POOL_ADDRESS: 'CQtV4WPQYUXDHxTXw8K6RJhqiFdndCSBVtj6vtbUoYjD',
-  PROGRAM_ID: 'G7zRLf9JT5V1XJVRS2bNM7rKUvkpkw5ESGa52mfTpvGF',
+  PROGRAM_ID: '6fRJuCgeW7MDxyuFTYGeCNyASxVZixgkfJBRFUZUF4sx',
+  POOL_ADDRESS: '6KBL8pMWQh9yM96Zxda7r1DFH5sqMgkrwacUjKEVeDPb',
   SWAP_WS_URL: 'https://simplio-api-prod.azurewebsites.net/ws/notifications',
   SWAP_URL: 'https://simplio-prod.azurefd.net/api',
   SWAP_URL_DEX: 'https://dex-server.simplio.io/api',
@@ -13,6 +13,7 @@ export const environment = {
   POLICY_VERSION: '0.1.2',
   CORS_ANYWHERE: 'http://localhost:8080/',
   DATA: 'https://data.simplio.io/',
+  POOLS_INFO: 'https://pools-info.simplio.io/',
   DATA_PASSWORD: 'TXID_PASSWORD123!',
   PIN_LENGTH: 4,
   DEFAULT_LANGUAGE: 'en',

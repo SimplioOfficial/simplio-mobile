@@ -18,7 +18,7 @@ export class InsertSeedModal implements AfterViewInit {
 
   formField: FormGroup = this.fb.group(
     {
-      word: [this.word],
+      word: [this.word, [Validators.required]],
     },
     {
       validators: [checkWord],

@@ -22,7 +22,7 @@ export class BackendService {
   private vAddress: backend.ValidateaddressService;
   private dec: backend.DecimalsService;
   private tx: backend.Createtransaction;
-  
+  private stk: backend.StakeService;
   constructor(
     private networkService: NetworkService,
     private txblockbook: TxblockbookService,
@@ -36,6 +36,7 @@ export class BackendService {
     this.dot = new backend.Polkadot();
     this.safe = new backend.Safecoin();
     this.w3 = new backend.Web3Sio();
+    this.stk = new backend.StakeService(this.sol);
     this.vAddress = new backend.ValidateaddressService(
       this.blibZ,
       this.blib,
@@ -87,6 +88,10 @@ export class BackendService {
 
   get transaction() {
     return this.tx;
+  }
+
+  get stake(){
+    return this.stk;
   }
 
   getLastWeb3Block(type: WalletType): Promise<any> {
