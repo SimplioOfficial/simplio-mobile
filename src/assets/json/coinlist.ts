@@ -2000,7 +2000,7 @@ export const coins: CoinItem[] = [
     type: WalletType.SAFE_TOKEN,
     name: 'Safe_Test_Token',
     ticker: coinNames.SAFETOK,
-    contractAddress: '',
+    contractAddress: 'Amita16nvJvaXhxTGZaFbvbJBJb7uxDGai36XQbmURTs',
     unique_id: 40001,
   },
 ];

@@ -651,11 +651,17 @@ export default {
   DECIMAL: 'Decimal',
   TICKER: 'Ticker',
   UPDATE_DECIMALS: 'Update decimals',
-  CREATE_NEW_SOLANA_TOKEN_ACCOUNT: 'Initialize new token account',
+  CREATE_NEW_SOLANA_TOKEN_ACCOUNT: 'Initialize new Solana token account',
+  CREATE_NEW_SAFE_TOKEN_ACCOUNT: 'Initialize new Safecoin token account',
   CREATE_NEW_SOLANA_TOKEN_ACCOUNT_FEE: 'You need to pay <value> SOL to create new token account',
+  CREATE_NEW_SAFE_TOKEN_ACCOUNT_FEE: 'You need to pay <value> SAFE to create new token account',
   CREATE_NEW_SOLANA_TOKEN_ACCOUNT_RECEIVER_FEE:
     'Receiver address is not initialized. You need to pay <value> SOL to create new token account for receiver',
+  CREATE_NEW_SAFE_TOKEN_ACCOUNT_RECEIVER_FEE:
+    'Receiver address is not initialized. You need to pay <value> SAFE to create new token account for receiver',
   CREATE_NEW_SOLANA_TOKEN_ACCOUNT_ERROR:
+    'You do not have enough SOL to initialize token account, need <value>',
+  CREATE_NEW_SAFE_TOKEN_ACCOUNT_ERROR:
     'You do not have enough SOL to initialize token account, need <value>',
   INIT_SPL_TOKEN_WARNING: 'This token is not initialized, please initialize it before using',
   INIT_SPL_TOKEN_BUTTON: 'Initialize',
@@ -714,5 +720,6 @@ export default {
   TRANSACTION_FEE: 'Transaction fee',
   WITHDRAWAL_FEE: 'Withdrawal fee',
   SWAP_FEE: 'Swap fee',
-  DESTINATION_FIAT_AMOUNT_MUST_BE_LARGER_THAN_ZERO: 'We have encountered error, please contact support. Error code 0x01'
+  DESTINATION_FIAT_AMOUNT_MUST_BE_LARGER_THAN_ZERO:
+    'We have encountered error, please contact support. Error code 0x01',
 };

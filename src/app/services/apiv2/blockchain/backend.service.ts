@@ -1,10 +1,26 @@
 import { Injectable } from '@angular/core';
 import * as backend from '@simplio/backend/api';
-import { AddressType, AddrUtxo, Rate, Transaction, TxType, WalletAddress, WalletType } from 'src/app/interface/data';
+import {
+  AddressType,
+  AddrUtxo,
+  Rate,
+  Transaction,
+  TxType,
+  WalletAddress,
+  WalletType,
+} from 'src/app/interface/data';
 import { Explorer, ExplorerType } from 'src/app/interface/explorer';
 import { TransactionsProvider } from 'src/app/providers/data/transactions.provider';
 import { TransactionDataResponse } from '../../transactions.service';
-import { isCoin, isErcCoin, isErcToken, isSolana, isSolanaToken, isSafecoin, isSafecoinToken } from '@simplio/backend/utils'
+import {
+  isCoin,
+  isErcCoin,
+  isErcToken,
+  isSolana,
+  isSolanaToken,
+  isSafecoin,
+  isSafecoinToken,
+} from '@simplio/backend/utils';
 import { NetworkService } from '../connection/network.service';
 import { TxblockbookService } from '../transaction/txblockbook.service';
 import { TxinsightService } from '../transaction/txinsight.service';
@@ -27,7 +43,7 @@ export class BackendService {
     private networkService: NetworkService,
     private txblockbook: TxblockbookService,
     private txinsight: TxinsightService,
-    private txs: TransactionsProvider
+    private txs: TransactionsProvider,
   ) {
     this.blib = new backend.BitcoreLib();
     this.blibC = new backend.BitcoreLibCustom();
@@ -94,7 +110,7 @@ export class BackendService {
   }
 
   getLastWeb3Block(type: WalletType): Promise<any> {
-      return this.web3.getLib(type).eth.getBlockNumber();
+    return this.web3.getLib(type).eth.getBlockNumber();
   }
 
   async createTransaction(data: {
@@ -117,39 +133,38 @@ export class BackendService {
     lasttx: string;
     api: string;
     feeContractAddress?: string;
-    addressType: AddressType
+    addressType: AddressType;
   }) {
     if (isSolana(data.type) || isSolanaToken(data.type)) {
       data.api = this.getSolApi(data);
     }
     if (isSafecoin(data.type) || isSafecoinToken(data.type)) {
       data.api = this.getSafeApi(data);
-    }    
+    }
     const txResponse = await this.transaction.createTransaction(data);
-    if(isErcToken(data.type) || isErcCoin(data.type)){
-      const currBlock = await this.getLastWeb3Block(data.type)
+    if (isErcToken(data.type) || isErcCoin(data.type)) {
+      const currBlock = await this.getLastWeb3Block(data.type);
       const tx: Transaction = {
         _uuid: data._uuid,
         address: data.addresses[0].address,
         amount: data.amount,
         block: currBlock,
         confirmed: false,
-        date: "",
+        date: '',
         unix: Math.floor(Date.now() / 1000),
         hash: txResponse,
         ticker: data.ticker,
         type: TxType.UNKNOWN,
-      }
+      };
 
       let txDataResponse: TransactionDataResponse = {
         _uuid: data._uuid,
         data: [tx],
         endBlock: currBlock,
-      }
+      };
       this.txs.pushTransactions(txDataResponse);
       return txResponse;
-    }
-    else if (isCoin(data.type)) {
+    } else if (isCoin(data.type)) {
       switch (data.explorer.type) {
         case ExplorerType.BLOCKBOOK:
           return this.txblockbook.broadcastTx({ explorer: data.explorer, rawtx: txResponse });
@@ -186,11 +201,13 @@ export class BackendService {
   }) {
     if (isSolana(data.type) || isSolanaToken(data.type)) {
       data.api = this.getSolApi(data);
+      return this.solana.getTokenAddress(data);
     }
     if (isSafecoin(data.type) || isSafecoinToken(data.type)) {
       data.api = this.getSafeApi(data);
+      return this.safe.getTokenAddress(data);
     }
-    return this.solana.getTokenAddress(data);
+    return undefined;
   }
 
   estimatedFee(data: {
@@ -277,7 +294,7 @@ export class BackendService {
     }
     if (isSolana(data.type) || isSafecoinToken(data.type)) {
       data.api = this.getSafeApi(data);
-    }  
+    }
     return this.decimals.getDecimals(data);
   }
 
@@ -303,7 +320,7 @@ export class BackendService {
     }
   }
 
-    getSafeApi(data: { important?: boolean; api?: string }) {
+  getSafeApi(data: { important?: boolean; api?: string }) {
     if (data.api && !!data.api.trim()) {
       return data.api;
     }
@@ -324,5 +341,4 @@ export class BackendService {
       return ex.api;
     }
   }
-
 }

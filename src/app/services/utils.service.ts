@@ -209,6 +209,7 @@ export class UtilsService {
       [WalletType.ETC]: 18,
       [WalletType.SOLANA]: 9,
       [WalletType.SOLANA_DEV]: 9,
+      [WalletType.SAFE]: 9,
       [WalletType.POLKADOT]: 10,
     };
     return decimals[type];
