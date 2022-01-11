@@ -84,7 +84,7 @@ export class HomePage extends TrackedPage implements OnInit {
       icon: 'flash-outline',
       cssClass: ['transaction-action-sheet'],
       handler: () => {
-        this._navigateSwap('home', 'swap', 'stake');
+        this._navigateStake('home', 'swap', 'stake');
       },
     },
   ];
