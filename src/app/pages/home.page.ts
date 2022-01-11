@@ -395,6 +395,25 @@ export class HomePage extends TrackedPage implements OnInit {
     const primaryWallet = this.settingsProvider.settingsValue?.primaryWallet;
     const overviewWallet = this.walletsProvider.walletValue;
     const w = overviewWallet || findPrimaryWallet(wallets, primaryWallet);
+    this.swapProvider.pushSwapData({
+      wallet: w,
+      pair: !!w ? [w, null] : [],
+      amount: 0,
+    });
+
+    this.router.navigate(route, {
+      state: {
+        origin: this.location.path(),
+        // wallet: w
+      },
+    });
+  }
+
+  _navigateStake(...route) {
+    const wallets = this.walletsProvider.walletsValue;
+    const primaryWallet = this.settingsProvider.settingsValue?.primaryWallet;
+    const overviewWallet = this.walletsProvider.walletValue;
+    const w = overviewWallet || findPrimaryWallet(wallets, primaryWallet);
     // this.swapProvider.pushSwapData({
     //   wallet: w,
     //   pair: !!w ? [w, null] : [],
