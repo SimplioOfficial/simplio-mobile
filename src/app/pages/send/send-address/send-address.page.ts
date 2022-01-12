@@ -546,6 +546,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
         console.log('Transaction txid', res);
         this.dismissLoading();
         this.broadcasting = false;
+        
         this._check(this.unsignedTransaction.wallet);
         this.router.navigate(['home', 'wallets', 'send', 'sendconfirm'], {
           state: {

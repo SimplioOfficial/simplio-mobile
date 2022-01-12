@@ -12,6 +12,7 @@ import { TxsolanaService } from './apiv2/transaction/txsolana.service';
 import { TxpolkadotService } from './apiv2/transaction/txpolkadot.service';
 import { NetworkService } from './apiv2/connection/network.service';
 import { TxcoinService } from './apiv2/transaction/txcoin.service';
+import { coinNames } from '@simplio/backend/api/utils/coins';
 
 export type TransactionDataResponse = {
   _uuid: string;
@@ -109,4 +110,15 @@ export class TransactionsService {
   clearData() {
     this.transactionProvider.pushTransactions(null);
   } // this.utilsService.grantCameraPermission(onSuccess, onError);
+
+  subscribleSolChange(wallets: Wallet[], callback){
+    const sol = wallets.find(e => e.ticker === coinNames.SOL && e.type === WalletType.SOLANA);
+    if(!!sol) {
+      this.txsolana.subscribleChange(sol.mainAddress, false, callback);
+    }
+    const solDev = wallets.find(e => e.ticker === coinNames.SOLD && e.type === WalletType.SOLANA_DEV);
+    if(!!solDev) {
+      this.txsolana.subscribleChange(solDev.mainAddress, true, callback);
+    }
+  }
 }

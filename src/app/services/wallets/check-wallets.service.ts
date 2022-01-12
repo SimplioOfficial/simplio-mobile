@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { sortBy } from 'lodash';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { filter, skipWhile, switchMap, tap } from 'rxjs/operators';
 import { CacheWallet } from 'src/app/interface/cache';
 import { Transaction, Wallet, WalletType } from 'src/app/interface/data';
 import { UUID } from 'src/app/interface/global';
@@ -28,6 +29,7 @@ type CheckTransactionData = {
 export class CheckWalletsService {
   private transactionErrors: Map<string, string[]> = new Map();
   private _isChecking = new BehaviorSubject<boolean>(false);
+  private _subscription = new Subscription();
   isChecking$ = this._isChecking.asObservable();
   checkingList: UUID[] = [];
 
@@ -43,6 +45,22 @@ export class CheckWalletsService {
     return notHasOwnProperty;
   };
 
+  account$ = this.authProvider.account$.pipe(
+    skipWhile(v => !v),
+    tap(acc => {
+      const wallets = this.io.getWallets(acc.uid);
+      const self = this;
+      this.tx.subscribleSolChange(wallets, function (accountinfo, address) {
+        const w = wallets.filter(e => e.mainAddress === address);
+        if (!!w.length) {
+          self.checkTransactionsAll({
+            wallets: w,
+          })
+        }
+      })
+    }),
+  );
+
   constructor(
     private tx: TransactionsService,
     private txs: TransactionsProvider,
@@ -50,6 +68,7 @@ export class CheckWalletsService {
     private io: IoService,
   ) {
     this._isChecking.next(false);
+    this._subscription.add(this.account$.subscribe());
   }
 
   checkTransactions(data: Partial<CheckTransactionData>, onDone = () => {}) {

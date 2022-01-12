@@ -44,7 +44,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private coinsService: CoinsService,
     private rateService: RateService,
     private liveChat: LivechatService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     Network.addListener('networkStatusChange', s => this._resolveNetwork(s));
@@ -129,7 +129,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         map<Data, boolean>(data => data.tapbar),
       )
       .subscribe(t => this.settingsProvider.pushTapbarVisibility(t));
-
     return data;
   }
 

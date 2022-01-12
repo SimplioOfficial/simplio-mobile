@@ -17,6 +17,8 @@ import { USERS_URLS, USERS_URLS_V2 } from 'src/app/providers/routes/swap.routes'
 import { AccountService } from 'src/app/services/authentication/account.service';
 import { SwapProvider } from '../../providers/data/swap.provider';
 import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
+import { CheckWalletsService } from '../wallets/check-wallets.service';
+import { TransactionsService } from '../transactions.service';
 
 type AfterLoginOptions = { verify: boolean; isNew: boolean };
 
@@ -34,7 +36,7 @@ export class AuthenticationService {
     private authProvider: AuthenticationProvider,
     private swapProvider: SwapProvider,
     private http: HttpFallbackService,
-    private acc: AccountService,
+    private acc: AccountService
   ) {}
 
   serverUrl() {
@@ -94,6 +96,7 @@ export class AuthenticationService {
       const account = o.verify
         ? await this._verifyAccount(accountStruct, accountLog)
         : accountStruct;
+
       return this.authProvider.pushAccount(account, { isNew: o.isNew });
     } catch (err) {
       // TODO - resolve error here

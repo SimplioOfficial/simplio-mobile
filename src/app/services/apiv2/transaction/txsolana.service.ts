@@ -10,11 +10,29 @@ import { BackendService } from '../blockchain/backend.service';
   providedIn: 'root',
 })
 export class TxsolanaService extends TxBase {
+  connection: solanaWeb3.Connection;
+  connectionDev: solanaWeb3.Connection;
   constructor(private backendService: BackendService, private networkService: NetworkService) {
     super('TxSolana');
+    this.connection = this.backendService.solana.getConnection({ api: solanaWeb3.clusterApiUrl('mainnet-beta')});
+    this.connectionDev = this.backendService.solana.getConnection({ api: solanaWeb3.clusterApiUrl('devnet')});
   }
 
   init() { }
+
+  subscribleChange(address, isDev, callback){
+    const self: TxsolanaService = this;
+    if(!isDev){
+      this.connection.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
+        callback(accountInfo, address);
+      })
+    } else {
+      this.connectionDev.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
+        callback(accountInfo, address);
+      })
+    }
+  }
+
 
   getHistoryToken(data: {
     tokenId: string;
