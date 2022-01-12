@@ -5,6 +5,7 @@ import { TransactionData, TransactionDataResponse } from '../../transactions.ser
 import { Transaction, TransactionAPI, TxType } from 'src/app/interface/data';
 import { NetworkService } from '../connection/network.service';
 import { BackendService } from '../blockchain/backend.service';
+// import WebSocket from 'ws';
 
 @Injectable({
   providedIn: 'root',
@@ -14,22 +15,82 @@ export class TxsolanaService extends TxBase {
   connectionDev: solanaWeb3.Connection;
   constructor(private backendService: BackendService, private networkService: NetworkService) {
     super('TxSolana');
-    this.connection = this.backendService.solana.getConnection({ api: solanaWeb3.clusterApiUrl('mainnet-beta')});
-    this.connectionDev = this.backendService.solana.getConnection({ api: solanaWeb3.clusterApiUrl('devnet')});
+    this.connection = this.backendService.solana.getConnection({ api: solanaWeb3.clusterApiUrl('mainnet-beta') });
+    this.connectionDev = this.backendService.solana.getConnection({ api: solanaWeb3.clusterApiUrl('devnet') });
   }
 
   init() { }
 
-  subscribleChange(address, isDev, callback){
-    const self: TxsolanaService = this;
-    if(!isDev){
-      this.connection.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
-        callback(accountInfo, address);
-      })
+  subscribleChange(address, isDev, callback) {
+    let apiEndpoint;
+    if (!isDev) {
+      apiEndpoint = "ws://api.mainnet-beta.solana.com";
     } else {
-      this.connectionDev.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
-        callback(accountInfo, address);
-      })
+      apiEndpoint = "ws://api.devnet.solana.com";
+    }
+    this.wsSubscribe(apiEndpoint, address, 'confirmed', callback);
+    // if(!isDev){
+    //   this.connection.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
+    //     callback(accountInfo, address);
+    //   })
+    // } else {
+    //   this.connectionDev.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
+    //     callback(accountInfo, address);
+    //   })
+    // }
+  }
+
+  async wsSubscribe(endpoint: string, address: string, commitment, callback) {
+    const ws = new WebSocket(endpoint);
+    ws.onopen = () => {
+      console.log(Date.now(), `Web socket opened to ${endpoint}`);
+      setInterval(() => {
+        // console.log(Date.now(), "ping");
+        ws.send(`{
+          "jsonrpc": "2.0",
+          "id": 1
+        }`);
+      }, 20000);
+      ws.send(JSON.stringify({
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "accountSubscribe",
+        "params": [
+          address,
+          {
+            "encoding": "base64",
+            commitment
+          }
+        ]
+      }));
+      ws.onmessage = evt => {
+        const msg = JSON.parse(evt.data as string);
+        // console.log("msg", msg);
+        if (msg.params?.result) {
+          callback(msg.params?.result, address)
+        }
+        else if (msg.error) {
+          if (msg.error.code !== -32600) {
+
+            console.log("error", msg.error);
+          }
+          else {
+            // do nothing because it's the response of ping msg
+          }
+
+        }
+        else {
+          console.log(commitment, evt.data);
+        }
+      }
+    }
+
+    ws.onerror = (err) => {
+      console.log(Date.now(), "Socket error", err);
+    }
+    ws.onclose = (err) => {
+      console.log(Date.now(), "Socket close, auto connect");
+      this.wsSubscribe(endpoint, address, commitment, callback);
     }
   }
 
@@ -312,7 +373,7 @@ export class TxsolanaService extends TxBase {
             let amount = 0;
             if (meta) {
               amount = meta.preBalances[0] - meta.postBalances[0];
-              if(amount > 0){
+              if (amount > 0) {
                 amount -= meta.fee;
               }
             }
