@@ -342,17 +342,7 @@ export class CheckWalletsService {
     };
 
     const onSuccess: TransactionDataSuccessHandler = res => {
-      if (res.data.length > 0) {
-        const sortedTxs: Transaction[] = sortBy(res.data, 'unix').reverse();
-        if (wallet.lasttx != sortedTxs[0].hash) {
-          console.log('Get new tranaction successfully');
-          this.txs.pushTransactions(res);
-        } else {
-          retry(this, onSuccess, onError);
-        }
-      } else {
-        retry(this, onSuccess, onError);
-      }
+      this.txs.pushTransactions(res);
     };
 
     const lastBlock = wallet.lastblock ? wallet.lastblock : 0;
