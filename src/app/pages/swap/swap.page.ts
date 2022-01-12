@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
-import { filter, map, startWith } from 'rxjs/operators';
+import { filter, map, skipWhile, startWith } from 'rxjs/operators';
 import { IonInfiniteScroll, ModalController } from '@ionic/angular';
 
 import { Translate } from 'src/app/providers/translate';
@@ -145,8 +145,9 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   );
 
   stakingWalletList$ = this._stakingList.pipe(
+    skipWhile(v => !v),
     map(stakes => {
-      return stakes;
+      return stakes.filter(e => !!e);
     }),
   );
 
@@ -267,12 +268,9 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     }
   }
 
-  private async _getStaking(idt: string, name: string, type: WalletType) {
-    const wallet = this.wallets.find(e => e.ticker === name && e.type === type);
-    if (!!wallet) {
-      const seeds = this.io.decrypt(wallet.mnemo, idt);
-      return this.backendService.stake.getAllStaking(seeds, environment.PROGRAM_ID, wallet.api);
-    }
+  private async _getStaking(idt: string, wallet) {
+    const seeds = this.io.decrypt(wallet.mnemo, idt);
+    return this.backendService.stake.getAllStaking(seeds, environment.PROGRAM_ID, wallet.api);
   }
 
   private async _fetchStaking() {
@@ -282,10 +280,13 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
         const { idt } = this.authProvider.accountValue;
         const promisesToMake = [];
         this.stakingWalletList.forEach(element => {
-          promisesToMake.push(this._getStaking(idt, element.name, element.type));
+          const wallet = this.wallets.find(e => e.ticker === element.name && e.type === element.type);
+          if (!!wallet) {
+            promisesToMake.push(this._getStaking(idt, wallet));
+          }
         });
         return Promise.all(promisesToMake).then((res: Stake[]) => {
-          // console.log("staking info", res.flat());
+          console.log("staking info", res.flat());
           const flat = res.flat().sort((a, b) => a.lastPayment - b.lastPayment);
           this.isGettingStake = false;
           this._stakingList.next(flat);
