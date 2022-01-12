@@ -11,6 +11,7 @@ import { BackendService } from '../blockchain/backend.service';
   providedIn: 'root',
 })
 export class TxsolanaService extends TxBase {
+  listSubscribe = [];
   connection: solanaWeb3.Connection;
   connectionDev: solanaWeb3.Connection;
   constructor(private backendService: BackendService, private networkService: NetworkService) {
@@ -28,16 +29,19 @@ export class TxsolanaService extends TxBase {
     } else {
       apiEndpoint = "ws://api.devnet.solana.com";
     }
-    this.wsSubscribe(apiEndpoint, address, 'confirmed', callback);
-    // if(!isDev){
-    //   this.connection.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
-    //     callback(accountInfo, address);
-    //   })
-    // } else {
-    //   this.connectionDev.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
-    //     callback(accountInfo, address);
-    //   })
-    // }
+    if (!this.listSubscribe[apiEndpoint]) {
+      this.listSubscribe[apiEndpoint] = true;
+      this.wsSubscribe(apiEndpoint, address, 'confirmed', callback);
+      // if(!isDev){
+      //   this.connection.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
+      //     callback(accountInfo, address);
+      //   })
+      // } else {
+      //   this.connectionDev.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
+      //     callback(accountInfo, address);
+      //   })
+      // }
+    }
   }
 
   async wsSubscribe(endpoint: string, address: string, commitment, callback) {
