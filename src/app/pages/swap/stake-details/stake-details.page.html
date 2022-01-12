@@ -1,7 +1,7 @@
 <sio-simple-page>
 
   <sio-header>
-    <sio-header-button slot="header-left" [routerLink]="['/home', 'swap']">
+    <sio-header-button slot="header-left" (click)="goBack()">
       <ion-icon name="arrow-back-outline"></ion-icon>
     </sio-header-button>
 

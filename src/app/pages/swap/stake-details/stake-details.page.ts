@@ -199,6 +199,14 @@ export class StakeDetailsPage extends TrackedPage implements OnInit {
       });
   }
 
+  goBack() {
+    this.router.navigate(['/home', 'swap'], {
+      state: {
+        tab: "staking"
+      }
+    });
+  }
+
   private async _presentLoading(message) {
     this._loading = await this.loadingController.create({
       message: this.instant(message),

@@ -85,8 +85,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     startTime: 0,
     withdrawAccount: 'Where',
   }
-
-  segment = 'swaps';
+  segment = this.router.getCurrentNavigation().extras.state?.tab || 'swaps';
   currency = this.settingsProvider.settingsValue.currency;
   locale = this.settingsProvider.settingsValue.language;
   mode = this.settingsProvider.settingsValue.theme.mode;
