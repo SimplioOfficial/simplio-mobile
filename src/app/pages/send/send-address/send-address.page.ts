@@ -471,7 +471,6 @@ export class SendAddressPage implements OnInit, OnDestroy {
               address: this.address,
               api: wallet.api,
             });
-
             const { idt } = this.authProvider.accountValue;
             // check token transaction
             const txs = await this.transactionService.getTransactionOfAsync({
@@ -479,7 +478,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
               ticker: wallet.ticker,
               type: wallet.type,
               addresses: [data.toString()],
-              tokenAddress: wallet.tokenAddress,
+              tokenAddress: data.toString(),
               lastBlock: 0,
               api: wallet.api,
               tokenId: wallet.contractaddress,
