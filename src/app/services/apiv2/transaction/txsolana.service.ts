@@ -7,6 +7,8 @@ import { NetworkService } from '../connection/network.service';
 import { BackendService } from '../blockchain/backend.service';
 // import WebSocket from 'ws';
 
+// import WebSocket from 'ws';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -46,14 +48,12 @@ export class TxsolanaService extends TxBase {
 
   async wsSubscribe(endpoint: string, address: string, commitment, callback) {
     const ws = new WebSocket(endpoint);
+    let timer;
     ws.onopen = () => {
       console.log(Date.now(), `Web socket opened to ${endpoint}`);
-      setInterval(() => {
+      timer = setInterval(() => {
         // console.log(Date.now(), "ping");
-        ws.send(`{
-          "jsonrpc": "2.0",
-          "id": 1
-        }`);
+        ws.send('{}');
       }, 20000);
       ws.send(JSON.stringify({
         "jsonrpc": "2.0",
@@ -69,11 +69,12 @@ export class TxsolanaService extends TxBase {
       }));
       ws.onmessage = evt => {
         const msg = JSON.parse(evt.data as string);
-        // console.log("msg", msg);
         if (msg.params?.result) {
+          // console.log("msg", msg);
           callback(msg.params?.result, address)
         }
         else if (msg.error) {
+          // console.log("error", msg.error);
           if (msg.error.code !== -32600) {
 
             console.log("error", msg.error);
@@ -94,6 +95,7 @@ export class TxsolanaService extends TxBase {
     }
     ws.onclose = (err) => {
       console.log(Date.now(), "Socket close, auto connect");
+      clearInterval(timer);
       this.wsSubscribe(endpoint, address, commitment, callback);
     }
   }
