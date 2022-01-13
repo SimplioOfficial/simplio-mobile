@@ -18,7 +18,7 @@ import BN from "bn.js";
   providedIn: 'root',
 })
 export class UtilsService {
-  static txsProperties = ['items', 'tokenItem', 'solanaTxs', 'polkadotTxs'];
+  static txsProperties = ['items', 'tokenItem', 'solanaTxs', 'safecoinTxs', 'polkadotTxs'];
 
   constructor(
     private toastController: ToastController,
@@ -211,6 +211,7 @@ export class UtilsService {
       [WalletType.ETC]: 18,
       [WalletType.SOLANA]: 9,
       [WalletType.SOLANA_DEV]: 9,
+      [WalletType.SAFE]: 9,
       [WalletType.POLKADOT]: 10,
     };
     return decimals[type];
@@ -445,20 +446,6 @@ export const isToken = type => {
 };
 export const isPolkadot = type => {
   return type === WalletType.POLKADOT;
-};
-
-export const platform = (type: WalletType, ticker: string): string => {
-  switch (type) {
-    case WalletType.BSC_TOKEN:
-      return 'BEP20';
-    case WalletType.ETH_TOKEN:
-      return 'ERC20';
-    case WalletType.SOLANA_TOKEN:
-    case WalletType.SOLANA_TOKEN_DEV:
-      return 'SPL';
-    default:
-      return '';
-  }
 };
 
 export const isNullOrEmpty = (str: string): boolean => {

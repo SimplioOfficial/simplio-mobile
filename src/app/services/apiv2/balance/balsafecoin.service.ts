@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BalBase } from './balancebase';
-import * as solanaWeb3 from '@solana/web3.js';
+import * as safecoinWeb3 from '@safecoin/web3.js';
 import { environment } from 'src/environments/environment';
 import { NetworkService } from '../connection/network.service';
 import { mnemonicToSeedSync } from 'bip39';
@@ -9,21 +9,13 @@ import { AddressType } from '@simplio/backend/interface/data';
 @Injectable({
   providedIn: 'root',
 })
-export class BalsolanaService extends BalBase {
+export class BalSafecoinService extends BalBase {
   constructor(private backendService: BackendService, private networkService: NetworkService) {
     super('Balweb3Service');
   }
 
   init() {
     if (!environment.production) {
-      // setTimeout(() => {
-      //   this.getBalance({
-      //     address: '4YGgmwyqztpJeAi3pzHQ4Gf9cWrMHCjZaWeWoCK6zz6X',
-      //     api: solanaWeb3.clusterApiUrl('devnet')
-      //   })
-      //     .then(res => console.log('test getbalance solana', res))
-      //     .catch(err => console.log(err));
-      // });
     }
   }
 
@@ -33,15 +25,15 @@ export class BalsolanaService extends BalBase {
     count: number;
     important?: boolean;
   }): Promise<number> {
-    const publickey = new solanaWeb3.PublicKey(data.address);
-    const connection = this.backendService.solana.getConnection(data);
+    const publickey = new safecoinWeb3.PublicKey(data.address);
+    const connection = this.backendService.safecoin.getConnection(data);
     return connection
       .getBalance(publickey)
       .then(bal => bal)
       .catch(err => {
         if (data.count < 5) {
           data.count += 1;
-          console.log('Count retry bal sol', data.count);
+          console.log('Count retry bal safe', data.count);
           return new Promise((resolve, reject) =>
             setTimeout(() => {
               return this._getBalance(data).then(resolve).catch(reject);
@@ -65,25 +57,27 @@ export class BalsolanaService extends BalBase {
     important?: boolean;
     addressType: AddressType
   }): Promise<number> {
-    const connection = this.backendService.solana.getConnection(data);
-    const mainPublickey = await this.backendService.solana.getAddress({
+    const connection = this.backendService.safecoin.getConnection(data);
+    const publickey = await this.backendService.safecoin.getAddress({
       mnemo: data.seeds,
-      addressType: data.addressType
     });
-    const publickey = await this.backendService.solana.getTokenAddress({
-      address: mainPublickey.address.toString(),
-      contractAddress: data.contractAddress,
-      api: data.api
-    });
+    const myMint = new safecoinWeb3.PublicKey(data.contractAddress);
+    let balance = 0;
     return connection
-      .getParsedAccountInfo(publickey)
+      .getParsedTokenAccountsByOwner(new safecoinWeb3.PublicKey(publickey.address), { mint: myMint })
       .then(res => {
-        return (res.value.data as any).parsed.info.tokenAmount.amount;
+        if (res.value.length > 0) {
+          const accounts = res.value;
+          accounts.forEach(element => {
+            balance += Number(element.account.data.parsed.info.tokenAmount.amount);
+          });
+        }
+        return balance;
       })
       .catch(_ => {
         if (data.count < 5) {
           data.count += 1;
-          console.log('Count retry bal sol token', data.count);
+          console.log('Count retry bal safe token', data.count);
           return new Promise((resolve, reject) =>
             setTimeout(() => {
               return this._getTokenBalance(data).then(resolve).catch(reject);

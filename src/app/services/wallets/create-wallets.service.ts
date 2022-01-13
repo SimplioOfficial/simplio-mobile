@@ -6,13 +6,12 @@ import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
 import { WalletData } from 'src/app/providers/wallets/wallet-data';
 import { IoService } from 'src/app/services/io.service';
 import { WalletsCreator, WalletService } from 'src/app/services/wallet.service';
-import { isSolanaToken, UtilsService } from '../utils.service';
+import { isSolanaToken, isSafecoinToken, Utils } from '@simplio/backend/utils';
 import { getCoinDerive } from '../apiv2/utils';
 import { AbiService } from '../apiv2/connection/abi.service';
 import { CoinsService } from '../apiv2/connection/coins.service';
 import { CoinItem } from 'src/assets/json/coinlist';
 import { BackendService } from '../apiv2/blockchain/backend.service';
-import { AddressType } from '@simplio/backend/interface/data';
 
 @Injectable({
   providedIn: 'root',
@@ -42,6 +41,10 @@ export class CreateWalletService implements WalletsCreator {
     [WalletType.SOLANA_DEV]: this.backendService.solana.getAddress.bind(this.backendService.solana),
     [WalletType.SOLANA_TOKEN_DEV]: this.backendService.solana.getAddress.bind(
       this.backendService.solana,
+    ),
+    [WalletType.SAFE]: this.backendService.safecoin.getAddress.bind(this.backendService.safecoin),
+    [WalletType.SAFE_TOKEN]: this.backendService.safecoin.getAddress.bind(
+      this.backendService.safecoin,
     ),
     [WalletType.POLKADOT]: this.backendService.polkadot.getAddress.bind(
       this.backendService.polkadot,
@@ -88,7 +91,7 @@ export class CreateWalletService implements WalletsCreator {
         walletData.setContractAddress(c.contractAddress);
       }
 
-      if (UtilsService.isErcToken(walletData.value().type)) {
+      if (Utils.isErcToken(walletData.value().type)) {
         abi = {
           contractaddress: c?.contractAddress || walletData.value().contractaddress,
           type: walletData.value().type,
@@ -101,7 +104,7 @@ export class CreateWalletService implements WalletsCreator {
         this.io.addAbi(abi);
       }
 
-      if (UtilsService.isToken(walletData.value().type)) {
+      if (Utils.isToken(walletData.value().type)) {
         const decimal = await this.backendService.getDecimals({
           abi: abi?.abi,
           api: c?.api || walletData.value().api,
@@ -110,7 +113,7 @@ export class CreateWalletService implements WalletsCreator {
         });
         walletData.setDecimal(decimal);
       } else {
-        const decimal = UtilsService.getDecimals(
+        const decimal = Utils.getDecimals(
           walletData.value().type,
           walletData.value().ticker,
         );
@@ -127,7 +130,7 @@ export class CreateWalletService implements WalletsCreator {
         }
       }
 
-      if (!UtilsService.isSolanaToken(walletData.value().type)) {
+      if (!(Utils.isSolanaToken(walletData.value().type) || Utils.isSafecoinToken(walletData.value().type))) {
         walletData.setIsInitialized(true);
       }
       walletData.setMnemo(mnemo);
@@ -158,7 +161,7 @@ export class CreateWalletService implements WalletsCreator {
         derivePath: derive,
       });
       walletData.setMainAddress(data.address);
-      if (isSolanaToken(walletData.value().type)) {
+      if (isSolanaToken(walletData.value().type) || isSafecoinToken(walletData.value().type)) {
         const tokenAddress = await this.walletService.getTokenAddress({
           type: walletData.value().type,
           contractAddress: walletData.value().contractaddress,

@@ -9,6 +9,7 @@ import { UUID } from 'src/app/interface/global';
 import { Explorer, ExplorerType } from '../interface/explorer';
 import { Txweb3Service } from './apiv2/transaction/txweb3.service';
 import { TxsolanaService } from './apiv2/transaction/txsolana.service';
+import { TxSafecoinService } from './apiv2/transaction/txsafecoin.service';
 import { TxpolkadotService } from './apiv2/transaction/txpolkadot.service';
 import { NetworkService } from './apiv2/connection/network.service';
 import { TxcoinService } from './apiv2/transaction/txcoin.service';
@@ -56,6 +57,8 @@ export class TransactionsService {
     [WalletType.SOLANA_TOKEN]: this.txsolana.getTxsToken.bind(this.txsolana),
     [WalletType.SOLANA_DEV]: this.txsolana.getTxs.bind(this.txsolana),
     [WalletType.SOLANA_TOKEN_DEV]: this.txsolana.getTxsToken.bind(this.txsolana),
+    [WalletType.SAFE]: this.txsafecoin.getTxs.bind(this.txsafecoin),
+    [WalletType.SAFE_TOKEN]: this.txsafecoin.getTxsToken.bind(this.txsafecoin),
   };
 
   private readonly GET_TX_MULTIPLE_OF = {
@@ -63,6 +66,7 @@ export class TransactionsService {
     [WalletType.BSC_TOKEN]: this.txweb3.getTxsMultiple.bind(this.txweb3),
     [WalletType.SOLANA_TOKEN]: this.txsolana.getTxsTokens.bind(this.txsolana),
     [WalletType.SOLANA_TOKEN_DEV]: this.txsolana.getTxsTokens.bind(this.txsolana),
+    [WalletType.SAFE_TOKEN]: this.txsafecoin.getTxsTokens.bind(this.txsafecoin),
   };
 
   constructor(
@@ -71,6 +75,7 @@ export class TransactionsService {
     private txcoin: TxcoinService,
     private txweb3: Txweb3Service,
     private txsolana: TxsolanaService,
+    private txsafecoin: TxSafecoinService,
     private txpolkadot: TxpolkadotService,
     private networkService: NetworkService,
   ) {}

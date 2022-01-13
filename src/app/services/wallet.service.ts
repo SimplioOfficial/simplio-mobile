@@ -18,7 +18,7 @@ import {
   Wallet,
 } from 'src/app/interface/data';
 import { IoService } from './io.service';
-import { isNullOrEmpty, isSolanaToken, UtilsService, validateSeeds } from './utils.service';
+import { isNullOrEmpty, isSolanaToken, isSafecoinToken, validateSeeds } from '@simplio/backend/utils';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
 import { Acc } from 'src/app/interface/user';
@@ -27,6 +27,7 @@ import { WalletData } from '../providers/wallets/wallet-data';
 import { UserID, UUID } from '../interface/global';
 import { Balweb3Service } from './apiv2/balance/balweb3.service';
 import { BalsolanaService } from './apiv2/balance/balsolana.service';
+import { BalSafecoinService } from './apiv2/balance/balsafecoin.service';
 import { BalpolkadotService } from './apiv2/balance/balpolkadot.service';
 import { BalcoinService } from './apiv2/balance/balcoin.service';
 import { CheckWalletsService } from './wallets/check-wallets.service';
@@ -58,6 +59,8 @@ export class WalletService {
     [WalletType.SOLANA_TOKEN]: this.balSolana.getTokenBalance.bind(this.balSolana),
     [WalletType.SOLANA_DEV]: this.balSolana.getBalance.bind(this.balSolana),
     [WalletType.SOLANA_TOKEN_DEV]: this.balSolana.getTokenBalance.bind(this.balSolana),
+    [WalletType.SAFE]: this.balSafecoin.getBalance.bind(this.balSafecoin),
+    [WalletType.SAFE_TOKEN]: this.balSafecoin.getTokenBalance.bind(this.balSafecoin),
     [WalletType.POLKADOT]: this.balPolkadot.getBalance.bind(this.balPolkadot),
   };
 
@@ -69,6 +72,7 @@ export class WalletService {
     private balCoin: BalcoinService,
     private balWeb3: Balweb3Service,
     private balSolana: BalsolanaService,
+    private balSafecoin: BalSafecoinService,
     private balPolkadot: BalpolkadotService,
     private backendService: BackendService,
   ) {
@@ -198,7 +202,7 @@ export class WalletService {
     console.log('Rescan, @TODO', uuid);
     const wallet = this.getWallet(uuid);
     wallet.transactions = [];
-    if (isNullOrEmpty(wallet.tokenAddress) && isSolanaToken(wallet.type)) {
+    if (isNullOrEmpty(wallet.tokenAddress) && (isSolanaToken(wallet.type) || isSafecoinToken(wallet.type))) {
       const tokenAddress = await this.getTokenAddress({
         type: wallet.type,
         contractAddress: wallet.contractaddress,
@@ -225,6 +229,7 @@ export class WalletService {
     switch (data.type) {
       case WalletType.SOLANA_TOKEN_DEV:
       case WalletType.SOLANA_TOKEN:
+      case WalletType.SAFE_TOKEN:
         return this.backendService.getTokenAddress(data);
       default:
         return data.address;

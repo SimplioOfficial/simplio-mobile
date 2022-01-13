@@ -2,7 +2,7 @@ import internal from 'assert';
 import { AddressType, WalletType } from 'src/app/interface/data';
 import { coinNames, coinOrigin } from '@simplio/backend/api/utils/coins';
 
-export const testCoins: CoinItem[] = []
+export const testCoins: CoinItem[] = [];
 export interface CoinItem {
   type: WalletType;
   name: string;
@@ -611,7 +611,6 @@ export const coins: CoinItem[] = [
     unique_id: 30073,
     contractAddress: '0x51ba0b044d96c3abfca52b64d733603ccc4f0d4d',
   },
-
 
   // DOT & DOT TOKENS
   // {
@@ -1677,9 +1676,13 @@ export const coins: CoinItem[] = [
     unique_id: 20150,
     contractAddress: '0xb7cb1c96db6b22b0d3d9536e0108d062bd488f74',
   },
-
-
-
+  {
+    type: WalletType.ETH_TOKEN,
+    name: 'SafeCoin',
+    ticker: coinNames.SAFE,
+    unique_id: 20151,
+    contractAddress: '0xdaf566020156297e2837fdfaa6fbba929a29461e',
+  },
 
   // ETC coin
   {
@@ -1702,7 +1705,7 @@ export const coins: CoinItem[] = [
     name: 'Solana-type1',
     ticker: coinNames.SOL1,
     unique_id: 10999,
-    addressType: AddressType.DEFAULT
+    addressType: AddressType.DEFAULT,
   },
   {
     type: WalletType.SOLANA_TOKEN,
@@ -1968,6 +1971,14 @@ export const coins: CoinItem[] = [
     contractAddress: '7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY',
     origin: coinOrigin.Native,
   },
+  {
+    type: WalletType.SOLANA_TOKEN,
+    name: 'SafeCoin',
+    ticker: coinNames.SAFE,
+    unique_id: 10034,
+    contractAddress: '2ah3bN48SKfRJbV93zEwfWz3FoUh44RUhRxDWFGzeaGL',
+    origin: coinOrigin.Native,
+  },
 
   // SOL & SOL Tokens (DEVNET)
   // {
@@ -1983,6 +1994,14 @@ export const coins: CoinItem[] = [
   //   api: 'https://api.devnet.solana.com',
   //   contractAddress: '62R6NmUSdTz8ZzpZ8sihi56HmGzt4BWdNr9obxhcP4DC',
   // },
+
+  // SAFE & SAFE Tokens
+  {
+    type: WalletType.SAFE,
+    name: 'SafeCoin',
+    ticker: coinNames.SAFE,
+    unique_id: 15,
+  },
 ];
 
 export const customCoins: CoinItem[] = [

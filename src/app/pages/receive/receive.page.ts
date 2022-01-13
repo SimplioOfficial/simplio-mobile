@@ -19,6 +19,7 @@ import { coinNames }from "@simplio/backend/api/utils/coins"
 import { CheckWalletsService } from 'src/app/services/wallets/check-wallets.service';
 import { TrackedPage } from '../../classes/trackedPage';
 import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
+import { Utils } from '@simplio/backend/utils';
 
 @Component({
   selector: 'app-receive',
@@ -81,7 +82,7 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
   }
 
   get isInitialized() {
-    if (!UtilsService.isSolanaToken(this.wallet.type)) {
+    if (!(UtilsService.isSolanaToken(this.wallet.type) || Utils.isSafecoinToken(this.wallet.type))) {
       return true;
     } else {
       return this.wallet.isInitialized;
@@ -144,82 +145,162 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
   }
 
   async presentCreateTokenAccountPrompt() {
-    const minimumRent = await this.backendService.solana.getMinimumRentExemption({
-      api: this.wallet.api,
-    });
-    const alertMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_FEE);
+    if (UtilsService.isSolanaToken(this.wallet.type)) {
 
-    const alert = await this.utilsService.createAlert({
-      header: this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT,
-      message: alertMsg.replace(
-        '<value>',
-        pipeAmount(
-          minimumRent,
-          coinNames.SOL,
-          WalletType.SOLANA,
-          UtilsService.getDecimals(WalletType.SOLANA, coinNames.SOL),
-          true,
-        ).toString(),
-      ),
-      buttons: [
-        {
-          text: this.$.CANCEL,
-          role: 'cancel',
-          cssClass: 'secondary',
-        },
-        {
-          text: this.$.CREATE,
-          handler: async () => {
-            const { idt } = this.authProvider.accountValue;
+      const minimumRent = await this.backendService.solana.getMinimumRentExemption({
+        api: this.wallet.api,
+      });
+      const alertMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_FEE);
 
-            const solWallet = this.wallets.find(
-              e => e.ticker === coinNames.SOL && UtilsService.isSolana(e.type),
-            );
-            if (!solWallet || (minimumRent > solWallet.balance && !UtilsService.isSolanaDev(this.wallet.type))) {
-              let errorMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_ERROR);
-              throw new Error(
-                errorMsg.replace(
-                  '<value>',
-                  pipeAmount(
-                    minimumRent,
-                    this.wallet.ticker,
-                    this.wallet.type,
-                    this.wallet.decimal,
-                    true,
-                  ).toString(),
-                ),
-              );
-            }
-            await this.presentLoading(this.$.INITIALIZING_TOKEN);
-            this.backendService.solana
-              .createTokenAddress({
-                address: this.wallet.mainAddress,
-                api: this.wallet.api,
-                contractAddress: this.wallet.contractaddress,
-                seeds: this.io.decrypt(this.wallet.mnemo, idt),
-                addressType: this.wallet.addressType
-              })
-              .then(_ => {
-                this.checker.checkTransactions(
-                  {
-                    wallets: [this.wallet],
-                    important: true,
-                  },
-                  () => {
-                    this.dismissLoading();
-                    this.rateService.refresh(false);
-                  },
-                );
-              })
-              .catch(error => {
-                this.dismissLoading();
-                this.utilsService.showToast(error.message, 2000, 'warning');
-              });
+      const alert = await this.utilsService.createAlert({
+        header: this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT,
+        message: alertMsg.replace(
+          '<value>',
+          pipeAmount(
+            minimumRent,
+            coinNames.SOL,
+            WalletType.SOLANA,
+            UtilsService.getDecimals(WalletType.SOLANA, coinNames.SOL),
+            true,
+          ).toString(),
+        ),
+        buttons: [
+          {
+            text: this.$.CANCEL,
+            role: 'cancel',
+            cssClass: 'secondary',
           },
-        },
-      ],
-    });
-    await alert.present();
+          {
+            text: this.$.CREATE,
+            handler: async () => {
+              const { idt } = this.authProvider.accountValue;
+
+              const solWallet = this.wallets.find(
+                e => e.ticker === coinNames.SOL && UtilsService.isSolana(e.type),
+              );
+              if (!solWallet || (minimumRent > solWallet.balance && !UtilsService.isSolanaDev(this.wallet.type))) {
+                const errorMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_ERROR);
+                throw new Error(
+                  errorMsg.replace(
+                    '<value>',
+                    pipeAmount(
+                      minimumRent,
+                      this.wallet.ticker,
+                      this.wallet.type,
+                      this.wallet.decimal,
+                      true,
+                    ).toString(),
+                  ),
+                );
+              }
+              await this.presentLoading(this.$.INITIALIZING_TOKEN);
+              this.backendService.solana
+                .createTokenAddress({
+                  address: this.wallet.mainAddress,
+                  api: this.wallet.api,
+                  contractAddress: this.wallet.contractaddress,
+                  seeds: this.io.decrypt(this.wallet.mnemo, idt),
+                  addressType: this.wallet.addressType
+                })
+                .then(_ => {
+                  this.checker.checkTransactions(
+                    {
+                      wallets: [this.wallet],
+                      important: true,
+                    },
+                    () => {
+                      this.dismissLoading();
+                      this.rateService.refresh(false);
+                    },
+                  );
+                })
+                .catch(error => {
+                  this.dismissLoading();
+                  this.utilsService.showToast(error.message, 2000, 'warning');
+                });
+            },
+          },
+        ],
+      });
+      await alert.present();
+    } else {
+      const minimumRent = await this.backendService.safecoin.getMinimumRentExemption({
+        api: this.wallet.api,
+      });
+      const alertMsg = this.instant(this.$.CREATE_NEW_SAFE_TOKEN_ACCOUNT_FEE);
+
+      const alert = await this.utilsService.createAlert({
+        header: this.$.CREATE_NEW_SAFE_TOKEN_ACCOUNT,
+        message: alertMsg.replace(
+          '<value>',
+          pipeAmount(
+            minimumRent,
+            coinNames.SAFE,
+            WalletType.SAFE,
+            UtilsService.getDecimals(WalletType.SAFE, coinNames.SAFE),
+            true,
+          ).toString(),
+        ),
+        buttons: [
+          {
+            text: this.$.CANCEL,
+            role: 'cancel',
+            cssClass: 'secondary',
+          },
+          {
+            text: this.$.CREATE,
+            handler: async () => {
+              const { idt } = this.authProvider.accountValue;
+
+              const safeWallet = this.wallets.find(
+                e => e.ticker === coinNames.SAFE && Utils.isSafecoin(e.type),
+              );
+              if (!safeWallet || minimumRent > safeWallet.balance) {
+                const errorMsg = this.instant(this.$.CREATE_NEW_SAFE_TOKEN_ACCOUNT_ERROR);
+                throw new Error(
+                  errorMsg.replace(
+                    '<value>',
+                    pipeAmount(
+                      minimumRent,
+                      this.wallet.ticker,
+                      this.wallet.type,
+                      this.wallet.decimal,
+                      true,
+                    ).toString(),
+                  ),
+                );
+              }
+              await this.presentLoading(this.$.INITIALIZING_TOKEN);
+              this.backendService.safecoin
+                .createTokenAddress({
+                  address: this.wallet.mainAddress,
+                  api: this.wallet.api,
+                  contractAddress: this.wallet.contractaddress,
+                  seeds: this.io.decrypt(this.wallet.mnemo, idt),
+                  addressType: this.wallet.addressType
+                })
+                .then(_ => {
+                  this.checker.checkTransactions(
+                    {
+                      wallets: [this.wallet],
+                      important: true,
+                    },
+                    () => {
+                      this.dismissLoading();
+                      this.rateService.refresh(false);
+                    },
+                  );
+                })
+                .catch(error => {
+                  this.dismissLoading();
+                  this.utilsService.showToast(error.message, 2000, 'warning');
+                });
+            },
+          },
+        ],
+      });
+      await alert.present();
+    }
   }
 
   async presentLoading(msg) {

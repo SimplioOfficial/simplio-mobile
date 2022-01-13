@@ -86,6 +86,11 @@ export const coinNames = {
   REN: 'REN',
   RENBTC: 'RENBTC',
   REV: 'REV',
+  RLC: 'RLC',
+  RLY: 'RLY',
+  RNDR: 'RNDR',
+  RSR: 'RSR',
+  SAFE: 'SAFE',
   SAND: 'SAND',
   SBR: 'SBR',
   SHIB: 'SHIB',
@@ -126,6 +131,7 @@ export const platformList = {
   BSC: 'BSC',
   SOL: 'SOL',
   SOL_DEV: 'SOL Dev',
+  SAFE: 'SAFE',
 };
 
 export const coinOrigin = {
