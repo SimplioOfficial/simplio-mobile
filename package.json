@@ -18,6 +18,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "cors": "node cors.js",
+    "malaka": "npm remove @simplio/backend && npm install @simplio/backend",
     "build:ng:prod": "gulp getversion && npm run build:prod:windows && npm run patch && npx cap sync android",
     "build:ios:prod": "gulp getversion && npm run build:prod:mac && npm run patch && npx cap sync ios",
     "build:ng": "gulp getversion && ionic build && npx cap sync android && npx cap open android",
