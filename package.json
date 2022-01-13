@@ -71,7 +71,7 @@
     "@polkadot/util-crypto": "6.11.1",
     "@safecoin/safe-token": "^0.1.7",
     "@safecoin/web3.js": "^1.29.3",
-    "@simplio/backend": "^1.0.20",
+    "@simplio/backend": "^1.0.21",
     "@simplioofficial/bitcore-lib-modified": "github:SimplioOfficial/bitcore-lib-modified",
     "@simplioofficial/bitcore-zcashy-modified": "github:SimplioOfficial/bitcore-zcashy-modified",
     "@solana/spl-token": "0.1.8",

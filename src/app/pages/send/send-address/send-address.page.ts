@@ -25,7 +25,7 @@ import { TransactionsService } from 'src/app/services/transactions.service';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { RateService } from 'src/app/services/apiv2/connection/rate.service';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
-import { coinNames }from "@simplio/backend/api/utils/coins"
+import { coinNames } from '@simplio/backend/api/utils/coins';
 import { CheckWalletsService } from 'src/app/services/wallets/check-wallets.service';
 import { MultiFactorAuthenticationService } from 'src/app/services/authentication/mfa.service';
 import { TransactionWalletsModal } from '../../modals/transaction-wallets-modal/transaction-wallets.modal';
@@ -478,8 +478,8 @@ export class SendAddressPage implements OnInit, OnDestroy {
       .then(async () => {
         const { wallet } = this.unsignedTransaction;
         try {
-          // check if it's solana token and have not initialized
-          if (UtilsService.isSolanaToken(wallet.type)) {
+          // check if it's solana or safecoin token and have not initialized
+          if (UtilsService.isSolanaToken(wallet.type) || Utils.isSafecoinToken(wallet.type)) {
             // check if address is not created
             await this.presentLoading(this.$.VALIDATING_ADDRESS);
             const data = await this.walletService.getTokenAddress({
@@ -562,7 +562,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
         console.log('Transaction txid', res);
         this.dismissLoading();
         this.broadcasting = false;
-        
+
         this._check(this.unsignedTransaction.wallet);
         this.router.navigate(['home', 'wallets', 'send', 'sendconfirm'], {
           state: {
