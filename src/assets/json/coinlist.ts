@@ -605,7 +605,6 @@ export const coins: CoinItem[] = [
     contractAddress: '0x51ba0b044d96c3abfca52b64d733603ccc4f0d4d',
   },
 
-
   // DOT & DOT TOKENS
   // {
   //   type: WalletType.POLKADOT,
@@ -1672,7 +1671,7 @@ export const coins: CoinItem[] = [
   },
   {
     type: WalletType.ETH_TOKEN,
-    name: 'Safecoin',
+    name: 'SafeCoin',
     ticker: coinNames.SAFE,
     unique_id: 20151,
     contractAddress: '0xdaf566020156297e2837fdfaa6fbba929a29461e',
@@ -1699,7 +1698,7 @@ export const coins: CoinItem[] = [
     name: 'Solana-type1',
     ticker: coinNames.SOL1,
     unique_id: 10999,
-    addressType: AddressType.DEFAULT
+    addressType: AddressType.DEFAULT,
   },
   {
     type: WalletType.SOLANA_TOKEN,
@@ -1967,7 +1966,7 @@ export const coins: CoinItem[] = [
   },
   {
     type: WalletType.SOLANA_TOKEN,
-    name: 'Safecoin',
+    name: 'SafeCoin',
     ticker: coinNames.SAFE,
     unique_id: 10034,
     contractAddress: '2ah3bN48SKfRJbV93zEwfWz3FoUh44RUhRxDWFGzeaGL',
@@ -1989,19 +1988,12 @@ export const coins: CoinItem[] = [
   //   contractAddress: '62R6NmUSdTz8ZzpZ8sihi56HmGzt4BWdNr9obxhcP4DC',
   // },
 
-    // SAFE & SAFE Tokens
+  // SAFE & SAFE Tokens
   {
     type: WalletType.SAFE,
-    name: 'Safecoin',
+    name: 'SafeCoin',
     ticker: coinNames.SAFE,
     unique_id: 15,
-  },
-  {
-    type: WalletType.SAFE_TOKEN,
-    name: 'Safe_Test_Token',
-    ticker: coinNames.SAFETOK,
-    contractAddress: 'Amita16nvJvaXhxTGZaFbvbJBJb7uxDGai36XQbmURTs',
-    unique_id: 40001,
   },
 ];
 
