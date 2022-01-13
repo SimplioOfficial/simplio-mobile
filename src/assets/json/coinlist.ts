@@ -2000,7 +2000,7 @@ export const coins: CoinItem[] = [
     type: WalletType.SAFE,
     name: 'SafeCoin',
     ticker: coinNames.SAFE,
-    unique_id: 15,
+    unique_id: 16,
   },
 ];
 
