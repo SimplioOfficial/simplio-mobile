@@ -16,8 +16,8 @@ and [iOS](https://apps.apple.com/us/app/simplio-wallet/id1580073536)
 
 ## :chains: Supported chains
 
-Simplio Wallet supports more than 50 blockchains: Bitcoin, Ethereum,
-Binance Chain, and most major blockchain platforms. The full list is [here](https://github.com/ciripel/script_generated_files/blob/master/full_list.md).
+Simplio Wallet currently supports 14 blockchains and more are under development: Bitcoin, Ethereum,
+Binance Smart Chain, and most major blockchain platforms. The full list is [here](https://github.com/ciripel/script_generated_files/blob/master/full_list.md).
 
 ## :hammer_and_wrench: Install development version
 
