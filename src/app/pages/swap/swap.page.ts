@@ -280,13 +280,15 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
         const { idt } = this.authProvider.accountValue;
         const promisesToMake = [];
         this.stakingWalletList.forEach(element => {
-          const wallet = this.wallets.find(e => e.ticker === element.name && e.type === element.type);
+          const wallet = this.wallets.find(
+            e => e.ticker === element.name && e.type === element.type,
+          );
           if (!!wallet) {
             promisesToMake.push(this._getStaking(idt, wallet));
           }
         });
         return Promise.all(promisesToMake).then((res: Stake[]) => {
-          console.log("staking info", res.flat());
+          // console.log("staking info", res.flat());
           const flat = res.flat().sort((a, b) => a.lastPayment - b.lastPayment);
           this.isGettingStake = false;
           this._stakingList.next(flat);
