@@ -29,7 +29,7 @@ export class SingleSwapService extends CommonSwap implements SwapService {
   constructor(
     protected plt: PlatformProvider,
     protected platformProvider: PlatformProvider,
-    protected http: HttpFallbackService
+    protected http: HttpFallbackService,
   ) {
     super(plt, http, platformProvider);
   }
@@ -48,10 +48,12 @@ export class SingleSwapService extends CommonSwap implements SwapService {
       'Content-Type': 'application/json',
     });
     const body = { sagaId };
-    return this.http.request<void>('DELETE', url, { headers, body }).catch((err: HttpErrorResponse) => {
-      console.error('Cancelling swap has failed');
-      throw err;
-    });
+    return this.http
+      .request<void>('DELETE', url, { headers, body })
+      .catch((err: HttpErrorResponse) => {
+        console.error('Cancelling swap has failed');
+        throw err;
+      });
   }
 
   convert(data: SwapConvertRequestParams): Promise<SwapConvertResponse> {
@@ -83,7 +85,6 @@ export class SingleSwapService extends CommonSwap implements SwapService {
 
     return this.http
       .put(url, data, { headers })
-      
       .then(() => {})
       .catch((err: HttpErrorResponse) => {
         console.error('Updating swap transaction has failed');
@@ -98,8 +99,8 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     });
 
     return this.http
-      .get(url + "/" + address, { headers })
-      
+      .get(url + '/' + address, { headers })
+
       .catch((err: HttpErrorResponse) => {
         throw err;
       });
@@ -112,8 +113,8 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     });
 
     return this.http
-      .post(url, {userId}, { headers })
-      
+      .post(url, { userId }, { headers })
+
       .catch((err: HttpErrorResponse) => {
         throw err;
       });
@@ -126,8 +127,8 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     });
 
     return this.http
-      .delete(url + "/"  + address, { headers })
-      
+      .delete(url + '/' + address, { headers })
+
       .catch((err: HttpErrorResponse) => {
         throw err;
       });

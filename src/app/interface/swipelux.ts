@@ -21,14 +21,14 @@ export interface Rate {
 }
 
 export interface CurrencyPair {
-  fromCurrency: Currency;
-  toCurrency: Currency;
+  fromCcy: Currency;
+  toCcy: Currency;
 }
 
 export interface RateResponse {
   pair: {
-    fromCurrency: Currency;
-    toCurrency: Currency;
+    fromCcy: Currency;
+    toCcy: Currency;
   };
   rate: Rate;
   updatedAt: Date;
@@ -137,9 +137,9 @@ export interface OrderResponse {
     };
   };
   toAmount: number;
-  toCurrency: Currency;
+  toCcy: Currency;
   fromAmount: number;
-  fromCurrency: Currency;
+  fromCcy: Currency;
   rate: number;
   merchantFeeAmount: number;
   merchantFeeCurrency: Currency;
@@ -149,31 +149,16 @@ export interface OrderResponse {
 
 export interface AllOrdersResponse {
   createdAt: Date;
-  currencyPair?: CurrencyPair;
-  expiresAt?: Date;
-  merchant?: {
-    apiKey: string;
-    createdAt: Date;
-    updatedAt: Date;
-    fee: number;
-    id: number;
-    name: string;
-    settings: MerchantSettings;
-  };
-  orderAmountLast?: {
-    feeAmount: number;
-    feeCurrency: Currency;
-    fromAmount: number;
-    merchantFeeAmount: number;
-    merchantFeeCurrency: Currency;
-    rate: number;
-    toAmount: number;
-  };
-  orderEventLast: OrderEvent;
-  orderWithdrawalLast: OrderWithdrawal;
-  processingType: string;
+  email: string;
+  fromAmount: number;
+  fromCcy: { name: string; a3: string };
+  id: number;
+  income: number;
+  merchantId: number;
+  phone: string;
+  status: string;
+  toAmount: number;
+  toCcy: { name: string; a3: string };
   uid: string;
-  user: UserData;
-  verificationEmail: VerificationData;
-  verificationPhone: VerificationData;
+  wallet: string;
 }

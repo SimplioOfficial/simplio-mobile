@@ -86,30 +86,30 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     super();
     this.swipeluxService.getPairs().then(res => {
       this._swapList = res.items
-        .filter(a => a.fromCurrency.isEnabled && a.toCurrency.isEnabled)
+        .filter(a => a.fromCcy.isEnabled && a.toCcy.isEnabled)
         .map(a =>
           environment.production
             ? a
             : {
                 ...a,
-                toCurrency: {
-                  ...a.toCurrency,
-                  a3: testCoins.find(b => b.isTestCoinFor === a.toCurrency.a3)?.ticker,
+                toCcy: {
+                  ...a.toCcy,
+                  a3: testCoins.find(b => b.isTestCoinFor === a.toCcy.a3)?.ticker,
                 },
               },
         );
 
       const walletTickers = this._wallets.map(a => a.ticker);
       let swapPair = this._swapList.find(
-        p => walletTickers.includes(p.toCurrency.a3) && p.fromCurrency.a3 === this.currency,
+        p => walletTickers.includes(p.toCcy.a3) && p.fromCcy.a3 === this.currency,
       );
 
       // in case default currency is not available select the first pair
       if (!swapPair) {
-        swapPair = this._swapList.find(p => walletTickers.includes(p.toCurrency.a3));
+        swapPair = this._swapList.find(p => walletTickers.includes(p.toCcy.a3));
 
         if (!!swapPair) {
-          this.currency = swapPair.fromCurrency.a3;
+          this.currency = swapPair.fromCcy.a3;
         } else {
           this.walletSelectingDisabled = true;
           this.utilsService.showToast(
@@ -122,7 +122,7 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
 
       // select first available wallet for purchase
       if (!!swapPair) {
-        const wallet = this._wallets.find(a => a.ticker === swapPair.toCurrency.a3);
+        const wallet = this._wallets.find(a => a.ticker === swapPair.toCcy.a3);
         this._wallet.next(wallet);
         this.formField.patchValue({
           swapPair,
@@ -216,26 +216,26 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     console.log(
       204,
       this._swapList
-        .filter(a => a.fromCurrency.a3 === 'USD')
-        .filter(a => this._wallets.find(b => b.ticker === a.toCurrency.a3))
-        .map(a => a.toCurrency.a3),
+        .filter(a => a.fromCcy.a3 === 'USD')
+        .filter(a => this._wallets.find(b => b.ticker === a.toCcy.a3))
+        .map(a => a.toCcy.a3),
     );
     const modal = await this._presentModal(TransactionPairsModal, {
       title: this.$.instant(this.$.SELECT_CRYPTO),
       usdPairs: this._swapList
-        .filter(a => a.fromCurrency.a3 === 'USD')
-        .filter(a => this._wallets.find(b => b.ticker === a.toCurrency.a3)),
+        .filter(a => a.fromCcy.a3 === 'USD')
+        .filter(a => this._wallets.find(b => b.ticker === a.toCcy.a3)),
       eurPairs: this._swapList
-        .filter(a => a.fromCurrency.a3 === 'EUR')
-        .filter(a => this._wallets.find(b => b.ticker === a.toCurrency.a3)),
+        .filter(a => a.fromCcy.a3 === 'EUR')
+        .filter(a => this._wallets.find(b => b.ticker === a.toCcy.a3)),
     });
     const selectedPair: CurrencyPair = await modal.onWillDismiss().then(({ data }) => data);
     console.log(215, selectedPair);
     if (!!selectedPair) {
-      const wallet = this._wallets.find(w => w.ticker === selectedPair.toCurrency.a3);
+      const wallet = this._wallets.find(w => w.ticker === selectedPair.toCcy.a3);
       if (!!wallet) {
         this._wallet.next(wallet);
-        this.currency = selectedPair.fromCurrency.a3;
+        this.currency = selectedPair.fromCcy.a3;
 
         this.formField.patchValue({
           amount: 0,

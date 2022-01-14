@@ -115,8 +115,8 @@ export class SwipeluxService {
       .toPromise<any>();
   }
 
-  getRateFromTo(fromCurrency: string, toCurrency: string): Promise<RateResponse> {
-    const url = `${SWIPELUX_URL.fromTo.href}/${fromCurrency}/${toCurrency}/rate`;
+  getRateFromTo(fromCcy: string, toCcy: string): Promise<RateResponse> {
+    const url = `${SWIPELUX_URL.fromTo.href}/${fromCcy}/${toCcy}/rate`;
 
     return this.http.get(url).toPromise<any>();
   }

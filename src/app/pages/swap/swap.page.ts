@@ -296,9 +296,9 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
         const transactions: Transaction[] = res.items.map(a => ({
           _uuid: a.uid,
           type: TxType.RECEIVE,
-          ticker: a.currencyPair.toCurrency.a3,
-          address: a.orderWithdrawalLast?.target,
-          amount: a.orderWithdrawalLast?.amount,
+          ticker: a.toCcy.a3,
+          address: a.wallet,
+          amount: a.toAmount,
           hash: '',
           unix: 0,
           date: `${a.createdAt}`,
