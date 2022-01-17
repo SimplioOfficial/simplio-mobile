@@ -1,8 +1,10 @@
+import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { flatten } from 'lodash';
 
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
+import { TxType } from 'src/app/interface/data';
 import { filter, map, skipWhile, startWith } from 'rxjs/operators';
 import { IonInfiniteScroll, ModalController } from '@ionic/angular';
 
@@ -14,11 +16,13 @@ import { SwapProvider } from 'src/app/providers/data/swap.provider';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
 import { IdentityVerificationError } from 'src/app/providers/errors/identity-verification-error';
 import { PlatformProvider } from 'src/app/providers/platform/platform';
+
 import { SingleSwapService } from 'src/app/services/swap/single-swap.service';
 import { getSwapStatusTranslations } from 'src/app/services/swap/utils';
 import { calculateInterest, UtilsService } from 'src/app/services/utils.service';
 import { TrackedPage } from '../../classes/trackedPage';
-import { flatten } from 'lodash';
+import { TransactionsProvider } from '../../providers/data/transactions.provider';
+import { SwipeluxService } from '../../services/swipelux/swipelux.service';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { Transaction, Wallet, WalletType } from 'src/app/interface/data';
 import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
@@ -26,7 +30,7 @@ import { environment } from 'src/environments/environment';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { IoService } from 'src/app/services/io.service';
 import { coinNames } from 'src/app/services/api/coins';
-import { InterestRate, Stake, Pool } from '@simplio/backend/interface/stake';
+import { Stake, Pool } from '@simplio/backend/interface/stake';
 import { NetworkService } from 'src/app/services/apiv2/connection/network.service';
 
 const DEFAULTS = {
@@ -37,6 +41,7 @@ const DEFAULTS = {
   isLoadingInit: false,
   isLoadingHistory: false,
   swapHistory: [],
+  transactions: [],
   stakingList: [],
 };
 
@@ -58,6 +63,8 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     private walletsProvider: WalletsProvider,
     private swapProvider: SwapProvider,
     private singleSwap: SingleSwapService,
+    private swipeluxService: SwipeluxService,
+    private transactionProvider: TransactionsProvider,
     private utils: UtilsService,
     private plt: PlatformProvider,
     private authService: AuthenticationService,
@@ -87,6 +94,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     startTime: 0,
     withdrawAccount: 'Where',
   };
+
   segment = this.router.getCurrentNavigation().extras.state?.tab || 'swaps';
   currency = this.settingsProvider.settingsValue.currency;
   locale = this.settingsProvider.settingsValue.language;
@@ -130,6 +138,12 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       ),
     ),
   );
+  private transactions = !!this.transactionProvider.transactionsValue
+    ? this.transactionProvider.transactionsValue
+    : [];
+
+  private _transactions = new BehaviorSubject<Transaction[]>(DEFAULTS.transactions);
+  transactions$ = this._transactions.asObservable();
 
   pendingSwaps$ = this.swapProvider.pendingSwaps$.pipe(
     map(pages => {
@@ -268,6 +282,49 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     }
   }
 
+  private async _fetchTransactionHistory(data: {
+    pageNumber: number;
+    clean?: boolean;
+  }): Promise<Transaction[]> {
+    const d = { pageNumber: 1, clean: false, ...data };
+
+    try {
+      const res = await this.swipeluxService.getAllOrders({ pageNumber: d.pageNumber });
+      console.log(233, res);
+
+      if (!!res) {
+        const transactions: Transaction[] = res.items.map(a => ({
+          _uuid: a.uid,
+          type: TxType.RECEIVE,
+          ticker: a.toCcy.a3,
+          address: a.wallet,
+          amount: a.toAmount,
+          hash: '',
+          unix: 0,
+          date: `${a.createdAt}`,
+          confirmed: true,
+          block: 1,
+        }));
+
+        if (data.clean) {
+          this.transactionProvider.pushTransactions({
+            _uuid: '',
+            data: transactions,
+          });
+
+          this._transactions.next(transactions);
+        }
+
+        return transactions;
+      } else {
+        return null;
+      }
+    } catch (err) {
+      console.error(err);
+      throw new Error(err);
+    }
+  }
+
   private async _getStaking(idt: string, wallet) {
     const seeds = this.io.decrypt(wallet.mnemo, idt);
     return this.backendService.stake.getAllStaking(seeds, environment.PROGRAM_ID, wallet.api);
@@ -288,7 +345,6 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
           }
         });
         return Promise.all(promisesToMake).then((res: Stake[]) => {
-          // console.log("staking info", res.flat());
           const flat = res.flat().sort((a, b) => a.lastPayment - b.lastPayment);
           this.isGettingStake = false;
           this._stakingList.next(flat);
@@ -321,11 +377,14 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     return page;
   }
 
-  loadData(clean = false): Promise<[SwapReportPage, SwapReportPage, Stake[], Pool[]]> {
+  loadData(
+    clean = false,
+  ): Promise<[SwapReportPage, SwapReportPage, Transaction[], Stake[], Pool[]]> {
     if (clean) this._setDefaults();
     return Promise.all([
       this._fetchSwapHistory({ pageNumber: this._nextPage, clean }),
       this._fetchPendingSwaps(clean),
+      this._fetchTransactionHistory({ pageNumber: this._nextPage, clean }),
       this._fetchStaking(),
       this._getPoolsInfo(),
     ]);

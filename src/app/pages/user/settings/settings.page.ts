@@ -18,10 +18,8 @@ import { Location } from '@angular/common';
 import { ThemeMode } from 'src/app/interface/settings';
 import { LivechatService } from '../../../services/livechat.service';
 import { UserDataService } from '../../../services/authentication/user-data.service';
-import { AgreementData } from '../../../interface/account';
 import { TrackedPage } from '../../../classes/trackedPage';
 import { RegistrationService } from '../../../services/authentication/registration.service';
-import * as Util from 'util';
 import { UtilsService } from '../../../services/utils.service';
 
 @Component({

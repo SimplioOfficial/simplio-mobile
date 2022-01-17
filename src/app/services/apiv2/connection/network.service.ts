@@ -263,6 +263,18 @@ export class NetworkService {
     });
   }
 
+  put(url: string, params): Promise<void> {
+    const rUrl = this.platformProvider.isCordova ? url : environment.CORS_ANYWHERE + url;
+    const headers = this.httpService.getHttpHeaders();
+    return this.httpService.put(rUrl, params, { headers });
+  }
+
+  delete(url: string, params?): Promise<any> {
+    const rUrl = this.platformProvider.isCordova ? url : environment.CORS_ANYWHERE + url;
+    const headers = this.httpService.getHttpHeaders();
+    return this.httpService.delete(rUrl, { headers, params });
+  }
+
   postCustom<T>(url: string, params, contentType): Promise<T> {
     const rUrl = this.platformProvider.isCordova ? url : environment.CORS_ANYWHERE + url;
     const headers = this.httpService.getHttpHeaders(contentType);

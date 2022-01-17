@@ -1,0 +1,39 @@
+<sio-simple-page>
+  <!-- HEADER -->
+  <sio-header [hasBorder]="true">
+    <sio-header-button slot="header-left" (click)="onDismissModal()">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ title }}</span>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <ion-content>
+    <ion-label class="label">{{ $.AVAILABLE_FOR_USD | translate }}</ion-label>
+    <ng-container *ngIf="usdPairs.length === 0">
+      <ion-label position="floating">{{ $.NO_AVAILABLE_COINS | translate }}</ion-label>
+    </ng-container>
+
+    <sio-wallet-item
+      *ngFor="let w of virtualUsdWallets"
+      [wallet]="w"
+      [currency]="'usd'"
+      [fiatValue]="getPrice(w.ticker, 'usd')"
+      (click)="selectUsdPair(w)"
+    ></sio-wallet-item>
+
+    <ion-label class="label">{{ $.AVAILABLE_FOR_EUR | translate }}</ion-label>
+    <ng-container *ngIf="eurPairs.length === 0">
+      <ion-label position="floating">{{ $.NO_AVAILABLE_COINS | translate }}</ion-label>
+    </ng-container>
+
+    <sio-wallet-item
+      *ngFor="let w of virtualEurWallets"
+      [wallet]="w"
+      [currency]="'eur'"
+      [fiatValue]="getPrice(w.ticker, 'eur')"
+      (click)="selectEurPair(w)"
+    ></sio-wallet-item>
+  </ion-content>
+</sio-simple-page>

@@ -37,7 +37,7 @@ export class SioFinalPageComponent implements OnInit, AfterViewInit {
     actionText: '',
     hasAction: true,
   };
-  @Input('options') private _inputOptions: PageOptions;
+  @Input('options') private _inputOptions: FinalPageOptions;
   options: FinalPageOptions = null;
 
   @HostBinding('attr.data-color') get dataColor() {

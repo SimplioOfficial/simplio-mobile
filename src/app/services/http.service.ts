@@ -4,6 +4,7 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { PlatformProvider } from '../providers/platform/platform';
 import { timeout } from 'rxjs/operators';
 import { AuthenticationProvider } from '../providers/data/authentication.provider';
+
 @Injectable({
   providedIn: 'root',
 })

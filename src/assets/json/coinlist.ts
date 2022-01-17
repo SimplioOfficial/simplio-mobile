@@ -1,8 +1,6 @@
-import internal from 'assert';
 import { AddressType, WalletType } from 'src/app/interface/data';
 import { coinNames, coinOrigin } from '@simplio/backend/api/utils/coins';
 
-export const testCoins: CoinItem[] = [];
 export interface CoinItem {
   type: WalletType;
   name: string;
@@ -13,6 +11,7 @@ export interface CoinItem {
   api?: string;
   origin?: string;
   addressType?: AddressType;
+  isTestCoinFor?: string;
 }
 
 export const coins: CoinItem[] = [
@@ -2002,6 +2001,10 @@ export const coins: CoinItem[] = [
     ticker: coinNames.SAFE,
     unique_id: 16,
   },
+];
+
+export const testCoins: CoinItem[] = [
+  { ...coins.find(a => a.ticker === coinNames.TBTC), isTestCoinFor: coinNames.BTC },
 ];
 
 export const customCoins: CoinItem[] = [

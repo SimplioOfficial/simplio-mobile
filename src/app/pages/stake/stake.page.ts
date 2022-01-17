@@ -1,21 +1,18 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { parseError, pipeAmount, UtilsService } from 'src/app/services/utils.service';
 import { WalletType, Rate, FeeResponse, FeeName } from 'src/app/interface/data';
 import { WalletService } from 'src/app/services/wallet.service';
 import { Wallet } from 'src/app/interface/data';
-import { TransactionOptionsModal } from 'src/app/pages/modals/transaction-options-modal/transaction-options.modal';
 import { TransactionWalletsModal } from 'src/app/pages/modals/transaction-wallets-modal/transaction-wallets.modal';
 import { SioValueComponent } from 'src/app/components/form/sio-value/sio-value.component';
 import { SettingsProvider } from 'src/app/providers/data/settings.provider';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
-import { isGreaterThan, isLowerThan } from 'src/shared/validators';
+import { isGreaterThan, isLessThan } from 'src/shared/validators';
 import { Translate } from 'src/app/providers/translate/';
 import { getPrice } from 'src/app/services/wallets/utils';
 import { RateService } from 'src/app/services/apiv2/connection/rate.service';
@@ -51,7 +48,8 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
   locale = this.settingsProvider.settingsValue.language;
   feePolicy = this.settingsProvider.settingsValue.feePolicy;
   wallets: Wallet[] = [];
-  wallet: Wallet = this.router.getCurrentNavigation().extras.state?.wallet || this.walletsProvider.walletValue;
+  wallet: Wallet =
+    this.router.getCurrentNavigation().extras.state?.wallet || this.walletsProvider.walletValue;
   pool;
   seeds;
   @ViewChild(SioValueComponent) valueComponent: SioValueComponent;
@@ -62,20 +60,26 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
       amount: [0, [Validators.required, isGreaterThan(0), this._validateSuficiencty.bind(this)]],
     },
     {
-      validators: [isLowerThan],
+      validators: [isLessThan],
     },
   );
 
   wallets$ = this.walletsProvider.wallets$.subscribe(async w => {
     this.wallets = w;
     if (!this.wallet) {
-      this.wallet = this.wallets.find(e => e.ticker === coinNames.SIO && e.type === WalletType.SOLANA_TOKEN_DEV);
+      this.wallet = this.wallets.find(
+        e => e.ticker === coinNames.SIO && e.type === WalletType.SOLANA_TOKEN_DEV,
+      );
       this.rate = getPrice(this.rateService.rateValue, this.wallet.ticker, this.currency);
       this.formField.patchValue({ wallet: this.wallet });
       const { idt } = this.authProvider.accountValue;
       this.seeds = this.io.decrypt(this.wallet.mnemo, idt);
-      this.pool = await this.backendService.stake.getPool(environment.POOL_ADDRESS, this.wallet.decimal, this.wallet.api);
-    };
+      this.pool = await this.backendService.stake.getPool(
+        environment.POOL_ADDRESS,
+        this.wallet.decimal,
+        this.wallet.api,
+      );
+    }
   });
 
   // private _wallet = new BehaviorSubject<Wallet>(
@@ -102,7 +106,7 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
     private txcoin: TxcoinService,
     private networkService: NetworkService,
     private translateService: TranslateService,
-    private backendService: BackendService
+    private backendService: BackendService,
   ) {
     super();
     this.feeService.getFee().then(res => (this._fees = res));
@@ -150,9 +154,19 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
     const { idt } = this.authProvider.accountValue;
     const seeds = this.io.decrypt(this.wallet.mnemo, idt);
     this.presentLoading();
-    this.backendService.stake.initStake(seeds, this.wallet.contractaddress, environment.POOL_ADDRESS, amount, this.wallet.decimal, environment.PROGRAM_ID, this.wallet.api).then(_ => {
-      this.dismissLoading();
-    })
+    this.backendService.stake
+      .initStake(
+        seeds,
+        this.wallet.contractaddress,
+        environment.POOL_ADDRESS,
+        amount,
+        this.wallet.decimal,
+        environment.PROGRAM_ID,
+        this.wallet.api,
+      )
+      .then(_ => {
+        this.dismissLoading();
+      })
       .catch(err => {
         this.dismissLoading();
         console.log(err);
@@ -175,18 +189,20 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
   async openSelectWalletModal() {
     const modal = await this._presentModal(TransactionWalletsModal, {
       wallets: this.wallets.filter(w => w !== this.selectedWallet),
-      currency: this.currency
+      currency: this.currency,
     });
     modal
       .onWillDismiss()
       .then(wallet => {
-        if (wallet.data && this.wallet != wallet.data) {
+        if (wallet.data && this.wallet !== wallet.data) {
           this.wallet = wallet.data;
           this.rate = getPrice(this.rateService.rateValue, this.wallet.ticker, this.currency);
           this.formField.patchValue({ wallet: this.wallet });
         }
       })
-      .catch(_ => this.utilsService.showToast(this.$.WALLET_COULD_NOT_BE_SELECTED, 2000, 'warning'));
+      .catch(_ =>
+        this.utilsService.showToast(this.$.WALLET_COULD_NOT_BE_SELECTED, 2000, 'warning'),
+      );
   }
 
   private _validateSuficiencty(c: FormControl): Validators {

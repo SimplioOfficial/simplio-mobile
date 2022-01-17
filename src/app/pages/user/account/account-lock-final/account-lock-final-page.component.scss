@@ -1,0 +1,16 @@
+.final-lock {
+  ::ng-deep {
+    .content {
+      display: block;
+
+      .title {
+        word-break: break-word;
+        font-size: 20px;
+      }
+
+      .content__icon {
+        height: 120px;
+      }
+    }
+  }
+}
