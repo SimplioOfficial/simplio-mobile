@@ -5,7 +5,7 @@ import { flatten } from 'lodash';
 
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { TxType } from 'src/app/interface/data';
-import { filter, map, skipWhile, startWith } from 'rxjs/operators';
+import { filter, map, skipWhile, startWith, tap } from 'rxjs/operators';
 import { IonInfiniteScroll, ModalController } from '@ionic/angular';
 
 import { Translate } from 'src/app/providers/translate';
@@ -290,7 +290,6 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
 
     try {
       const res = await this.swipeluxService.getAllOrders({ pageNumber: d.pageNumber });
-      console.log(233, res);
 
       if (!!res) {
         const transactions: Transaction[] = res.items.map(a => ({
@@ -321,7 +320,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       }
     } catch (err) {
       console.error(err);
-      throw new Error(err);
+      return null;
     }
   }
 

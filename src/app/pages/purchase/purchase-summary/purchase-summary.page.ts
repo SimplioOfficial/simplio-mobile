@@ -32,7 +32,6 @@ export class PurchaseSummaryPage {
     loading.present();
 
     const paymentData = await this.swipeluxService.initializePayment();
-    console.log(27, paymentData);
 
     await this.router.navigate(['../gateway-iframe'], {
       relativeTo: this.route.parent,

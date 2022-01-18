@@ -29,7 +29,6 @@ export class GatewayIframePage implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(25, this.paymentUrl);
     this.paymentSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.paymentUrl);
 
     setTimeout(() => this.loadingCtrl.dismiss(), 3000);
@@ -38,7 +37,6 @@ export class GatewayIframePage implements OnInit {
       () =>
         this.swipeluxService.getCurrentOrder().then(res => {
           const status = res.orderPaymentLast.orderPaymentEventLast.status;
-          console.log(39, status);
           if (status === 'SUCCESS') {
             clearInterval(this.interval);
             this.router.navigate(['final'], {

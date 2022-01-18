@@ -21,8 +21,8 @@ export interface Rate {
 }
 
 export interface CurrencyPair {
-  fromCcy: Currency;
-  toCcy: Currency;
+  fromCurrency: Currency;
+  toCurrency: Currency;
 }
 
 export interface RateResponse {

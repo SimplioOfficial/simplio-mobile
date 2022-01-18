@@ -18,16 +18,27 @@ export class IsUserTrustworthyGuard implements CanActivate {
   ) {}
 
   async canActivate(): Promise<boolean> {
+    this.router.navigate(['/home', 'user', 'account', 'lock']);
+    return;
+
     const loading = await this.loadingController.create();
     loading.present();
-    await this.kycService.getVerificationsRecords().catch(e => {
-      console.error(e);
-      this.utils.showToast('An error occurred, please try it later', 2000, 'warning');
-      this.loadingController.dismiss();
+    await this.kycService
+      .getVerificationsRecords()
+      .catch(_ => {
+        this.utils.showToast('An error occurred, please try it later', 2000, 'warning');
+        this.loadingController.dismiss();
 
-      this.router.navigate(['/home', 'user', 'account', 'lock']);
-      return false;
-    });
+        this.router.navigate(['/home', 'user', 'account', 'lock']);
+        return false;
+      })
+      .then(res => {
+        console.log(33, res);
+        if (!res) {
+          this.router.navigate(['/home', 'user', 'account', 'lock']);
+          return false;
+        }
+      });
     loading.dismiss();
 
     const [isVerified, status] = this.authProvider.isVerifiedValue;

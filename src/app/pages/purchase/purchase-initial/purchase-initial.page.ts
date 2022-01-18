@@ -86,30 +86,30 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     super();
     this.swipeluxService.getPairs().then(res => {
       this._swapList = res.items
-        .filter(a => a.fromCcy.isEnabled && a.toCcy.isEnabled)
+        .filter(a => a.fromCurrency.isEnabled && a.toCurrency.isEnabled)
         .map(a =>
           environment.production
             ? a
             : {
                 ...a,
-                toCcy: {
-                  ...a.toCcy,
-                  a3: testCoins.find(b => b.isTestCoinFor === a.toCcy.a3)?.ticker,
+                toCurrency: {
+                  ...a.toCurrency,
+                  a3: testCoins.find(b => b.isTestCoinFor === a.toCurrency.a3)?.ticker,
                 },
               },
         );
 
       const walletTickers = this._wallets.map(a => a.ticker);
       let swapPair = this._swapList.find(
-        p => walletTickers.includes(p.toCcy.a3) && p.fromCcy.a3 === this.currency,
+        p => walletTickers.includes(p.toCurrency.a3) && p.fromCurrency.a3 === this.currency,
       );
 
       // in case default currency is not available select the first pair
       if (!swapPair) {
-        swapPair = this._swapList.find(p => walletTickers.includes(p.toCcy.a3));
+        swapPair = this._swapList.find(p => walletTickers.includes(p.toCurrency.a3));
 
         if (!!swapPair) {
-          this.currency = swapPair.fromCcy.a3;
+          this.currency = swapPair.fromCurrency.a3;
         } else {
           this.walletSelectingDisabled = true;
           this.utilsService.showToast(
@@ -122,7 +122,7 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
 
       // select first available wallet for purchase
       if (!!swapPair) {
-        const wallet = this._wallets.find(a => a.ticker === swapPair.toCcy.a3);
+        const wallet = this._wallets.find(a => a.ticker === swapPair.toCurrency.a3);
         this._wallet.next(wallet);
         this.formField.patchValue({
           swapPair,
@@ -182,8 +182,6 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
         a => a.ticker === this.formField.value.wallet.ticker,
       ).mainAddress;
 
-      console.log(172, this.walletsProvider.walletsValue);
-
       const order: OrderDataWithToken = {
         currencyPair: {
           from: this.currency,
@@ -196,10 +194,7 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
 
       const status = await this.swipeluxService
         .createOrderByShareToken(order)
-        .then(res => {
-          console.log(163, res);
-          this.swipeluxProvider.setAuthToken(res.accessToken);
-        })
+        .then(res => this.swipeluxProvider.setAuthToken(res.accessToken))
         .then(() => this.swipeluxService.getKycStatus());
 
       if (status.passed) {
@@ -216,26 +211,25 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     console.log(
       204,
       this._swapList
-        .filter(a => a.fromCcy.a3 === 'USD')
-        .filter(a => this._wallets.find(b => b.ticker === a.toCcy.a3))
-        .map(a => a.toCcy.a3),
+        .filter(a => a.fromCurrency.a3 === 'USD')
+        .filter(a => this._wallets.find(b => b.ticker === a.toCurrency.a3))
+        .map(a => a.toCurrency.a3),
     );
     const modal = await this._presentModal(TransactionPairsModal, {
       title: this.$.instant(this.$.SELECT_CRYPTO),
       usdPairs: this._swapList
-        .filter(a => a.fromCcy.a3 === 'USD')
-        .filter(a => this._wallets.find(b => b.ticker === a.toCcy.a3)),
+        .filter(a => a.fromCurrency.a3 === 'USD')
+        .filter(a => this._wallets.find(b => b.ticker === a.toCurrency.a3)),
       eurPairs: this._swapList
-        .filter(a => a.fromCcy.a3 === 'EUR')
-        .filter(a => this._wallets.find(b => b.ticker === a.toCcy.a3)),
+        .filter(a => a.fromCurrency.a3 === 'EUR')
+        .filter(a => this._wallets.find(b => b.ticker === a.toCurrency.a3)),
     });
     const selectedPair: CurrencyPair = await modal.onWillDismiss().then(({ data }) => data);
-    console.log(215, selectedPair);
     if (!!selectedPair) {
-      const wallet = this._wallets.find(w => w.ticker === selectedPair.toCcy.a3);
+      const wallet = this._wallets.find(w => w.ticker === selectedPair.toCurrency.a3);
       if (!!wallet) {
         this._wallet.next(wallet);
-        this.currency = selectedPair.fromCcy.a3;
+        this.currency = selectedPair.fromCurrency.a3;
 
         this.formField.patchValue({
           amount: 0,
@@ -275,7 +269,6 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     return this.swipeluxService
       .getRateFromTo(this.currency, this.getWalletTicker())
       .then(res => {
-        console.log(259, res);
         this.isPending = false;
         if (!!res?.rate?.amount) {
           this.formField.patchValue({ resultRate: res.rate.amount ? 1 / res.rate.amount : 0 });
@@ -286,8 +279,6 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
           ]);
           this.formField.patchValue({ amount: this.formField.value.amount });
         }
-
-        console.log(260, this.formField.valid);
       })
       .catch(e => {
         console.error(e);
@@ -319,7 +310,6 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     const order = await this.swipeluxService.getCurrentOrder();
 
     loading.dismiss();
-    console.log(309, order);
     if (!!order) {
       this.router.navigate(['summary'], {
         relativeTo: this.route.parent.parent,
@@ -358,9 +348,6 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
       .withDebug(!environment.production)
       .build();
 
-    snsMobileSDK
-      .launch()
-      .then(async ({ status }) => console.log(198, status))
-      .catch(err => console.log('SumSub SDK Error: ' + JSON.stringify(err)));
+    snsMobileSDK.launch().catch(err => console.log('SumSub SDK Error: ' + JSON.stringify(err)));
   }
 }
