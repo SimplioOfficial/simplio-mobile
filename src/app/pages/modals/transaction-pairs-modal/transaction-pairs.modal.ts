@@ -44,8 +44,8 @@ export class TransactionPairsModal implements OnInit {
 
     console.log(
       45,
-      this.usdPairs.map(a => a.toCcy.a3),
-      this.eurPairs.map(a => a.toCcy.a3),
+      this.usdPairs.map(a => a.toCurrency.a3),
+      this.eurPairs.map(a => a.toCurrency.a3),
     );
     this.virtualUsdWallets = this.usdPairs.map(p => this.getImaginaryWallet(p));
     this.virtualEurWallets = this.eurPairs.map(p => this.getImaginaryWallet(p));
@@ -60,27 +60,27 @@ export class TransactionPairsModal implements OnInit {
   }
 
   selectEurPair(w: Wallet) {
-    this.modalCtrl.dismiss([...this.eurPairs].find(a => a.toCcy.a3 === w.ticker));
+    this.modalCtrl.dismiss([...this.eurPairs].find(a => a.toCurrency.a3 === w.ticker));
   }
 
   selectUsdPair(w: Wallet) {
-    this.modalCtrl.dismiss([...this.usdPairs].find(a => a.toCcy.a3 === w.ticker));
+    this.modalCtrl.dismiss([...this.usdPairs].find(a => a.toCurrency.a3 === w.ticker));
   }
 
   private getImaginaryWallet(pair: CurrencyPair): Wallet {
-    const ticker = pair.toCcy.a3;
+    const ticker = pair.toCurrency.a3;
     const type = this.getWalletType(ticker);
 
     return {
       _p: null,
       _uuid: null,
       uid: null,
-      name: this.getWalletName(pair.toCcy.a3),
-      type: this.getWalletType(pair.toCcy.a3),
+      name: this.getWalletName(pair.toCurrency.a3),
+      type: this.getWalletType(pair.toCurrency.a3),
       ticker,
       balance: UtilsService.sPipeAmount(
         1,
-        pair.toCcy.a3,
+        pair.toCurrency.a3,
         type,
         UtilsService.getDecimals(type, ticker),
       ),
