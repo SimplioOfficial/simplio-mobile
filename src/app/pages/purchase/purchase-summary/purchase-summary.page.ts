@@ -19,7 +19,9 @@ export class PurchaseSummaryPage {
     private loadingCtrl: LoadingController,
     private swipeluxService: SwipeluxService,
     public $: Translate,
-  ) {}
+  ) {
+    console.log(23, this.order);
+  }
 
   back() {
     this.router.navigate(['../initial'], {

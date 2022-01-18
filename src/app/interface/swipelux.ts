@@ -137,9 +137,9 @@ export interface OrderResponse {
     };
   };
   toAmount: number;
-  toCcy: Currency;
+  toCurrency: Currency;
   fromAmount: number;
-  fromCcy: Currency;
+  fromCurrency: Currency;
   rate: number;
   merchantFeeAmount: number;
   merchantFeeCurrency: Currency;

@@ -18,9 +18,6 @@ export class IsUserTrustworthyGuard implements CanActivate {
   ) {}
 
   async canActivate(): Promise<boolean> {
-    this.router.navigate(['/home', 'user', 'account', 'lock']);
-    return;
-
     const loading = await this.loadingController.create();
     loading.present();
     await this.kycService
@@ -33,7 +30,6 @@ export class IsUserTrustworthyGuard implements CanActivate {
         return false;
       })
       .then(res => {
-        console.log(33, res);
         if (!res) {
           this.router.navigate(['/home', 'user', 'account', 'lock']);
           return false;
