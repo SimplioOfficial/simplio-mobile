@@ -164,8 +164,14 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
         environment.PROGRAM_ID,
         this.wallet.api,
       )
-      .then(_ => {
-        this.dismissLoading();
+      .then(async _ => {
+        await this.dismissLoading();
+        this.router.navigate(['home', 'swap', 'stake', 'confirm'], {
+          state: {
+            wallet: this.wallet,
+            amount: amount,
+          },
+        });
       })
       .catch(err => {
         this.dismissLoading();

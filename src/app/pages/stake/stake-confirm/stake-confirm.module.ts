@@ -9,6 +9,7 @@ import { IonicModule } from '@ionic/angular';
 import { StakeConfirmPage } from './stake-confirm.page';
 import { SioLayoutModule } from 'src/app/components/layout/sio-layout.module';
 import { SioFormModule } from 'src/app/components/form/sio-form.module';
+import { SioSharedModule } from 'src/app/components/shared/sio-shared.module';
 
 const routes: Routes = [
   {
@@ -24,6 +25,7 @@ const routes: Routes = [
     IonicModule,
     SioLayoutModule,
     SioFormModule,
+    SioSharedModule,
     RouterModule.forChild(routes),
     TranslateModule.forChild({
       extend: true,
