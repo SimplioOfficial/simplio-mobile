@@ -136,9 +136,22 @@
           ></sio-purchase-item>
         </section>
       </ion-grid>
-      <!-- staking tab   -->
+      <!-- Staking tab   -->
       <ion-grid *ngSwitchCase="'staking'">
-        <ion-col> staking </ion-col>
+        <ng-container *ngIf="stakingWalletList$ | async as stakingList">
+          <section class="tab-container">
+            <sio-stake-item
+              *ngFor="let s of stakingList"
+              [wallet]="walletInfo(s.contractAddress)"
+              [staked]="s.amount"
+              [earned]="calculateEarn(s, walletInfo(s.contractAddress))"
+              (click)="openStakeDetails(s, walletInfo(s.contractAddress))"
+            >
+              <!-- <sio-embeded-chart [dataset]="[130, 180, 218, 190, 300, 330, 580, 618, 290, 300, 130]">
+            </sio-embeded-chart> -->
+            </sio-stake-item>
+          </section>
+        </ng-container>
       </ion-grid>
     </div>
   </ng-container>
