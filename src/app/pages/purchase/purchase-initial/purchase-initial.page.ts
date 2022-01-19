@@ -58,7 +58,6 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     .pipe(
       filter(d => !!d),
       tap(({ wallets: w }: RouteData) => {
-        this._wallets = w.wallets;
         this._wallet.next(w.primaryWallet);
       }),
     )
@@ -84,6 +83,8 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     public $: Translate,
   ) {
     super();
+    this._wallets = this.walletsProvider.walletsValue;
+
     this.swipeluxService.getPairs().then(res => {
       this._swapList = res.items
         .filter(a => a.fromCurrency.isEnabled && a.toCurrency.isEnabled)

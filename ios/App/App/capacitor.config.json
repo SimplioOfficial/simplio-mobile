@@ -35,8 +35,5 @@
 			"ShowSplashScreen": "true",
 			"orientation": "portrait"
 		}
-	},
-	"server": {
-		"url": "http://10.0.1.24:8100"
 	}
 }
