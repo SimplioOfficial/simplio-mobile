@@ -36,20 +36,23 @@ export class KycService {
     this.authProvider.pushSumsubStatus('');
     this.authProvider.pushVerificationRecord(null);
     return this.http.get<any>(url, { headers }).then(records => {
-      const record = records.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))[0]; // get the latest record
-      this.authProvider.pushVerificationRecord(record);
-      this.authProvider.pushSumsubStatus(record.detail.reviewAnswer);
+      if (!!records) {
+        const latestRecord = records.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))[0]; // get the latest record
+        this.authProvider.pushVerificationRecord(latestRecord);
+        this.authProvider.pushSumsubStatus(latestRecord.detail?.reviewAnswer);
 
-      if (record.detail.reviewAnswer === 'GREEN') {
-        this.getSharedToken()
-          .catch(e => {
-            this.authProvider.pushSumsubStatus('');
-            throw e;
-          })
-          .then(token => this.swipeluxProvider.setShareToken(token?.token));
+        if (latestRecord.detail?.reviewAnswer === 'GREEN') {
+          this.getSharedToken()
+            .catch(e => {
+              this.authProvider.pushSumsubStatus('');
+              throw e;
+            })
+            .then(token => this.swipeluxProvider.setShareToken(token?.token));
+        }
+
+        return records;
       }
-
-      return records;
+      return [];
     });
   }
 }
