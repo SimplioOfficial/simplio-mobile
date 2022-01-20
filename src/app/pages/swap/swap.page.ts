@@ -291,7 +291,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     try {
       const res = await this.swipeluxService.getAllOrders({ pageNumber: d.pageNumber });
 
-      if (!!res) {
+      if (!!res?.items) {
         const transactions: Transaction[] = res.items.map(a => ({
           _uuid: a.uid,
           type: TxType.RECEIVE,

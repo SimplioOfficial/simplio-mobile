@@ -20,12 +20,6 @@ import { getParams } from '../authentication/utils';
 export class SwipeluxService {
   constructor(private http: HttpClient) {}
 
-  authenticateTemp(): Promise<any> {
-    const url = SWIPELUX_URL.authenticateTemp;
-
-    return this.http.post(url, { login: 'simplio', password: '9vx5hQKnB295g6ba' }).toPromise();
-  }
-
   cancelCurrentPayment(): Promise<any> {
     const url = SWIPELUX_URL.payment.href;
 

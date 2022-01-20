@@ -29,5 +29,4 @@ export const SWIPELUX_URL = Object.freeze({
   orders: url2('swipelux/orders'),
 
   createByShareToken: urlNew('orders/createByShareToken'),
-  authenticateTemp: urlNew('auth/login'),
 });
