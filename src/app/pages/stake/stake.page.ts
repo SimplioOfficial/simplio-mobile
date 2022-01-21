@@ -33,17 +33,12 @@ import { BackendService } from 'src/app/services/apiv2/blockchain/backend.servic
   styleUrls: ['./stake.page.scss'],
 })
 export class StakePage extends TrackedPage implements OnDestroy, OnInit {
-  private _fees: FeeResponse;
-
-  readonly numTypes = SioNumpadComponent.TYPES;
-  private _originUrl = this.router.getCurrentNavigation().extras.state?.origin || '/home/wallets';
   fee = 0;
   rate = 0;
   minFee = 0;
   loading: any;
   feeLevels: FeeName[] = Object.values(FeeName) as FeeName[];
   isMax = false;
-
   currency = this.settingsProvider.settingsValue.currency;
   locale = this.settingsProvider.settingsValue.language;
   feePolicy = this.settingsProvider.settingsValue.feePolicy;
@@ -53,7 +48,6 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
   pool;
   seeds;
   @ViewChild(SioValueComponent) valueComponent: SioValueComponent;
-
   formField: FormGroup = this.fb.group(
     {
       wallet: [null, [Validators.required]],
@@ -63,71 +57,82 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
       validators: [isLessThan],
     },
   );
-
   wallets$ = this.walletsProvider.wallets$.subscribe(async w => {
     this.wallets = w;
     if (!this.wallet) {
       this.wallet = this.wallets.find(
         e => e.ticker === coinNames.SIO && e.type === WalletType.SOLANA_TOKEN_DEV,
       );
-      this.rate = getPrice(this.rateService.rateValue, this.wallet.ticker, this.currency);
-      this.formField.patchValue({ wallet: this.wallet });
-      const { idt } = this.authProvider.accountValue;
-      this.seeds = this.io.decrypt(this.wallet.mnemo, idt);
-      this.pool = await this.backendService.stake.getPool(
-        environment.POOL_ADDRESS,
-        this.wallet.decimal,
-        this.wallet.api,
-      );
+
+      if (!!this.wallet) {
+        this.rate = getPrice(this.rateService.rateValue, this.wallet.ticker, this.currency);
+        this.formField.patchValue({ wallet: this.wallet });
+        const { idt } = this.authProvider.accountValue;
+        this.seeds = this.io.decrypt(this.wallet?.mnemo, idt);
+        this.pool = await this.backendService.stake.getPool(
+          environment.POOL_ADDRESS,
+          this.wallet.decimal,
+          this.wallet.api,
+        );
+      }
     }
   });
 
-  // private _wallet = new BehaviorSubject<Wallet>(
-  //   this.router.getCurrentNavigation().extras.state?.wallet || this.walletsProvider.walletValue,
-  // );
-
-  instant = s => this.translateService.instant(s);
+  private _fees: FeeResponse;
+  private _originUrl = this.router.getCurrentNavigation().extras.state?.origin || '/home/wallets';
+  readonly numTypes = SioNumpadComponent.TYPES;
 
   constructor(
+    private io: IoService,
     private router: Router,
     private fb: FormBuilder,
-    private modalCtrl: ModalController,
-    private loadingController: LoadingController,
-    private walletService: WalletService,
+    private txcoin: TxcoinService,
     private feeService: Feev2Service,
-    private settingsProvider: SettingsProvider,
-    private utilsService: UtilsService,
     private rateService: RateService,
     private dataService: DataService,
-    private authProvider: AuthenticationProvider,
-    private io: IoService,
-    public $: Translate,
-    private walletsProvider: WalletsProvider,
-    private txcoin: TxcoinService,
+    private modalCtrl: ModalController,
+    private utilsService: UtilsService,
+    private walletService: WalletService,
     private networkService: NetworkService,
-    private translateService: TranslateService,
     private backendService: BackendService,
+    private walletsProvider: WalletsProvider,
+    private translateService: TranslateService,
+    private settingsProvider: SettingsProvider,
+    private authProvider: AuthenticationProvider,
+    private loadingController: LoadingController,
+    public $: Translate,
   ) {
     super();
+
+    this.loadingController.create({ duration: 1000 }).then(loading => loading.present());
+
     this.feeService.getFee().then(res => (this._fees = res));
-  }
-
-  get selectedWallet(): Wallet {
-    return this.formField.get('wallet').value;
-  }
-
-  get selectedFiat(): number {
-    if (!this.selectedWallet) return;
-    const { balance, ticker, type, decimal } = this.selectedWallet;
-    return pipeAmount(balance, ticker, type, decimal, true) * this.rate;
   }
 
   ngOnInit(): void {
     this.formField.patchValue({ wallet: this.wallet });
   }
+
   ngOnDestroy(): void {
     this.wallets$.unsubscribe();
   }
+
+  async cancelTransaction() {
+    this.router.navigateByUrl(this._originUrl);
+    this.dataService.cleanTransaction();
+  }
+
+  async dismissLoading() {
+    if (this.loading) {
+      await this.loading.dismiss();
+    }
+  }
+
+  getPrice(rates: Rate[], ticker: string, currency: string): number {
+    return getPrice(rates, ticker, currency);
+  }
+
+  instant = s => this.translateService.instant(s);
 
   onAmountChange(value: number) {
     this.valueComponent.updateInputValue(value);
@@ -137,14 +142,6 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
     this.isMax = value;
   }
 
-  private _navigateWithUrl(url) {
-    return this.router.navigate(url, {
-      state: {
-        wallet: this.wallet,
-        origin: this._originUrl,
-      },
-    });
-  }
   /**
    *
    * @todo too complex logic. Simplify!
@@ -169,7 +166,7 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
         this.router.navigate(['home', 'swap', 'stake', 'confirm'], {
           state: {
             wallet: this.wallet,
-            amount: amount,
+            amount,
           },
         });
       })
@@ -177,18 +174,6 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
         this.dismissLoading();
         console.log(err);
         this.utilsService.showToast(parseError(err.message), 3000, 'warning');
-      });
-  }
-
-  private _presentModal(modal, props = {}): Promise<HTMLIonModalElement> {
-    return this.modalCtrl
-      .create({
-        component: modal,
-        componentProps: props,
-      })
-      .then(modal => {
-        modal.present();
-        return modal;
       });
   }
 
@@ -211,19 +196,6 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
       );
   }
 
-  private _validateSuficiencty(c: FormControl): Validators {
-    return Validators.max(this.wallet?.balance || 0)(c);
-  }
-
-  getPrice(rates: Rate[], ticker: string, currency: string): number {
-    return getPrice(rates, ticker, currency);
-  }
-
-  async cancelTransaction() {
-    this.router.navigateByUrl(this._originUrl);
-    this.dataService.cleanTransaction();
-  }
-
   async presentLoading() {
     this.loading = await this.loadingController.create({
       message: this.instant(this.$.INITIALIZING_STAKE),
@@ -232,9 +204,32 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
     await this.loading.present();
   }
 
-  async dismissLoading() {
-    if (this.loading) {
-      await this.loading.dismiss();
+  get selectedFiat(): number {
+    if (!this.selectedWallet) {
+      return;
     }
+
+    const { balance, ticker, type, decimal } = this.selectedWallet;
+    return pipeAmount(balance, ticker, type, decimal, true) * this.rate;
+  }
+
+  get selectedWallet(): Wallet {
+    return this.formField.get('wallet').value;
+  }
+
+  private _presentModal(modal, props = {}): Promise<HTMLIonModalElement> {
+    return this.modalCtrl
+      .create({
+        component: modal,
+        componentProps: props,
+      })
+      .then(modal => {
+        modal.present();
+        return modal;
+      });
+  }
+
+  private _validateSuficiencty(c: FormControl): Validators {
+    return Validators.max(this.wallet?.balance || 0)(c);
   }
 }

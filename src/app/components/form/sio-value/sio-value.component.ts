@@ -73,7 +73,7 @@ export class SioValueComponent implements AfterViewInit, ControlValueAccessor {
   }
 
   onSwap() {
-    const swappedValue = this.swapedAmount;
+    const swappedValue = this.swappedAmount;
     this.isCoin = !this.isCoin;
     this.inputValue = swappedValue;
     this._resizeAmount();
@@ -87,7 +87,7 @@ export class SioValueComponent implements AfterViewInit, ControlValueAccessor {
 
   updateInputValue(value: number) {
     this.inputValue = UtilsService.resolveNumpadValue(value, this.inputValue);
-    const amountNum = this.isCoin ? parseFloat(this.inputValue) : parseFloat(this.swapedAmount);
+    const amountNum = this.isCoin ? parseFloat(this.inputValue) : parseFloat(this.swappedAmount);
     this.maxClicked.emit(false);
     this.writeValue(this._getFinalValue(amountNum));
     this._resizeAmount();
@@ -108,7 +108,7 @@ export class SioValueComponent implements AfterViewInit, ControlValueAccessor {
     return this.isCoin ? this.ticker : this.currency;
   }
 
-  get swapedAmount(): string {
+  get swappedAmount(): string {
     const v = parseFloat(this.inputValue);
     const value = this.isCoin ? this._rateCurrency(v) : this._rateCoin(v);
     return value.toString();
