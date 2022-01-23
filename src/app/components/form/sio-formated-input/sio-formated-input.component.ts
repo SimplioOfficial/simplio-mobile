@@ -34,7 +34,7 @@ export class SioFormatedInputComponent implements OnInit, ControlValueAccessor {
 
   @Input() format = '';
   @Input() separator = '';
-  @Input() type = 'text';
+  @Input() type = 'tel';
   @Input('is-valid') _isValid = true;
 
   @ViewChild('inputEl', { static: true }) $input: ElementRef<HTMLInputElement>;

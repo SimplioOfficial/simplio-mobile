@@ -10,7 +10,7 @@ import { Wallet } from 'src/app/interface/data';
 export class SioWalletItemSelectComponent {
   @Input() wallet: Wallet | null;
   @Input() label = '';
-  @Input() fiatValue: number;
+  @Input() fiatValue: number | string;
   @Input() rate: number;
   @Input() currency = 'usd';
   @Input() locale = 'en';

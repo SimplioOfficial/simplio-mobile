@@ -10,17 +10,6 @@ ion-grid {
   display: flex;
   justify-content: center;
   margin-bottom: 6%;
-
-  .source-icon,
-  .target-icon {
-    position: relative;
-    left: 6px;
-  }
-
-  .target-icon {
-    left: -6px;
-    transform: scaleX(1.2) scaleY(1.2);
-  }
 }
 
 ion-col span {
@@ -33,9 +22,29 @@ p {
 }
 
 .overview {
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   .amount h3 {
     margin: 0;
     font-size: 24px;
+  }
+
+  .loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--ion-background-color);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: var(--sizing-element-medium);
   }
 }
 
@@ -45,17 +54,8 @@ p {
   width: 100%;
 
   ion-row {
-    padding: var(--spacing-tiny) 0;
+    padding: var(--spacing-small) 0;
     border-top: solid 1px var(--ion-color-border);
-
-    &.icon {
-      padding: 15px 0 0 calc(50% - 5px);
-
-      ion-icon {
-        color: #888a88;
-        transform: scaleY(2) scaleX(2);
-      }
-    }
   }
 }
 

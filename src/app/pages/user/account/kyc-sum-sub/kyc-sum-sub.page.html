@@ -1,0 +1,8 @@
+<div [ngSwitch]="sumsubResponseStatus" class="centered">
+  <div *ngSwitchCase="SumSubResponseStatusType.Unknown" class="loading">
+    <sio-spinner [size]="60">
+      <ion-icon name="person-outline"></ion-icon>
+    </sio-spinner>
+    <span>{{ $.LOADING_COMPONENT | translate }}</span>
+  </div>
+</div>

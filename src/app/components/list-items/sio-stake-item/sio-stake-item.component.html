@@ -1,9 +1,11 @@
 <main>
   <section class="top">
     <div class="top__left">
-        <sio-wallet-thumbnail [iconID]="wallet.ticker" [attr.scale]="'small'">
-          <sio-wallet-thumbnail [iconID]="network" [attr.scale]="'micro'"></sio-wallet-thumbnail>
-        </sio-wallet-thumbnail>
+      <sio-wallet-thumbnail [iconID]="wallet.ticker" [attr.scale]="'small'"> </sio-wallet-thumbnail>
+
+      <div class="platform-container">
+        <sio-wallet-thumbnail [iconID]="network" [attr.scale]="'tiny'"></sio-wallet-thumbnail>
+      </div>
       <div>
         <p>{{ wallet.name }}</p>
         <span>{{ $.ON | translate }} {{ network }}</span>

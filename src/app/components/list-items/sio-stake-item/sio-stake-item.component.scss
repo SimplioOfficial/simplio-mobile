@@ -1,6 +1,6 @@
 :host {
   display: block;
-  padding: var(--spacing-smaller) var(--spacing-small)
+  padding: var(--spacing-smaller) var(--spacing-small) 0;
 }
 
 main {
@@ -21,7 +21,6 @@ p {
   padding: var(--spacing-smaller);
 }
 
-
 .top__left,
 .top__right {
   flex-grow: 1;
@@ -38,26 +37,26 @@ p {
   display: flex;
   align-items: center;
 
-  >div {
+  > div {
     display: flex;
     flex-direction: column;
     margin-left: var(--spacing-smaller);
 
     span {
       font-size: 12px;
-      color: var(--ion-color-step-450)
+      color: var(--ion-color-step-450);
     }
   }
 }
 
-.bottom>div {
+.bottom > div {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .bottom {
-  padding: var(--spacing-smaller);
+  padding: 0 var(--spacing-smaller) var(--spacing-smaller);
 
   .title--secondary {
     p {
@@ -65,4 +64,11 @@ p {
       color: var(--ion-color-step-450);
     }
   }
+}
+
+.platform-container {
+  position: relative;
+  top: 18px;
+  left: -39px;
+  transform: scaleX(0.7) scaleY(0.7);
 }

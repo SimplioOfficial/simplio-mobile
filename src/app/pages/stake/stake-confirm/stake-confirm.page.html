@@ -1,8 +1,8 @@
 <sio-simple-page [hasHeader]="false">
   <main class="content">
     <header>
-      <p>{{ $.SWAP_HAS_BEEN_SUCCESSFUL | translate }}</p>
-      <h3>{{ sourceCoin }} to {{ targetCoin }}</h3>
+      <p>{{ $.STAKE_HAS_BEEN_SUCCESSFUL | translate }}</p>
+      <h3>{{ amount | balance: wallet.ticker:wallet.type:wallet.decimal }} {{ wallet.ticker }}</h3>
     </header>
     <div class="scene">
       <sio-rocket></sio-rocket>

@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  padding: var(--spacing-small);
+}
+
+.code {
+  margin: 0 var(--spacing-small);
+}
+
+.name {
+  font-size: 14px;
+  color: var(--ion-color-step-500);
+}

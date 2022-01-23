@@ -17,11 +17,6 @@ const routes: Routes = [
     component: StakePage,
   },
   {
-    path: 'summary',
-    loadChildren: () =>
-      import('./stake-summary/stake-summary.module').then(m => m.StakeSummaryPageModule),
-  },
-  {
     path: 'confirm',
     loadChildren: () =>
       import('./stake-confirm/stake-confirm.module').then(m => m.StakeConfirmPageModule),

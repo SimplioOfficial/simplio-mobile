@@ -28,6 +28,15 @@ type CheckTransactionData = {
   providedIn: 'root',
 })
 export class CheckWalletsService {
+  constructor(
+    private tx: TransactionsService,
+    private txs: TransactionsProvider,
+    private authProvider: AuthenticationProvider,
+    private io: IoService,
+  ) {
+    this._isChecking.next(false);
+    this._subscription.add(this.account$.subscribe());
+  }
   private transactionErrors: Map<string, string[]> = new Map();
   private _isChecking = new BehaviorSubject<boolean>(false);
   private _subscription = new Subscription();
@@ -36,6 +45,24 @@ export class CheckWalletsService {
   });
   isChecking$ = this._isChecking.asObservable();
   checkingList: UUID[] = [];
+
+  account$ = this.authProvider.account$.pipe(
+    skipWhile(v => !v),
+    tap(acc => {
+      if (!!acc) {
+        const wallets = this.io.getWallets(acc.uid);
+        const self = this;
+        this.tx.subscribleSolChange(wallets, (accountInfo, address) => {
+          const w = wallets.filter(e => e.mainAddress === address);
+          if (!!w.length) {
+            self.checkTransactionsAll({
+              wallets: w,
+            });
+          }
+        });
+      }
+    }),
+  );
 
   checkProperties = data => {
     let notHasOwnProperty = true;
@@ -48,32 +75,6 @@ export class CheckWalletsService {
     });
     return notHasOwnProperty;
   };
-
-  account$ = this.authProvider.account$.pipe(
-    skipWhile(v => !v),
-    tap(acc => {
-      const wallets = this.io.getWallets(acc.uid);
-      const self = this;
-      this.tx.subscribleSolChange(wallets, function (accountinfo, address) {
-        const w = wallets.filter(e => e.mainAddress === address);
-        if (!!w.length) {
-          self.checkTransactionsAll({
-            wallets: w,
-          });
-        }
-      });
-    }),
-  );
-
-  constructor(
-    private tx: TransactionsService,
-    private txs: TransactionsProvider,
-    private authProvider: AuthenticationProvider,
-    private io: IoService,
-  ) {
-    this._isChecking.next(false);
-    this._subscription.add(this.account$.subscribe());
-  }
 
   checkTransactions(data: Partial<CheckTransactionData>, onDone = () => {}) {
     const d: CheckTransactionData = {

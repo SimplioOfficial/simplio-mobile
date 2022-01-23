@@ -1,5 +1,4 @@
 <sio-simple-page>
-
   <sio-header>
     <sio-header-button slot="header-left" (click)="goBack()">
       <ion-icon name="arrow-back-outline"></ion-icon>
@@ -10,28 +9,35 @@
     <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
   </sio-header>
 
-
   <sio-floating-tapbar>
     <sio-floating-tapbar-button [title]="$.ACTION_STAKE | translate" (click)="openStake()">
       <ion-icon name="flash-outline"></ion-icon>
     </sio-floating-tapbar-button>
 
-    <sio-floating-tapbar-button [title]="$.ACTION_HARVEST | translate" (click)="openHarvestPrompt()">
+    <sio-floating-tapbar-button
+      [title]="$.ACTION_HARVEST | translate"
+      (click)="openHarvestPrompt()"
+    >
       <ion-icon name="download-outline"></ion-icon>
     </sio-floating-tapbar-button>
 
-    <sio-floating-tapbar-button [title]="$.ACTION_UNSTAKE | translate" (click)="openUnstakePrompt()">
+    <sio-floating-tapbar-button
+      [title]="$.ACTION_UNSTAKE | translate"
+      (click)="openUnstakePrompt()"
+    >
       <ion-icon name="flash-off-outline"></ion-icon>
     </sio-floating-tapbar-button>
   </sio-floating-tapbar>
 
-  <ng-container *ngIf="rate$ |async as rate">
+  <ng-container *ngIf="rate$ | async as rate">
     <section class="intro">
       <section class="top">
         <div class="top__left">
-          <sio-wallet-thumbnail [iconID]="'SIO'">
-            <sio-wallet-thumbnail [iconID]="'SOL'" [attr.scale]="'micro'"></sio-wallet-thumbnail>
-          </sio-wallet-thumbnail>
+          <sio-wallet-thumbnail [iconID]="'SIO'"> </sio-wallet-thumbnail>
+          <div class="platform-container">
+            <sio-wallet-thumbnail [iconID]="network" [attr.scale]="'tiny'"></sio-wallet-thumbnail>
+          </div>
+
           <div>
             <p>{{ wallet.name }}</p>
             <span>{{ $.ON | translate }} {{ network }}</span>
@@ -49,22 +55,26 @@
         </div>
         <div class="title--secondary">
           <p class="title">{{ $.LAST_PAYMENT | translate }}</p>
-          <p>{{ stake.lastPayment * 1000 | date:'MMM dd, yyyy HH:mm' }}</p>
+          <p>{{ stake.lastPayment * 1000 | date: 'MMM dd, yyyy HH:mm' }}</p>
         </div>
         <div class="title--secondary">
           <p class="title">{{ $.CREATED_TIME | translate }}</p>
-          <p>{{ stake.startTime * 1000 | date:'MMM dd, yyyy HH:mm' }}</p>
+          <p>{{ stake.startTime * 1000 | date: 'MMM dd, yyyy HH:mm' }}</p>
         </div>
         <div class="title--secondary">
           <p class="title">{{ $.STAKED | translate }}</p>
-          <p>{{stake.amount | balance: wallet.ticker:wallet.type:wallet.decimal}} {{ wallet.ticker }}</p>
+          <p
+            >{{ stake.amount | balance: wallet.ticker:wallet.type:wallet.decimal }}
+            {{ wallet.ticker }}</p
+          >
         </div>
         <div class="title">
           <p class="title">{{ $.EARNED | translate }}</p>
-          <p>{{earned | balance: wallet.ticker:wallet.type:wallet.decimal}} {{ wallet.ticker }}</p>
+          <p
+            >{{ earned | balance: wallet.ticker:wallet.type:wallet.decimal }} {{ wallet.ticker }}</p
+          >
         </div>
       </section>
-
 
       <!-- <sio-wallet-thumbnail [iconID]="'SIO'" [attr.scale]="'large'">
         <sio-wallet-thumbnail [iconID]="'SOL'" [attr.scale]="'micro'"></sio-wallet-thumbnail>
@@ -84,5 +94,4 @@
       </sio-stake-transaction-item>
     </section> -->
   </ng-container>
-
 </sio-simple-page>

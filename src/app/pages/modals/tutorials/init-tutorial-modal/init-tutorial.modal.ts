@@ -17,18 +17,23 @@ type Action = {
 export class InitTutorialModal {
   readonly ACTIONS: Action[] = [
     {
+      buttonText: this.$.BUY,
+      buttonIcon: 'logo-bitcoin',
+      desc: this.$.TUT_INIT_BUY,
+    },
+    {
       buttonText: this.$.SEND,
-      buttonIcon: 'arrow-up',
+      buttonIcon: 'arrow-up-outline',
       desc: this.$.TUT_INIT_SEND,
     },
     {
       buttonText: this.$.RECEIVE,
-      buttonIcon: 'arrow-down',
+      buttonIcon: 'arrow-down-outline',
       desc: this.$.TUT_INIT_RECEIVE,
     },
     {
       buttonText: this.$.SWAP,
-      buttonIcon: 'repeat',
+      buttonIcon: 'repeat-outline',
       desc: this.$.TUT_INIT_SWAP,
     },
     {

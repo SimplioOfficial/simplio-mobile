@@ -4,6 +4,8 @@
 * [DEVELOPMENT-277] Add automatic move to the next word in seed recovery
 * [DEVELOPMENT-285] Automatically scroll to previously selected wallet on detail closing
 * [DEVELOPMENT-278] Add possibility to copy entire seed. User can now use capital letters without any effect
+* [DEVELOPMENT-215] Implement swipelux payment gateway
+* [DEVELOPMENT-306] Fix stake button colors
 
 # 0.2.1 (2021-12-15)
 * [DEVELOPMENT-283] Improve performance for wallet reordering & active wallets settings

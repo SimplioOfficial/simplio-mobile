@@ -12,6 +12,8 @@ import {
   NavController,
 } from '@ionic/angular';
 import { Animation } from '@ionic/core';
+import { coinNames } from '@simplio/backend/api/utils/coins';
+import { Utils } from '@simplio/backend/utils';
 import { orderBy, sortBy, toLower as lc } from 'lodash';
 import { Transaction, TransactionAPI, TxType, Wallet, WalletType } from 'src/app/interface/data';
 import { copyInputMessage, pipeAmount, UtilsService } from 'src/app/services/utils.service';
@@ -29,11 +31,9 @@ import { RateService } from 'src/app/services/apiv2/connection/rate.service';
 import { TransactionsProvider } from 'src/app/providers/data/transactions.provider';
 import { IoService } from 'src/app/services/io.service';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
-import { coinNames }from "@simplio/backend/api/utils/coins"
+import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
 import { TrackedPage } from '../../../classes/trackedPage';
 import { SioPageComponent } from '../../../components/layout/sio-page/sio-page.component';
-import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
-import { Utils } from '@simplio/backend/utils';
 
 @Component({
   selector: 'app-overview',
@@ -100,7 +100,9 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
     .pipe(filter(tx => !!tx.data && tx._uuid === this._wallet?._uuid))
     .subscribe(txData => {
       const txs = this._transactions.value;
-      const wTxs = txs ? txs.filter(e => txData.data.findIndex(ee => ee.hash === e.hash) === -1) : [];
+      const wTxs = txs
+        ? txs.filter(e => txData.data.findIndex(ee => ee.hash === e.hash) === -1)
+        : [];
       const combinedTxs = sortBy([...wTxs, ...txData.data], 'unix')
         .reverse()
         .slice(0, 20);
@@ -244,7 +246,7 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
   back() {
     this.router.navigate(['/home', 'wallets'], {
       state: {
-        walletId: this._wallet.uniqueId,
+        walletOrder: this._wallet._p,
       },
     });
   }
@@ -619,7 +621,9 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
   }
 
   get isInitialized() {
-    if (!(UtilsService.isSolanaToken(this._wallet.type) || Utils.isSafecoinToken(this._wallet.type))) {
+    if (
+      !(UtilsService.isSolanaToken(this._wallet.type) || Utils.isSafecoinToken(this._wallet.type))
+    ) {
       return true;
     } else {
       return this._wallet.isInitialized;

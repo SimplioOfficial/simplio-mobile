@@ -22,7 +22,7 @@ import { InitTutorialModal } from 'src/app/pages/modals/tutorials/init-tutorial-
 import { TutorialsProvider } from 'src/app/providers/data/tutorials.provider';
 import { RateService } from 'src/app/services/apiv2/connection/rate.service';
 import { Feev2Service } from 'src/app/services/apiv2/connection/feev2.service';
-import { coinNames }from "@simplio/backend/api/utils/coins"
+import { coinNames } from '@simplio/backend/api/utils/coins';
 import { sortBy } from 'lodash';
 import { SioPageComponent } from '../../../components/layout/sio-page/sio-page.component';
 import { Animation } from '@ionic/core';
@@ -113,12 +113,12 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     ),
   );
 
+  selectedWalletId = this.router.getCurrentNavigation().extras.state?.walletOrder;
+
   private hideAnimation: Animation;
   private showAnimation: Animation;
   private hideAnimation2: Animation;
   private showAnimation2: Animation;
-
-  private selectedWalletId = this.router.getCurrentNavigation().extras.state?.walletId;
 
   private readonly ANIMATION_DURATION = 100; // ms
 
@@ -245,8 +245,7 @@ export class WalletsOverviewPage implements OnInit, OnDestroy, AfterViewInit {
     if (!!this.selectedWalletId) {
       setTimeout(() => {
         const element = document.getElementById(`wallet-${this.selectedWalletId}`);
-        element.focus();
-        element.scrollIntoView({ behavior: 'smooth' });
+        this.pageComponent.mainEl.scrollByPoint(0, element.offsetTop, 700);
       });
     }
   }

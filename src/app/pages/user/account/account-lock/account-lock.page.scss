@@ -1,0 +1,86 @@
+.dash {
+  height: 100vw;
+  width: 100vw;
+  display: grid;
+  place-content: center;
+}
+
+.box {
+  box-shadow: var(--sio-box-shadow);
+  background-color: var(--ion-background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box--finger {
+  width: 10rem;
+  height: 10rem;
+  border-radius: var(--main-border-radius);
+  position: relative;
+  background-color: var(--ion-background-color);
+}
+
+.box--simplio,
+.box--check,
+.box--send {
+  position: absolute;
+  border-radius: 100%;
+}
+
+.box--simplio {
+  width: 3rem;
+  height: 3rem;
+  background-color: var(--ion-color-primary);
+  top: 1rem;
+  left: -1rem;
+
+  sio-simplio-logo {
+    --size: 2em;
+    --color: var(--ion-background-color);
+  }
+}
+
+.box--send {
+  width: 2.6rem;
+  height: 2.6rem;
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
+  top: 2rem;
+  left: calc(100% - 1rem);
+}
+
+.box--check {
+  width: 3rem;
+  height: 3rem;
+  background-color: var(--ion-color-primary);
+  color: var(--button-text-color);
+  font-size: 1.6em;
+  bottom: -2rem;
+  left: calc(50% - 1.5rem);
+}
+
+.content {
+  padding: var(--spacing-small);
+  text-align: center;
+}
+
+body.dark :host {
+  .box--finger {
+    background-color: var(--ion-color-translucent);
+  }
+  .box--send,
+  .box--simplio {
+    border: solid 1px var(--ion-text-color);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .box--finger {
+    background-color: var(--ion-color-translucent);
+  }
+  .box--send,
+  .box--simplio {
+    border: solid 1px var(--ion-text-color);
+  }
+}

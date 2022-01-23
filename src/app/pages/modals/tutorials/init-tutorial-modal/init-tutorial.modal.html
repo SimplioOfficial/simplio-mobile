@@ -7,7 +7,7 @@
         <div class="action-menu__content">
           <div *ngFor="let action of ACTIONS; index as i" class="action__content" class="action">
             <div class="action-sides action-icon">
-              <ion-icon [name]="action.buttonIcon + '-outline'"></ion-icon>
+              <ion-icon [name]="action.buttonIcon"></ion-icon>
             </div>
             <div class="action-text">
               <span>{{ action.buttonText | translate }}</span>

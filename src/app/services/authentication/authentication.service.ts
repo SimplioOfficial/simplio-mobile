@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   AccountCredentials,
@@ -10,10 +10,10 @@ import { IdentityVerificationError } from 'src/app/providers/errors/identity-ver
 import { Translate } from 'src/app/providers/translate';
 import { AuthenticationProvider } from '../../providers/data/authentication.provider';
 import { PlatformProvider } from '../../providers/platform/platform';
+import { USERS_URLS, USERS_URLS_V2 } from '../../providers/routes/account.routes';
 import { IoService } from '../io.service';
-import { httpHeaders, parseJWT } from './utils';
+import { parseJWT } from './utils';
 import { MultiFactorAuthenticationService } from './mfa.service';
-import { USERS_URLS, USERS_URLS_V2 } from 'src/app/providers/routes/swap.routes';
 import { AccountService } from 'src/app/services/authentication/account.service';
 import { SwapProvider } from '../../providers/data/swap.provider';
 import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';

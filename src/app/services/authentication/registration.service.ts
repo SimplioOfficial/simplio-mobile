@@ -1,9 +1,9 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AccountCredentials, AgreementData, RegisterAccountData } from 'src/app/interface/account';
 import { AccountRegistrationError } from 'src/app/providers/errors/account-registration-error';
 import { Translate } from 'src/app/providers/translate';
-import { AGREEMENTS_URL, USERS_URLS } from 'src/app/providers/routes/swap.routes';
+import { USERS_URLS } from '../../providers/routes/account.routes';
 import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
 
 @Injectable({
@@ -25,7 +25,6 @@ export class RegistrationService {
 
     return this.http
       .post<void>(url, body, { headers })
-      
       .then(() => data.cred)
       .catch((err: HttpErrorResponse) => {
         throw new AccountRegistrationError(err, this.$);

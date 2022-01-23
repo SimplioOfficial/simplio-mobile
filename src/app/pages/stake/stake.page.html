@@ -7,19 +7,14 @@
 
     <span slot="header-title">{{ $.STAKING | translate }}</span>
 
-    <sio-header-button
-      id="sio-t-btn--open-options"
-      slot="header-right"
-      (click)="openOptionsModal()"
-    >
-      <ion-icon name="options-outline"></ion-icon>
-    </sio-header-button>
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
   </sio-header>
 
   <main class="content">
     <form [formGroup]="formField">
       <sio-value
-        [ticker]="selectedWallet?.ticker || ''"
+        [ngClass]="{ disabled: !selectedWallet?.ticker }"
+        [ticker]="selectedWallet?.ticker"
         [currency]="currency"
         formControlName="amount"
         [max]="selectedWallet?.balance || 0"

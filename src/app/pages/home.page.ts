@@ -38,8 +38,10 @@ import { AccountService } from 'src/app/services/authentication/account.service'
 import { SwapConnectionService } from 'src/app/services/swap/swap-connection.service';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { SwapProvider } from '../providers/data/swap.provider';
+import { SwipeluxProvider } from '../providers/swipelux/swipelux-provider.service';
 import { NetworkService } from '../services/apiv2/connection/network.service';
 import { RateService } from '../services/apiv2/connection/rate.service';
+import { KycService } from '../services/kyc.service';
 import { WalletService } from '../services/wallet.service';
 import { CoinsService } from '../services/apiv2/connection/coins.service';
 import { MultiFactorAuthenticationService } from '../services/authentication/mfa.service';
@@ -59,6 +61,12 @@ export class HomePage extends TrackedPage implements OnInit {
   private _pauseTimeout;
   private _timeoutOccurs: boolean | null = null;
   readonly actions: ActionsModalProps = [
+    {
+      title: this.$.instant(this.$.BUY),
+      icon: 'logo-bitcoin',
+      cssClass: ['transaction-action-sheet', ' sio-t-btn--action-send'],
+      handler: () => this._navigateWithWallet('home', 'purchase'),
+    },
     {
       title: this.$.instant(this.$.SEND),
       icon: 'arrow-up',
@@ -202,6 +210,7 @@ export class HomePage extends TrackedPage implements OnInit {
     private router: Router,
     private acc: AccountService,
     private plt: PlatformProvider,
+    private kycService: KycService,
     private rateService: RateService,
     private modalCtrl: ModalController,
     private swapProvider: SwapProvider,
@@ -217,6 +226,7 @@ export class HomePage extends TrackedPage implements OnInit {
     private translateService: TranslateService,
     private walletCreator: CreateWalletService,
     private settingsProvider: SettingsProvider,
+    private swipeluxProvider: SwipeluxProvider,
     private authProvider: AuthenticationProvider,
     private firebaseAnalytics: FirebaseAnalytics,
     private loadingController: LoadingController,
@@ -229,9 +239,10 @@ export class HomePage extends TrackedPage implements OnInit {
   }
 
   ngOnInit() {
-    // disable swiping back
     this.coinsService.init();
-    this.routerOutlet.swipeGesture = false;
+    this.routerOutlet.swipeGesture = false; // disable swiping back
+
+    this.kycService.getVerificationsRecords();
   }
 
   private async _presentPreparingSwap() {
@@ -297,10 +308,10 @@ export class HomePage extends TrackedPage implements OnInit {
             }
 
             const sortedTxs: Transaction[] = sortBy(tx.data, 'unix').reverse();
-            let wTxs = wallet.transactions
+            const wTxs = wallet.transactions
               ? wallet.transactions.filter(
-                e => sortedTxs.findIndex(ee => ee.hash === e.hash) === -1,
-              )
+                  e => sortedTxs.findIndex(ee => ee.hash === e.hash) === -1,
+                )
               : [];
             const unconfirmed = sortedTxs.filter(e => e.confirmed === false).length;
             const pending = wTxs.filter(e => e.confirmed === false).length;
@@ -308,11 +319,18 @@ export class HomePage extends TrackedPage implements OnInit {
               .reverse()
               .slice(0, 20);
 
-            if (wallet.lasttx !== sortedTxs[0].hash || wallet.unconfirmed !== unconfirmed || pending != unconfirmed) {
-              if (pending != unconfirmed && wTxs.length > 0 && wTxs[0].block > sortedTxs[0].block) {
+            if (
+              wallet.lasttx !== sortedTxs[0].hash ||
+              wallet.unconfirmed !== unconfirmed ||
+              pending !== unconfirmed
+            ) {
+              if (
+                pending !== unconfirmed &&
+                wTxs.length > 0 &&
+                wTxs[0].block > sortedTxs[0].block
+              ) {
                 // do not update data if there's still pending transaction and no new transaction after last transaction time
-              }
-              else {
+              } else {
                 wallet.transactions = combinedTxs;
                 if (tx.endBlock) {
                   wallet.lastblock = tx.endBlock;

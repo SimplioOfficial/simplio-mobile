@@ -4,7 +4,6 @@
   grid-template-rows: auto auto;
   border-bottom-left-radius: var(--main-border-radius);
   border-bottom-right-radius: var(--main-border-radius);
-
 }
 
 p {
@@ -17,7 +16,6 @@ p {
   align-items: flex-start;
   padding: var(--spacing-small);
 }
-
 
 .top__left,
 .top__right {
@@ -41,7 +39,7 @@ p {
 
     span {
       font-size: 14px;
-      color: var(--ion-color-step-450)
+      color: var(--ion-color-step-450);
     }
   }
 }
@@ -53,7 +51,7 @@ p {
   margin: var(--spacing-smallest) 0;
 }
 
-.bottom  {
+.bottom {
   padding: var(--spacing-small);
 
   .title--secondary {
@@ -68,4 +66,11 @@ p {
       font-weight: 600;
     }
   }
+}
+
+.platform-container {
+  position: relative;
+  top: 18px;
+  left: -39px;
+  transform: scaleX(0.7) scaleY(0.7);
 }
