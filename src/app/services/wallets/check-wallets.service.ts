@@ -17,6 +17,7 @@ import {
 } from 'src/app/services/transactions.service';
 import { IoService } from '../io.service';
 import { isErcToken, isToken, UtilsService } from '../utils.service';
+import Bottleneck from 'bottleneck';
 
 type CheckTransactionData = {
   wallets: Wallet[];
@@ -30,6 +31,9 @@ export class CheckWalletsService {
   private transactionErrors: Map<string, string[]> = new Map();
   private _isChecking = new BehaviorSubject<boolean>(false);
   private _subscription = new Subscription();
+  private _bottkeneck = new Bottleneck({
+    minTime: 333,
+  });
   isChecking$ = this._isChecking.asObservable();
   checkingList: UUID[] = [];
 
@@ -55,9 +59,9 @@ export class CheckWalletsService {
         if (!!w.length) {
           self.checkTransactionsAll({
             wallets: w,
-          })
+          });
         }
-      })
+      });
     }),
   );
 
@@ -114,22 +118,24 @@ export class CheckWalletsService {
       if (UtilsService.isSolanaToken(wallet.type) || UtilsService.isErcToken(wallet.type)) {
         contractAddress = wallet.contractaddress;
       }
-      return this.tx
-        .getTransactionOfAsync({
-          _uuid: wallet._uuid,
-          ticker: wallet.ticker,
-          type: wallet.type,
-          addresses: wallet.addresses.map(a => a.address),
-          tokenAddress: wallet.tokenAddress,
-          lastBlock,
-          api: wallet.api,
-          tokenId: contractAddress,
-          seeds: this.io.decrypt(wallet.mnemo, idt),
-          wallet,
-          important: data.important,
-        })
-        .then(res => onSuccess(res))
-        .catch(onError);
+      return this._bottkeneck.schedule(() =>
+        this.tx
+          .getTransactionOfAsync({
+            _uuid: wallet._uuid,
+            ticker: wallet.ticker,
+            type: wallet.type,
+            addresses: wallet.addresses.map(a => a.address),
+            tokenAddress: wallet.tokenAddress,
+            lastBlock,
+            api: wallet.api,
+            tokenId: contractAddress,
+            seeds: this.io.decrypt(wallet.mnemo, idt),
+            wallet,
+            important: data.important,
+          })
+          .then(res => onSuccess(res))
+          .catch(onError),
+      );
     });
 
     Promise.all(proms).catch(onError).then(onDone);
@@ -183,22 +189,24 @@ export class CheckWalletsService {
           this.txs.pushTransactions(res);
         } else {
           const wallet = res.wallet;
-          this.tx
-            .getTransactionOfAsync({
-              _uuid: wallet._uuid,
-              ticker: wallet.ticker,
-              type: wallet.type,
-              addresses: wallet.addresses.map(a => a.address),
-              tokenAddress: wallet.tokenAddress,
-              lastBlock: 0,
-              api: wallet.api,
-              tokenId: wallet.contractaddress,
-              seeds: this.io.decrypt(wallet.mnemo, idt),
-              wallet,
-              important: data.important,
-            })
-            .then(res => onSuccess(res))
-            .catch(onError);
+          return this._bottkeneck.schedule(() =>
+            this.tx
+              .getTransactionOfAsync({
+                _uuid: wallet._uuid,
+                ticker: wallet.ticker,
+                type: wallet.type,
+                addresses: wallet.addresses.map(a => a.address),
+                tokenAddress: wallet.tokenAddress,
+                lastBlock: 0,
+                api: wallet.api,
+                tokenId: wallet.contractaddress,
+                seeds: this.io.decrypt(wallet.mnemo, idt),
+                wallet,
+                important: data.important,
+              })
+              .then(res => onSuccess(res))
+              .catch(onError),
+          );
         }
       });
     };
@@ -216,22 +224,24 @@ export class CheckWalletsService {
       if (UtilsService.isSolanaToken(wallet.type) || UtilsService.isErcToken(wallet.type)) {
         contractAddress = wallet.contractaddress;
       }
-      return this.tx
-        .getTransactionOfAsync({
-          _uuid: wallet._uuid,
-          ticker: wallet.ticker,
-          type: wallet.type,
-          addresses: wallet.addresses.map(a => a.address),
-          tokenAddress: wallet.tokenAddress,
-          lastBlock,
-          api: wallet.api,
-          tokenId: contractAddress,
-          seeds: this.io.decrypt(wallet.mnemo, idt),
-          wallet: wallet,
-          important: data.important,
-        })
-        .then(res => onSuccess(res))
-        .catch(onError);
+      return this._bottkeneck.schedule(() =>
+        this.tx
+          .getTransactionOfAsync({
+            _uuid: wallet._uuid,
+            ticker: wallet.ticker,
+            type: wallet.type,
+            addresses: wallet.addresses.map(a => a.address),
+            tokenAddress: wallet.tokenAddress,
+            lastBlock,
+            api: wallet.api,
+            tokenId: contractAddress,
+            seeds: this.io.decrypt(wallet.mnemo, idt),
+            wallet: wallet,
+            important: data.important,
+          })
+          .then(res => onSuccess(res))
+          .catch(onError),
+      );
     });
 
     if (ercTokens.length > 0) {
@@ -331,8 +341,9 @@ export class CheckWalletsService {
           .catch(onError),
       );
     }
-
-    Promise.all(proms).catch(onError).then(onDone);
+    this._bottkeneck.schedule(() => {
+      return Promise.all(proms).catch(onError).then(onDone);
+    });
   }
 
   checkNewTransactions(wallet: Wallet) {
@@ -367,21 +378,23 @@ export class CheckWalletsService {
       }
     }
     function getTxs(self: CheckWalletsService, onSuccess, onError) {
-      self.tx
-        .getTransactionOfAsync({
-          _uuid: wallet._uuid,
-          ticker: wallet.ticker,
-          type: wallet.type,
-          addresses: wallet.addresses.map(a => a.address),
-          tokenAddress: wallet.tokenAddress,
-          lastBlock,
-          api: wallet.api,
-          tokenId: contractAddress,
-          seeds: self.io.decrypt(wallet.mnemo, idt),
-          wallet,
-        })
-        .then(onSuccess)
-        .catch(onError);
+      return self._bottkeneck.schedule(() =>
+        self.tx
+          .getTransactionOfAsync({
+            _uuid: wallet._uuid,
+            ticker: wallet.ticker,
+            type: wallet.type,
+            addresses: wallet.addresses.map(a => a.address),
+            tokenAddress: wallet.tokenAddress,
+            lastBlock,
+            api: wallet.api,
+            tokenId: contractAddress,
+            seeds: self.io.decrypt(wallet.mnemo, idt),
+            wallet,
+          })
+          .then(onSuccess)
+          .catch(onError),
+      );
     }
   }
 

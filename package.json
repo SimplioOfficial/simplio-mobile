@@ -81,6 +81,7 @@
     "bignumber.js": "9.0.1",
     "bip39": "3.0.4",
     "bitcore-lib-cash": "8.25.10",
+    "bottleneck": "^2.19.5",
     "chart.js": "2.9.4",
     "cordova-android": "10.1.1",
     "cordova-ios": "6.2.0",
