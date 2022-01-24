@@ -34,7 +34,8 @@ export class BalsolanaService extends BalBase {
     important?: boolean;
   }): Promise<number> {
     const publickey = new solanaWeb3.PublicKey(data.address);
-    const connection = this.backendService.solana.getConnection(data);
+    const apiUrl = this.backendService.getSolApi(data);
+    const connection = this.backendService.solana.getConnection({ api: apiUrl });
     return connection
       .getBalance(publickey)
       .then(bal => bal)
@@ -63,17 +64,18 @@ export class BalsolanaService extends BalBase {
     api: string;
     count: 0;
     important?: boolean;
-    addressType: AddressType
+    addressType: AddressType;
   }): Promise<number> {
-    const connection = this.backendService.solana.getConnection(data);
+    const apiUrl = this.backendService.getSolApi(data);
+    const connection = this.backendService.solana.getConnection({ api: apiUrl });
     const mainPublickey = await this.backendService.solana.getAddress({
       mnemo: data.seeds,
-      addressType: data.addressType
+      addressType: data.addressType,
     });
     const publickey = await this.backendService.solana.getTokenAddress({
       address: mainPublickey.address.toString(),
       contractAddress: data.contractAddress,
-      api: data.api
+      api: data.api,
     });
     return connection
       .getParsedAccountInfo(publickey)
@@ -95,14 +97,19 @@ export class BalsolanaService extends BalBase {
       });
   }
 
-  getTokenBalance(data: { seeds: string; contractAddress: string; api: string; addressType: AddressType }): Promise<number> {
+  getTokenBalance(data: {
+    seeds: string;
+    contractAddress: string;
+    api: string;
+    addressType: AddressType;
+  }): Promise<number> {
     return this._getTokenBalance({
       seeds: data.seeds,
       contractAddress: data.contractAddress,
       api: data.api,
       count: 0,
       important: true,
-      addressType: data.addressType
+      addressType: data.addressType,
     });
   }
 }
