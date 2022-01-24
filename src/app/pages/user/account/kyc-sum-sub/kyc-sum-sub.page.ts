@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 
 import { Translate } from 'src/app/providers/translate';
 import { environment } from '../../../../../environments/environment';
+import { SumSubStatus } from '../../../../interface/kyc';
 import { SettingsProvider } from '../../../../providers/data/settings.provider';
 import { SwipeluxProvider } from '../../../../providers/swipelux/swipelux-provider.service';
 import { AccountService } from '../../../../services/authentication/account.service';
@@ -15,23 +16,14 @@ import { UtilsService } from '../../../../services/utils.service';
 
 declare const SNSMobileSDK: import('@sumsub/cordova-idensic-mobile-sdk-plugin/dist/SNSMobileSDK');
 
-enum SumSubResponseStatusType {
-  Unknown = 'Unknown',
-  Initial = 'Initial',
-  Incomplete = 'Incomplete',
-  Pending = 'Pending',
-  TemporarilyDeclined = 'TemporarilyDeclined',
-  Approved = 'Approved',
-}
-
 @Component({
   selector: 'kyc-sum-sub',
   templateUrl: './kyc-sum-sub.page.html',
   styleUrls: ['./kyc-sum-sub.page.scss'],
 })
 export class KycSumSubPage extends TrackedPage implements OnInit, OnDestroy {
-  sumsubResponseStatus = SumSubResponseStatusType.Unknown;
-  SumSubResponseStatusType = SumSubResponseStatusType;
+  sumsubResponseStatus = SumSubStatus.Unknown;
+  SumSubResponseStatusType = SumSubStatus;
 
   private token: string;
   private language = 'en';
@@ -92,7 +84,7 @@ export class KycSumSubPage extends TrackedPage implements OnInit, OnDestroy {
           .then(async ({ status }) => this.handleSumSubResult(status, this.token))
           .catch(err => {
             console.log('SumSub SDK Error: ' + JSON.stringify(err));
-            this.sumsubResponseStatus = SumSubResponseStatusType.TemporarilyDeclined;
+            this.sumsubResponseStatus = SumSubStatus.TemporarilyDeclined;
           });
       })
       .catch(e => {
@@ -106,7 +98,7 @@ export class KycSumSubPage extends TrackedPage implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  private async handleSumSubResult(status: SumSubResponseStatusType, token: string) {
+  private async handleSumSubResult(status: SumSubStatus, token: string) {
     this.sumsubResponseStatus = status;
     console.log('SumSub SDK status: ' + status);
 

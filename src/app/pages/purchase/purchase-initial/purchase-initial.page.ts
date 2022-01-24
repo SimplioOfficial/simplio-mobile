@@ -16,6 +16,7 @@ import {
 import { SioBuyValueComponent } from '../../../components/form/sio-buy-value/sio-buy-value.component';
 import { Rate, Wallet, WalletsData } from '../../../interface/data';
 import { TrackedPage } from '../../../classes/trackedPage';
+import { SumSubStatus } from '../../../interface/kyc';
 import { CurrencyPair, OrderDataWithToken } from '../../../interface/swipelux';
 import { SettingsProvider } from '../../../providers/data/settings.provider';
 import { SwipeluxProvider } from '../../../providers/swipelux/swipelux-provider.service';
@@ -199,7 +200,7 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
         .then(() => this.swipeluxService.getKycStatus());
 
       if (status.passed) {
-        await this.initializePayment();
+        await this.continueWithPayment();
       } else {
         this.initializeSumSub(status.token);
       }
@@ -304,7 +305,7 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     return UtilsService.getDecimals(this._wallet.value.type, this._wallet.value.ticker);
   }
 
-  private async initializePayment() {
+  private async continueWithPayment() {
     const loading = await this.loadingCtrl.create();
     loading.present();
 
@@ -337,11 +338,8 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
       })
       .withHandlers({
         // Optional callbacks you can use to get notified of the corresponding events
-        onStatusChanged: async event => {
-          console.log('onStatusChanged: [' + event.prevStatus + '] => [' + event.newStatus + ']');
-
-          this.initializePayment();
-        },
+        onStatusChanged: async event =>
+          console.log('onStatusChanged: [' + event.prevStatus + '] => [' + event.newStatus + ']'),
         // Prepared callbacks:
         onStatusDidChange: () => null,
         onDidDismiss: () => null,
@@ -349,6 +347,13 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
       .withDebug(!environment.production)
       .build();
 
-    snsMobileSDK.launch().catch(err => console.log('SumSub SDK Error: ' + JSON.stringify(err)));
+    snsMobileSDK
+      .launch()
+      .then(async ({ status }) => {
+        if (status === SumSubStatus.Approved) {
+          this.continueWithPayment();
+        }
+      })
+      .catch(err => console.log('SumSub SDK Error: ' + JSON.stringify(err)));
   }
 }

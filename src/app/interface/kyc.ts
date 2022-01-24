@@ -1,3 +1,16 @@
+export enum SumSubStatus {
+  Unknown = 'Unknown',
+  Ready = 'Ready',
+  Failed = 'Failed',
+  Initial = 'Initial',
+  Incomplete = 'Incomplete',
+  Pending = 'Pending',
+  TemporarilyDeclined = 'TemporarilyDeclined',
+  FinallyRejected = 'FinallyRejected',
+  Approved = 'Approved',
+  ActionCompleted = 'ActionCompleted',
+}
+
 export interface SumSubTokenResponse {
   token: string;
   userId: string;
