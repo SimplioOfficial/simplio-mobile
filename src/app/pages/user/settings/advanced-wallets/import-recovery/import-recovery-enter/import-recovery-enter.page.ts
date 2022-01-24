@@ -21,13 +21,15 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./import-recovery-enter.page.scss'],
 })
 export class ImportRecoveryEnterPage implements OnDestroy {
+  wrongSeed = false;
+
   private _loading = new BehaviorSubject(false);
+  loading$ = this._loading.asObservable();
+
   private LENGTH = 24;
   private EMPTY_SEED = Array.from(Array(this.LENGTH), () => '');
   private _seed$ = new BehaviorSubject<string[]>(Array.from(this.EMPTY_SEED));
   private _apply$;
-  private wrongSeed = false;
-  loading$ = this._loading.asObservable();
 
   static formatWord(word: string): string {
     return word.toLowerCase().trim();

@@ -46,4 +46,8 @@ export class InsertSeedModal implements AfterViewInit {
   onSubmit() {
     if (this.formField.valid) this.onDismissModal(true);
   }
+
+  get isValid(): boolean {
+    return this.formField.valid;
+  }
 }

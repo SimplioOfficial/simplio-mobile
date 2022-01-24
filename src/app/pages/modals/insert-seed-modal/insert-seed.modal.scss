@@ -2,3 +2,7 @@ ion-grid {
   --ion-grid-padding: var(--spacing-small);
   margin: 0;
 }
+
+.valid {
+  border-bottom: 2px solid var(--ion-color-success);
+}
