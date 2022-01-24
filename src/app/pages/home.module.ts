@@ -51,6 +51,9 @@ const routes: Routes = [
         path: 'purchase',
         canActivate: [IsUserTrustworthyGuard],
         runGuardsAndResolvers: 'always',
+        resolve: {
+          wallets: AccountWalletsResolver,
+        },
         loadChildren: () => import('./purchase/purchase.module').then(m => m.PurchasePageModule),
         data: { tapbar: true },
       },
