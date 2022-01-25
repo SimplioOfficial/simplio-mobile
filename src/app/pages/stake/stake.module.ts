@@ -21,6 +21,12 @@ const routes: Routes = [
     loadChildren: () =>
       import('./stake-confirm/stake-confirm.module').then(m => m.StakeConfirmPageModule),
   },
+  {
+    path: 'details',
+    loadChildren: () =>
+      import('./stake-details/stake-details.module').then(m => m.StakeDetailsPageModule),
+    data: { tapbar: false },
+  },
 ];
 
 @NgModule({

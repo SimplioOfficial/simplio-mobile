@@ -8,6 +8,7 @@
 * [DEVELOPMENT-306] Fix stake button colors
 * [DEVELOPMENT-311] Fix wallet selection in purchase page after adding new wallet
 * [DEVELOPMENT-308] Fix color highlighting for input seed
+* [DEVELOPMENT-305] Fix NaN issue for staking from wallet
 
 # 0.2.1 (2021-12-15)
 * [DEVELOPMENT-283] Improve performance for wallet reordering & active wallets settings

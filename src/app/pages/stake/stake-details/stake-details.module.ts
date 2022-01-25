@@ -11,13 +11,11 @@ import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
 import { SioTapbarsModule } from 'src/app/components/tapbars/tapbars.module';
 import { SioChartsModule } from 'src/app/components/charts/sio-charts.module';
 
-
-
 const routes: Routes = [
   {
     path: '',
-    component: StakeDetailsPage
-  }
+    component: StakeDetailsPage,
+  },
 ];
 @NgModule({
   imports: [
@@ -30,8 +28,8 @@ const routes: Routes = [
     SioLayoutModule,
     SioTapbarsModule,
     SioChartsModule,
-    NgxQRCodeModule
+    NgxQRCodeModule,
   ],
-  declarations: [StakeDetailsPage]
+  declarations: [StakeDetailsPage],
 })
 export class StakeDetailsPageModule {}

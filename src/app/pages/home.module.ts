@@ -57,6 +57,11 @@ const routes: Routes = [
         loadChildren: () => import('./purchase/purchase.module').then(m => m.PurchasePageModule),
         data: { tapbar: true },
       },
+      {
+        path: 'stake',
+        loadChildren: () => import('./stake/stake.module').then(m => m.StakePageModule),
+        data: { tapbar: false },
+      },
     ],
   },
 ];

@@ -92,7 +92,7 @@ export class HomePage extends TrackedPage implements OnInit {
       icon: 'flash-outline',
       cssClass: ['transaction-action-sheet'],
       handler: () => {
-        this._navigateStake('home', 'swap', 'stake');
+        this._navigateStake('home', 'stake');
       },
     },
   ];
@@ -441,7 +441,7 @@ export class HomePage extends TrackedPage implements OnInit {
     this.router.navigate(route, {
       state: {
         origin: this.location.path(),
-        wallet: w
+        wallet: w,
       },
     });
   }

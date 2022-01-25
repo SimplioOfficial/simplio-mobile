@@ -158,7 +158,7 @@ export class StakeDetailsPage extends TrackedPage implements OnInit {
 
   openStake() {
     console.log(this.location.path());
-    this.router.navigate(['home', 'swap', 'stake'], {
+    this.router.navigate(['home', 'stake'], {
       state: {
         origin: '/home',
         wallet: this.wallet,

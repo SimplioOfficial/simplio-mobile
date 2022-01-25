@@ -59,22 +59,23 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
   );
   wallets$ = this.walletsProvider.wallets$.subscribe(async w => {
     this.wallets = w;
+
     if (!this.wallet) {
       this.wallet = this.wallets.find(
         e => e.ticker === coinNames.SIO && e.type === WalletType.SOLANA_TOKEN_DEV,
       );
+    }
 
-      if (!!this.wallet) {
-        this.rate = getPrice(this.rateService.rateValue, this.wallet.ticker, this.currency);
-        this.formField.patchValue({ wallet: this.wallet });
-        const { idt } = this.authProvider.accountValue;
-        this.seeds = this.io.decrypt(this.wallet?.mnemo, idt);
-        this.pool = await this.backendService.stake.getPool(
-          environment.POOL_ADDRESS,
-          this.wallet.decimal,
-          this.wallet.api,
-        );
-      }
+    if (!!this.wallet) {
+      this.rate = getPrice(this.rateService.rateValue, this.wallet.ticker, this.currency);
+      this.formField.patchValue({ wallet: this.wallet });
+      const { idt } = this.authProvider.accountValue;
+      this.seeds = this.io.decrypt(this.wallet?.mnemo, idt);
+      this.pool = await this.backendService.stake.getPool(
+        environment.POOL_ADDRESS,
+        this.wallet.decimal,
+        this.wallet.api,
+      );
     }
   });
 
@@ -163,7 +164,7 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
       )
       .then(async _ => {
         await this.dismissLoading();
-        this.router.navigate(['home', 'swap', 'stake', 'confirm'], {
+        this.router.navigate(['home', 'stake', 'confirm'], {
           state: {
             wallet: this.wallet,
             amount,

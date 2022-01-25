@@ -455,7 +455,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   }
 
   async openStakeDetails(s: Stake, w: Wallet) {
-    await this.router.navigate(['/home', 'swap', 'stake-details'], {
+    await this.router.navigate(['/home', 'stake', 'details'], {
       state: {
         origin: this.location.path(),
         wallet: w,
