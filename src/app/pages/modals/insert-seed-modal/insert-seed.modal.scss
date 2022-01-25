@@ -6,3 +6,16 @@ ion-grid {
 .valid {
   border-bottom: 2px solid var(--ion-color-success);
 }
+
+.invalid {
+  border-bottom: 2px solid var(--ion-color-danger);
+}
+
+.empty {
+  border-bottom: none !important;
+}
+
+ion-item {
+  --highlight-color-valid: none;
+  --highlight-color-invalid: none;
+}

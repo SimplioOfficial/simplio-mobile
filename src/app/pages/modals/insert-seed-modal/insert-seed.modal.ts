@@ -50,4 +50,8 @@ export class InsertSeedModal implements AfterViewInit {
   get isValid(): boolean {
     return this.formField.valid;
   }
+
+  get isEmpty(): boolean {
+    return this.formField.get('word').value === '';
+  }
 }

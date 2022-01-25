@@ -16,7 +16,7 @@
             <ion-label position="floating">{{ $.WORD | translate }} {{ index + 1 }}</ion-label>
             <ion-input
               #seedInput
-              [ngClass]="{ valid: isValid }"
+              [ngClass]="{ valid: isValid, invalid: !isValid, empty: isEmpty }"
               formControlName="word"
               type="text"
               mode="md"
