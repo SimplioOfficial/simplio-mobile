@@ -5,7 +5,7 @@ import { flatten } from 'lodash';
 
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { TxType } from 'src/app/interface/data';
-import { filter, map, skipWhile, startWith, tap } from 'rxjs/operators';
+import { filter, map, skipWhile, startWith } from 'rxjs/operators';
 import { IonInfiniteScroll, ModalController } from '@ionic/angular';
 
 import { Translate } from 'src/app/providers/translate';

@@ -176,9 +176,7 @@ export class StakeDetailsPage extends TrackedPage implements OnInit {
       .then(async _ => {
         await this._closeLoading();
         this.utilsService.showToast(this.$.CANCELLED_SUCCESS);
-        this.router.navigate(['..'], {
-          relativeTo: this.route.parent,
-        });
+        this.router.navigate(['home', 'swap']);
       })
       .catch(err => {
         this._closeLoading();
