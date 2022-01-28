@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import {
-  AllOrdersResponse,
+  OrdersResponse,
   Currency,
   CurrencyPair,
   OrderData,
@@ -40,13 +40,13 @@ export class SwipeluxService {
     return this.http.post(url, order).toPromise<any>();
   }
 
-  getAllOrders(params?: any): Promise<{ items: AllOrdersResponse[]; pageInfo: any }> {
+  getAllOrders(params?: any): Promise<{ items: OrdersResponse[]; pageInfo: any }> {
     const url = SWIPELUX_URL.orders.href;
 
     return this.http
       .get(url, {
         params: getParams({
-          sort: 'createdAt',
+          sort: 'created_at',
           dir: 'desc',
           ...params,
         }),

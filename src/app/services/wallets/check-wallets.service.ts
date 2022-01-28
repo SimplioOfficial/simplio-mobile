@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { sortBy } from 'lodash';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { filter, skipWhile, switchMap, tap } from 'rxjs/operators';
-import { CacheWallet } from 'src/app/interface/cache';
-import { Transaction, Wallet, WalletType } from 'src/app/interface/data';
+import { skipWhile, tap } from 'rxjs/operators';
+import { Wallet, WalletType } from 'src/app/interface/data';
 import { UUID } from 'src/app/interface/global';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { TransactionsProvider } from 'src/app/providers/data/transactions.provider';
@@ -16,7 +14,7 @@ import {
   TransactionsService,
 } from 'src/app/services/transactions.service';
 import { IoService } from '../io.service';
-import { isErcToken, isToken, UtilsService } from '../utils.service';
+import { isToken, UtilsService } from '../utils.service';
 import Bottleneck from 'bottleneck';
 
 type CheckTransactionData = {

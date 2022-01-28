@@ -1,0 +1,103 @@
+<section class="swap-modal">
+  <header>
+    <div class="close-btn" (click)="dismiss()">
+      <ion-icon name="close-outline"></ion-icon>
+    </div>
+  </header>
+
+  <ion-app>
+    <ion-content [scrollY]="true">
+      <section class="transaction-detail">
+        <header>
+          <h3>{{ $.PURCHASE_DETAIL | translate }}</h3>
+        </header>
+
+        <div class="overview">
+          <div class="thumbnail">
+            <sio-wallet-thumbnail
+              class="source-icon"
+              [iconID]="purchase.fromCcy.a3"
+              scale="small"
+            ></sio-wallet-thumbnail>
+            <sio-wallet-thumbnail
+              class="target-icon"
+              [iconID]="purchase.toCcy.a3"
+            ></sio-wallet-thumbnail>
+          </div>
+        </div>
+
+        <ion-grid class="detail">
+          <ion-row class="headerfee" *ngIf="!!purchase.createdAt">
+            <ion-col size="6">
+              <span>{{ $.CREATED_TIME | translate }}</span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p
+                >{{ purchase.createdAt | date: 'mediumDate' }},
+                {{ purchase.createdAt | date: 'shortTime' }}</p
+              >
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="headerfee">
+            <ion-col size="6">
+              <span>{{ $.SOURCE | translate }}</span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p>
+                {{ sourceAmount }}
+                {{ sourceCoin }}
+              </p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="headerfee">
+            <ion-col size="6">
+              <span>{{ $.DESTINATION | translate }}</span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p>
+                {{ targetAmount }}
+                {{ purchase.toCcy.a3 }}
+              </p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="headerfee">
+            <ion-col size="6">
+              <span>{{ $.TRANSACTION_FEE | translate }} </span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p>{{ transactionFee | number: '1.1-8' }} </p>
+            </ion-col>
+          </ion-row>
+          <ion-row class="headerfee">
+            <ion-col size="6">
+              <span>{{ $.WITHDRAWAL_FEE | translate }} ({{ targetCoin }})</span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p>{{ withdrawalFee | number: '1.1-8' }} {{ targetCoin }}</p>
+            </ion-col>
+          </ion-row>
+          <ion-row class="headerfee">
+            <ion-col size="6">
+              <span>{{ $.MERCHANT_FEE | translate }}</span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p>{{ merchantFee | number: '1.1-8' }} {{ sourceCoin }}</p>
+            </ion-col>
+          </ion-row>
+          <ion-row class="headerfee">
+            <ion-col size="6">
+              <span>{{ $.TOTAL_FEE | translate }}</span>
+            </ion-col>
+            <ion-col size="6" text-right>
+              <p>{{ totalFee | number: '1.1-8' }} {{ sourceCoin }}</p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </section>
+
+      <div class="offset-bottom"></div> </ion-content
+  ></ion-app>
+</section>

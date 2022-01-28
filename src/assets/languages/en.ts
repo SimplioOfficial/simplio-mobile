@@ -754,4 +754,5 @@ export default {
   PAYMENT_FAILURE_TITLE: 'Your payment was declined',
   MERCHANT_FEE: 'Merchant fee',
   STAKE_HAS_BEEN_SUCCESSFUL: 'Stake has been successful!',
+  PURCHASE_DETAIL: 'Purchase detail',
 };

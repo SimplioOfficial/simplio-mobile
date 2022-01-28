@@ -12,6 +12,7 @@ import { WalletsDataResolver } from 'src/app/resolvers/wallets-data.resolver';
 import { SwapType } from 'src/app/interface/swap';
 import { SwapDetailModalModule } from 'src/app/pages/modals/swap-detail-modal/swap-detail.module';
 import { ResponsibilityAgreementGuard } from 'src/app/guards/responsibility-agreement.guard';
+import { PurchaseDetailModalModule } from '../modals/purchase-detail-modal/purchase-detail.module';
 import { SwapPage } from './swap.page';
 import { SioChartsModule } from 'src/app/components/charts/sio-charts.module';
 
@@ -63,6 +64,7 @@ const routes: Routes = [
     SioChartsModule,
     SioSharedModule,
     SwapDetailModalModule,
+    PurchaseDetailModalModule,
     RouterModule.forChild(routes),
     TranslateModule.forChild({
       extend: true,

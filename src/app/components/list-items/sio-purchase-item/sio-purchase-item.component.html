@@ -1,26 +1,17 @@
-<div
-  class="thumbnail-container"
-  [class]="{ 'has-notification': !transaction.confirmed }"
-  [attr.data-notification-type]="getNotificationType(transaction)"
->
-  <sio-wallet-thumbnail [iconID]="transaction.ticker"></sio-wallet-thumbnail>
+<div class="thumbnail-container">
+  <sio-wallet-thumbnail [iconID]="purchase.toCcy.a3"></sio-wallet-thumbnail>
 </div>
 
 <div class="title">
-  <p>{{ transaction.address | address: 3 }}</p>
-  <span>{{ transaction.ticker }}</span>
+  <p>{{ purchase.fromAmount }}</p>
+  <span>{{ purchase.fromCcy.a3 }}</span>
 </div>
 <div class="balance">
   <p>
-    {{ transaction.amount }}
-    {{ transaction.ticker }}
+    {{ purchase.toAmount }}
+    {{ purchase.toCcy.a3 }}
   </p>
-  <span *ngIf="transaction.confirmed; else unconfirmedRef">{{
-    transaction.date | date: 'MMM dd, yyyy, HH:mm'
-  }}</span>
-  <ng-template #unconfirmedRef>
-    <span>{{ unconfirmedMsg }}</span>
-  </ng-template>
+  <span>{{ purchase.createdAt | date: 'MMM dd, yyyy, HH:mm' }}</span>
 </div>
 
 <ng-content></ng-content>

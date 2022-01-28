@@ -147,7 +147,7 @@ export interface OrderResponse {
   feeCurrency: Currency;
 }
 
-export interface AllOrdersResponse {
+export interface OrdersResponse {
   createdAt: Date;
   email: string;
   fromAmount: number;

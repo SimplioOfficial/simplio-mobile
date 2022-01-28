@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { flatten } from 'lodash';
 
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
-import { TxType } from 'src/app/interface/data';
 import { filter, map, skipWhile, startWith } from 'rxjs/operators';
 import { IonInfiniteScroll, ModalController } from '@ionic/angular';
 
@@ -21,10 +20,11 @@ import { SingleSwapService } from 'src/app/services/swap/single-swap.service';
 import { getSwapStatusTranslations } from 'src/app/services/swap/utils';
 import { calculateInterest, UtilsService } from 'src/app/services/utils.service';
 import { TrackedPage } from '../../classes/trackedPage';
+import { OrdersResponse } from '../../interface/swipelux';
 import { TransactionsProvider } from '../../providers/data/transactions.provider';
 import { SwipeluxService } from '../../services/swipelux/swipelux.service';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { Transaction, Wallet, WalletType } from 'src/app/interface/data';
+import { Transaction, TxType, Wallet, WalletType } from 'src/app/interface/data';
 import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
 import { environment } from 'src/environments/environment';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
@@ -32,6 +32,7 @@ import { IoService } from 'src/app/services/io.service';
 import { coinNames } from 'src/app/services/api/coins';
 import { Stake, Pool } from '@simplio/backend/interface/stake';
 import { NetworkService } from 'src/app/services/apiv2/connection/network.service';
+import { PurchaseDetailModal } from '../modals/purchase-detail-modal/purchase-detail.modal';
 
 const DEFAULTS = {
   currentPage: 0,
@@ -41,7 +42,7 @@ const DEFAULTS = {
   isLoadingInit: false,
   isLoadingHistory: false,
   swapHistory: [],
-  transactions: [],
+  purchases: [],
   stakingList: [],
 };
 
@@ -142,8 +143,8 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     ? this.transactionProvider.transactionsValue
     : [];
 
-  private _transactions = new BehaviorSubject<Transaction[]>(DEFAULTS.transactions);
-  transactions$ = this._transactions.asObservable();
+  private _purchases = new BehaviorSubject<OrdersResponse[]>(DEFAULTS.purchases);
+  purchases$ = this._purchases.asObservable();
 
   pendingSwaps$ = this.swapProvider.pendingSwaps$.pipe(
     map(pages => {
@@ -311,7 +312,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
             data: transactions,
           });
 
-          this._transactions.next(transactions);
+          this._purchases.next(res.items);
         }
 
         return transactions;
@@ -445,13 +446,18 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     });
   }
 
-  segmentChanged(ev: any) {
-    // console.log(this.segment);
-    // console.log('Segment changed', ev);
-  }
+  async openPurchaseDetail(purchase: OrdersResponse): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: PurchaseDetailModal,
+      componentProps: { purchase },
+      swipeToClose: true,
+      cssClass: 'slide-modal',
+      mode: 'ios',
+    });
+    await modal.present();
 
-  async openTransaction(tx: Transaction): Promise<void> {
-    console.log('Opending tx:', tx);
+    const { data: refresh } = await modal.onWillDismiss();
+    if (!refresh) return;
   }
 
   async openStakeDetails(s: Stake, w: Wallet) {
