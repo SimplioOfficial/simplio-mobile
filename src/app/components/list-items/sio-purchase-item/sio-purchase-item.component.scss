@@ -18,3 +18,20 @@ p {
     color: var(--ion-color-primary);
   }
 }
+
+.thumbnail {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 6%;
+
+  .source-icon,
+  .target-icon {
+    position: relative;
+    left: 6px;
+  }
+
+  .target-icon {
+    left: -6px;
+    transform: scaleX(1.2) scaleY(1.2);
+  }
+}

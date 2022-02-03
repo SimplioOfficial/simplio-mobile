@@ -210,13 +210,6 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
   }
 
   async openTargetWalletModal() {
-    console.log(
-      204,
-      this._swapList
-        .filter(a => a.fromCurrency.a3 === 'USD')
-        .filter(a => this._wallets.find(b => b.ticker === a.toCurrency.a3))
-        .map(a => a.toCurrency.a3),
-    );
     const modal = await this._presentModal(TransactionPairsModal, {
       title: this.$.instant(this.$.SELECT_CRYPTO),
       usdPairs: this._swapList

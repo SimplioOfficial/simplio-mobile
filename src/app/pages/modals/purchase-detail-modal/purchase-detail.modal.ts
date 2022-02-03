@@ -1,12 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { coinNames } from '@simplio/backend/api/utils/coins';
-import { UtilsService } from 'src/app/services/utils.service';
-import { Translate } from 'src/app/providers/translate/';
 import { TransactionProgressItem } from 'src/app/components/list-items/sio-transaction-progress/sio-transaction-progress.component';
+import { Translate } from 'src/app/providers/translate/';
+import { UtilsService } from 'src/app/services/utils.service';
 import { SvgIcon } from 'src/assets/icon/icons.js';
-import { OrdersResponse } from '../../../interface/swipelux';
+import { OrdersResponse, OrderStatus } from '../../../interface/swipelux';
+import { SwipeluxService } from '../../../services/swipelux/swipelux.service';
 
 @Component({
   selector: 'purchase-detail-modal',
@@ -25,8 +26,11 @@ export class PurchaseDetailModal implements OnInit {
 
   constructor(
     private router: Router,
-    private utilsService: UtilsService,
+    private utils: UtilsService,
     private modalCtr: ModalController,
+    private utilsService: UtilsService,
+    private loadingCtrl: LoadingController,
+    private swipeluxService: SwipeluxService,
     public $: Translate,
   ) {}
 
@@ -38,6 +42,24 @@ export class PurchaseDetailModal implements OnInit {
     });
   }
 
+  async continueWithPayment() {
+    const loading = await this.loadingCtrl.create();
+    loading.present();
+
+    const order = await this.swipeluxService.getCurrentOrder().catch(e => null);
+
+    loading.dismiss();
+    if (!!order) {
+      this.router.navigate(['home', 'purchase', 'summary'], {
+        state: {
+          order,
+        },
+      });
+    } else {
+      this.utils.showToast('No active order, please create new one.', 3000, 'warning');
+    }
+  }
+
   async dismiss() {
     await this.modalCtr.dismiss();
   }
@@ -46,8 +68,14 @@ export class PurchaseDetailModal implements OnInit {
     return this._walletColor;
   }
 
+  get canContinueToPurchase(): boolean {
+    return (
+      this.status === OrderStatus.PAYMENT_INIT || this.status === OrderStatus.PAYMENT_ROLLBACK_INIT
+    );
+  }
+
   get isCancelRequested(): boolean {
-    return this.purchase.status === 'canceled';
+    return this.purchase.status === OrderStatus.CANCELLED;
   }
 
   get merchantFee() {

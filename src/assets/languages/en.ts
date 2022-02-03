@@ -755,4 +755,8 @@ export default {
   MERCHANT_FEE: 'Merchant fee',
   STAKE_HAS_BEEN_SUCCESSFUL: 'Stake has been successful!',
   PURCHASE_DETAIL: 'Purchase detail',
+  STATUS: 'Status',
+  PURCHASE_FAILED: 'Failed',
+  CANCELED: 'Canceled',
+  PENDING: 'Pending',
 };

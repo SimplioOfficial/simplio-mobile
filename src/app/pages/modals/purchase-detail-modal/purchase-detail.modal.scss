@@ -125,3 +125,15 @@ ion-app {
     transform: scaleX(1.2) scaleY(1.2);
   }
 }
+
+.actions {
+  display: flex;
+  padding: var(--spacing-medium) var(--spacing-small);
+
+  ion-button {
+    --border-width: 1px;
+    --border-style: solid;
+    --background-focused: none;
+    margin: auto;
+  }
+}

@@ -1,10 +1,15 @@
-<div class="thumbnail-container">
-  <sio-wallet-thumbnail [iconID]="purchase.toCcy.a3"></sio-wallet-thumbnail>
+<div class="thumbnail">
+  <sio-wallet-thumbnail
+    class="source-icon"
+    [iconID]="purchase.fromCcy.a3"
+    scale="small"
+  ></sio-wallet-thumbnail>
+  <sio-wallet-thumbnail class="target-icon" [iconID]="purchase.toCcy.a3"></sio-wallet-thumbnail>
 </div>
 
 <div class="title">
-  <p>{{ purchase.fromAmount }}</p>
-  <span>{{ purchase.fromCcy.a3 }}</span>
+  <p>{{ purchase.fromAmount }} {{ purchase.fromCcy.a3 }}</p>
+  <span>{{ purchaseStatus }}</span>
 </div>
 <div class="balance">
   <p>
