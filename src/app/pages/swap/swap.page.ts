@@ -433,8 +433,16 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   }
 
   private async _getPoolsInfo() {
+    // FIXME: HOT-FIX
     const data: any = await this.networkService.get(environment.POOLS_INFO + 'poolsinfo');
-    this.poolsInfo = JSON.parse(this.io.decrypt(data.result, environment.DATA_PASSWORD));
+    console.log(437, data, this.io.decrypt(data.result, environment.DATA_PASSWORD));
+    const decrypted = this.io.decrypt(data.result, environment.DATA_PASSWORD);
+    if (!!decrypted) {
+      this.poolsInfo = JSON.parse(this.io.decrypt(data.result, environment.DATA_PASSWORD));
+    } else {
+      this.poolsInfo = [];
+    }
+
     return this.poolsInfo;
   }
 
