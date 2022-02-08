@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import {
   OrdersResponse,
-  Currency,
   CurrencyPair,
-  OrderData,
   OrderDataWithToken,
   OrderResponse,
   RateResponse,
@@ -24,12 +22,6 @@ export class SwipeluxService {
     const url = SWIPELUX_URL.payment.href;
 
     return this.http.delete(url, {}).toPromise();
-  }
-
-  createOrderAndAuthenticateUser(order: OrderData): Promise<{ token: string; code: string }> {
-    const url = SWIPELUX_URL.authenticateAndCreateOrder.href;
-
-    return this.http.post(url, order).toPromise<any>();
   }
 
   createOrderByShareToken(
@@ -52,18 +44,6 @@ export class SwipeluxService {
         }),
       })
       .toPromise() as any;
-  }
-
-  getCurrencies(currencyId?: string): Promise<{ items: Currency[]; pageInfo: any }> {
-    const url = `${SWIPELUX_URL.currencies.href}/${currencyId ?? ''}`;
-
-    return this.http
-      .get(url, {
-        params: {
-          limit: 999,
-        },
-      })
-      .toPromise<any>();
   }
 
   getCurrentOrder(): Promise<OrderResponse> {
@@ -89,12 +69,6 @@ export class SwipeluxService {
         }),
       )
       .toPromise<any>();
-  }
-
-  getMerchantOrders(): Promise<any> {
-    const url = SWIPELUX_URL.merchantOrders.href;
-
-    return this.http.get(url).toPromise();
   }
 
   getPairs(): Promise<{ items: CurrencyPair[]; pageInfo: any }> {
@@ -123,47 +97,5 @@ export class SwipeluxService {
     const url = SWIPELUX_URL.payment.href;
 
     return this.http.get(url).toPromise<any>();
-  }
-
-  setAddress(address: string): Promise<any> {
-    const url = SWIPELUX_URL.address.href;
-
-    return this.http.put(url, { address }).toPromise();
-  }
-
-  setEmail(email: string): Promise<{ code: string }> {
-    const url = SWIPELUX_URL.email.href;
-
-    return this.http.put(url, { email, subscribe: true }).toPromise<any>();
-  }
-
-  verifyEmail(code: string): Promise<{ passed: boolean }> {
-    const url = SWIPELUX_URL.emailVerification.href;
-
-    return this.http
-      .post(url, { code })
-      .toPromise()
-      .then(res => {
-        console.error(res);
-        return { passed: false };
-      })
-      .catch(e => {
-        return { passed: e.status === 201 };
-      });
-  }
-
-  verifyPhone(code: string): Promise<{ passed: boolean }> {
-    const url = SWIPELUX_URL.phoneVerification.href;
-
-    return this.http
-      .post(url, { code })
-      .toPromise()
-      .then(res => {
-        console.error(res);
-        return { passed: false };
-      })
-      .catch(e => {
-        return { passed: e.status === 201 };
-      });
   }
 }
