@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { flatten } from 'lodash';
 
-import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, of, Subscription } from 'rxjs';
 import { filter, map, skipWhile, startWith } from 'rxjs/operators';
 import { IonInfiniteScroll, ModalController } from '@ionic/angular';
 
@@ -381,10 +381,14 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     clean = false,
   ): Promise<[SwapReportPage, SwapReportPage, Transaction[], Stake[], Pool[]]> {
     if (clean) this._setDefaults();
+
+    console.log('Change this after swipelux provide production env!');
     return Promise.all([
       this._fetchSwapHistory({ pageNumber: this._nextPage, clean }),
       this._fetchPendingSwaps(clean),
-      this._fetchTransactionHistory({ pageNumber: this._nextPage, clean }),
+      environment.production
+        ? of([]).toPromise()
+        : this._fetchTransactionHistory({ pageNumber: this._nextPage, clean }),
       this._fetchStaking(),
       this._getPoolsInfo(),
     ]);
