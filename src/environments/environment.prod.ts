@@ -22,4 +22,7 @@ export const environment = {
   SUM_SUB_API_URL: 'https://api.sumsub.com',
   USER_API: 'https://simplio-8tkjnaqb.ew.gateway.dev',
   SWIPELUX: 'https://jvm.api.aws-stage.swipelux.com/api',
+  CUSTOM_CONTENT: {
+    SWIPELUX: false,
+  },
 };

@@ -37,6 +37,7 @@ import { AuthenticationProvider } from 'src/app/providers/data/authentication.pr
 import { AccountService } from 'src/app/services/authentication/account.service';
 import { SwapConnectionService } from 'src/app/services/swap/swap-connection.service';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { environment } from '../../environments/environment';
 import { SwapProvider } from '../providers/data/swap.provider';
 import { SwipeluxProvider } from '../providers/swipelux/swipelux-provider.service';
 import { NetworkService } from '../services/apiv2/connection/network.service';
@@ -62,24 +63,28 @@ export class HomePage extends TrackedPage implements OnInit {
   private _timeoutOccurs: boolean | null = null;
   readonly actions: ActionsModalProps = [
     {
+      id: 'purchase',
       title: this.$.instant(this.$.BUY),
       icon: 'logo-bitcoin',
       cssClass: ['transaction-action-sheet', ' sio-t-btn--action-send'],
       handler: () => this._navigateWithWallet('home', 'purchase'),
     },
     {
+      id: 'send',
       title: this.$.instant(this.$.SEND),
       icon: 'arrow-up',
       cssClass: ['transaction-action-sheet', 'sio-t-btn--action-send'],
       handler: () => this._navigateWithWallet('home', 'wallets', 'send'),
     },
     {
+      id: 'receive',
       title: this.$.instant(this.$.RECEIVE),
       icon: 'arrow-down',
       cssClass: ['transaction-action-sheet'],
       handler: () => this._navigateWithWallet('home', 'wallets', 'receive'),
     },
     {
+      id: 'swap',
       title: this.$.instant(this.$.SWAP),
       icon: 'repeat',
       cssClass: ['transaction-action-sheet'],
@@ -88,6 +93,7 @@ export class HomePage extends TrackedPage implements OnInit {
       },
     },
     {
+      id: 'staking',
       title: this.$.instant(this.$.STAKING),
       icon: 'flash-outline',
       cssClass: ['transaction-action-sheet'],
@@ -95,7 +101,7 @@ export class HomePage extends TrackedPage implements OnInit {
         this._navigateStake('home', 'stake');
       },
     },
-  ];
+  ].filter(a => a.id !== 'purchase' || environment.CUSTOM_CONTENT.SWIPELUX);
 
   tapbarVisibility$ = this.settingsProvider.tapbarVisibility$;
 

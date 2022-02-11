@@ -52,6 +52,8 @@ const DEFAULTS = {
   styleUrls: ['./swap.page.scss'],
 })
 export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
+  useSwipelux = environment.CUSTOM_CONTENT.SWIPELUX;
+
   private get _nextPage(): number {
     return this.currentPage + 1;
   }
@@ -382,13 +384,12 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   ): Promise<[SwapReportPage, SwapReportPage, Transaction[], Stake[], Pool[]]> {
     if (clean) this._setDefaults();
 
-    console.log('Change this after swipelux provide production env!');
     return Promise.all([
       this._fetchSwapHistory({ pageNumber: this._nextPage, clean }),
       this._fetchPendingSwaps(clean),
-      environment.production
-        ? of([]).toPromise()
-        : this._fetchTransactionHistory({ pageNumber: this._nextPage, clean }),
+      this.useSwipelux
+        ? this._fetchTransactionHistory({ pageNumber: this._nextPage, clean })
+        : of([]).toPromise(),
       this._fetchStaking(),
       this._getPoolsInfo(),
     ]);

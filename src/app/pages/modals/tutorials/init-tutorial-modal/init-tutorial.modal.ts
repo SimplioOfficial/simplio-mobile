@@ -1,12 +1,13 @@
 import { Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { AnimationController, ModalController } from '@ionic/angular';
 import { Translate } from 'src/app/providers/translate';
+import { environment } from '../../../../../environments/environment';
 
 type Action = {
   buttonText: string;
   buttonIcon: string;
   desc: string;
-  commingSoon?: boolean;
+  comingSoon?: boolean;
 };
 
 @Component({
@@ -20,6 +21,7 @@ export class InitTutorialModal {
       buttonText: this.$.BUY,
       buttonIcon: 'logo-bitcoin',
       desc: this.$.TUT_INIT_BUY,
+      comingSoon: true,
     },
     {
       buttonText: this.$.SEND,
@@ -41,7 +43,6 @@ export class InitTutorialModal {
       buttonIcon: 'flash',
       desc: this.$.TUT_INIT_STAKING,
     },
-
   ];
 
   get buttonText(): string {
