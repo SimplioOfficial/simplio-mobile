@@ -4,7 +4,6 @@ import { BlockbookAddress, Explorer, ExplorerType } from 'src/app/interface/expl
 import { environment } from 'src/environments/environment';
 import { NetworkService } from '../connection/network.service';
 import { BalBase } from './balancebase';
-import { coinNames } from '../../api/coins';
 
 @Injectable({
   providedIn: 'root',

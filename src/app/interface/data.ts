@@ -54,7 +54,7 @@ export interface Address {
 
 export enum AddressType {
   DEFAULT = 1,
-  HD
+  HD,
 }
 
 export enum WalletType {
@@ -72,6 +72,8 @@ export enum WalletType {
   SOLANA_TOKEN_DEV = 33,
   POLKADOT = 40,
   TRX = 50,
+  SAFE = 60,
+  SAFE_TOKEN = 61,
   CUSTOM_TOKEN = 999998,
   UNKNOWN = 999999,
 }
@@ -80,6 +82,7 @@ export enum TokenType {
   SOLANA_TOKEN = 'SPL Token',
   ETH_TOKEN = 'ERC20 Token',
   BSC_TOKEN = 'BEP20 Token',
+  SAFE_TOKEN = 'SAFE Token',
 }
 
 export enum SeedType {
@@ -128,6 +131,7 @@ export interface TransactionAPI {
   items?: TransactionAPIItem[];
   tokenItem?: EthTransaction[];
   solanaTxs?: any;
+  safecoinTxs?: any;
   polkadotTxs?: any[];
 }
 
@@ -611,4 +615,15 @@ export interface Abi {
 export interface SolFeeToken {
   ticker: string;
   type: WalletType;
+}
+
+export interface Stake {
+  amount: number;
+  contractAddress: string;
+  lastPayment: number;
+  poolAccount: string;
+  stakingAccount: string;
+  stakingOwner: string;
+  startTime: number;
+  withdrawAccount: string;
 }

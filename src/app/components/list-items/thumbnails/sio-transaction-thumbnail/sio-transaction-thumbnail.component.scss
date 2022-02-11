@@ -1,0 +1,22 @@
+:host {
+  position: relative;
+  display: block;
+}
+
+.thumbnail {
+  border: solid 1px var(--ion-border-color);
+}
+
+ion-icon {
+  font-size: 18px;
+}
+
+[transaction-type='0'] {
+  border-color: var(--ion-color-danger);
+  color: var(--ion-color-danger);
+}
+
+[transaction-type='1'] {
+  border-color: var(--ion-color-success);
+  color: var(--ion-color-success);
+}

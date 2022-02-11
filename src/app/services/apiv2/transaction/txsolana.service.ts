@@ -5,16 +5,101 @@ import { TransactionData, TransactionDataResponse } from '../../transactions.ser
 import { Transaction, TransactionAPI, TxType } from 'src/app/interface/data';
 import { NetworkService } from '../connection/network.service';
 import { BackendService } from '../blockchain/backend.service';
+// import WebSocket from 'ws';
+
+// import WebSocket from 'ws';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TxsolanaService extends TxBase {
+  listSubscribe = [];
+  connection: solanaWeb3.Connection;
+  connectionDev: solanaWeb3.Connection;
   constructor(private backendService: BackendService, private networkService: NetworkService) {
     super('TxSolana');
+    this.connection = this.backendService.solana.getConnection({
+      api: solanaWeb3.clusterApiUrl('mainnet-beta'),
+    });
+    this.connectionDev = this.backendService.solana.getConnection({
+      api: solanaWeb3.clusterApiUrl('devnet'),
+    });
   }
 
-  init() { }
+  init() {}
+
+  subscribleChange(address, isDev, callback) {
+    let apiEndpoint;
+    if (!isDev) {
+      apiEndpoint = 'ws://api.mainnet-beta.solana.com';
+    } else {
+      apiEndpoint = 'ws://api.devnet.solana.com';
+    }
+    if (!this.listSubscribe[apiEndpoint]) {
+      this.listSubscribe[apiEndpoint] = true;
+      this.wsSubscribe(apiEndpoint, address, 'confirmed', callback);
+      // if(!isDev){
+      //   this.connection.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
+      //     callback(accountInfo, address);
+      //   })
+      // } else {
+      //   this.connectionDev.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
+      //     callback(accountInfo, address);
+      //   })
+      // }
+    }
+  }
+
+  async wsSubscribe(endpoint: string, address: string, commitment, callback) {
+    const ws = new WebSocket(endpoint);
+    let timer;
+    ws.onopen = () => {
+      console.log(Date.now(), `Web socket opened to ${endpoint}`);
+      timer = setInterval(() => {
+        // console.log(Date.now(), "ping");
+        ws.send('{}');
+      }, 20000);
+      ws.send(
+        JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'accountSubscribe',
+          params: [
+            address,
+            {
+              encoding: 'base64',
+              commitment,
+            },
+          ],
+        }),
+      );
+      ws.onmessage = evt => {
+        const msg = JSON.parse(evt.data as string);
+        if (msg.params?.result) {
+          // console.log("msg", msg);
+          callback(msg.params?.result, address);
+        } else if (msg.error) {
+          // console.log("error", msg.error);
+          if (msg.error.code !== -32600) {
+            console.log('error', msg.error);
+          } else {
+            // do nothing because it's the response of ping msg
+          }
+        } else {
+          console.log(commitment, evt.data);
+        }
+      };
+    };
+
+    ws.onerror = err => {
+      console.log(Date.now(), 'Socket error', err);
+    };
+    ws.onclose = err => {
+      console.log(Date.now(), 'Socket close, auto connect');
+      clearInterval(timer);
+      this.wsSubscribe(endpoint, address, commitment, callback);
+    };
+  }
 
   getHistoryToken(data: {
     tokenId: string;
@@ -294,7 +379,7 @@ export class TxsolanaService extends TxBase {
             let amount = 0;
             if (meta) {
               amount = meta.preBalances[0] - meta.postBalances[0];
-              if(amount > 0){
+              if (amount > 0) {
                 amount -= meta.fee;
               }
             }
@@ -420,18 +505,17 @@ export class TxsolanaService extends TxBase {
                     if (instructions) {
                       instructions.some((ee: solanaWeb3.ParsedInstruction) => {
                         currParsed = this._parseInstruction(ee);
-                        if (data.addresses.find(
-                          e => e.toString() === (currParsed.sender).toString(),
-                        )) {
+                        if (
+                          data.addresses.find(e => e.toString() === currParsed.sender.toString())
+                        ) {
                           parsed.amount -= currParsed.amount;
                           if (parsed.amount < 0) {
                             parsed.sender = currParsed.sender;
                             parsed.receiver = currParsed.receiver;
                           }
-                        }
-                        else if (data.addresses.find(
-                          e => e.toString() === (currParsed.receiver).toString(),
-                        )) {
+                        } else if (
+                          data.addresses.find(e => e.toString() === currParsed.receiver.toString())
+                        ) {
                           parsed.amount += currParsed.amount;
                           if (parsed.amount > 0) {
                             parsed.sender = currParsed.sender;

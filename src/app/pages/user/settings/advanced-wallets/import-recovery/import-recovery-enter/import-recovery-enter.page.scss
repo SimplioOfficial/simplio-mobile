@@ -4,7 +4,7 @@
   grid-template-columns: repeat(3, minmax(60px, 100px));
   gap: var(--spacing-smaller);
 
-  height: calc(100% - 130px);
+  height: calc(100% - 54px - 125px);
 }
 
 .seed {
@@ -28,7 +28,7 @@
 }
 
 h1 {
-  padding: var(--spacing-smaller) var(--spacing-small);
+  padding: 0 var(--spacing-small);
 }
 
 .loading {

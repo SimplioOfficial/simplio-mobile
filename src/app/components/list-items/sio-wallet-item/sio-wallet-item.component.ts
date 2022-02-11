@@ -10,9 +10,9 @@ import {
 
 import { Subscription } from 'rxjs';
 import { Wallet, WalletType } from 'src/app/interface/data';
-import { platform } from 'src/app/services/utils.service';
-import { coinNames } from '../../../services/api/coins';
+import { platform } from '@simplio/backend/utils';
 
+import { coinNames } from '@simplio/backend/api/utils/coins';
 export enum NotificationType {
   NONE,
   UNCONFIRMED,
@@ -84,6 +84,7 @@ export class SioWalletItemComponent implements OnChanges {
     return (
       this.wallet.type === WalletType.SOLANA_TOKEN ||
       this.wallet.type === WalletType.SOLANA_TOKEN_DEV ||
+      this.wallet.type === WalletType.SAFE_TOKEN ||
       this.wallet.type === WalletType.BSC_TOKEN ||
       this.wallet.type === WalletType.ETH_TOKEN ||
       this.wallet.type === WalletType.CUSTOM_TOKEN
@@ -99,6 +100,8 @@ export class SioWalletItemComponent implements OnChanges {
       case WalletType.SOLANA_TOKEN:
       case WalletType.SOLANA_TOKEN_DEV:
         return coinNames.SOL;
+      case WalletType.SAFE_TOKEN:
+        return coinNames.SAFE;
       case WalletType.CUSTOM_TOKEN:
       default:
         return '';

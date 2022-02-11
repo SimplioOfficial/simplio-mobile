@@ -278,6 +278,10 @@ ion-spinner {
   align-items: center;
   justify-content: space-between;
 
+  &.with-padding {
+    padding: var(--spacing-smaller) var(--spacing-small);
+  }
+
   .section-title {
     margin: 0 !important;
   }

@@ -1,8 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AGREEMENTS_URL, USERS_URLS } from '../../providers/routes/swap.routes';
+import { USERS_URLS } from '../../providers/routes/account.routes';
+import { AGREEMENTS_URL } from '../../providers/routes/swap.routes';
 import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
-import { HttpService } from '../http.service';
 
 export interface UserDataItem {
   ETag: string;
@@ -20,7 +20,7 @@ export interface UserDataItem {
   providedIn: 'root',
 })
 export class UserDataService {
-  constructor(private http: HttpFallbackService) { }
+  constructor(private http: HttpFallbackService) {}
 
   get(property: string): Promise<any> {
     const url = USERS_URLS.data.href;
@@ -28,7 +28,9 @@ export class UserDataService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.get<UserDataItem[]>(url, { headers }).then(res => res.find(a => a.Name === property)?.Value);
+    return this.http
+      .get<UserDataItem[]>(url, { headers })
+      .then(res => res.find(a => a.Name === property)?.Value);
   }
 
   create(name: string, type: string, value: any): Promise<any> {

@@ -11,12 +11,14 @@ import { Translate, ExtendedAlertOptions, sanitizeExtendedInput } from '../provi
 import { fromPairs, isString, toPairs } from 'lodash';
 import { coinNames } from './api/coins';
 import { validateMnemonic } from 'bip39';
+import { InterestRate } from '@simplio/backend/interface/stake';
+import BN from 'bn.js';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UtilsService {
-  static txsProperties = ['items', 'tokenItem', 'solanaTxs', 'polkadotTxs'];
+  static txsProperties = ['items', 'tokenItem', 'solanaTxs', 'safecoinTxs', 'polkadotTxs'];
 
   constructor(
     private toastController: ToastController,
@@ -209,6 +211,7 @@ export class UtilsService {
       [WalletType.ETC]: 18,
       [WalletType.SOLANA]: 9,
       [WalletType.SOLANA_DEV]: 9,
+      [WalletType.SAFE]: 9,
       [WalletType.POLKADOT]: 10,
     };
     return decimals[type];
@@ -445,20 +448,6 @@ export const isPolkadot = type => {
   return type === WalletType.POLKADOT;
 };
 
-export const platform = (type: WalletType, ticker: string): string => {
-  switch (type) {
-    case WalletType.BSC_TOKEN:
-      return 'BEP20';
-    case WalletType.ETH_TOKEN:
-      return 'ERC20';
-    case WalletType.SOLANA_TOKEN:
-    case WalletType.SOLANA_TOKEN_DEV:
-      return 'SPL';
-    default:
-      return '';
-  }
-};
-
 export const isNullOrEmpty = (str: string): boolean => {
   return !str || !!str.trim();
 };
@@ -529,4 +518,206 @@ export const mul10 = (amount: string, decimal: number): string => {
     arr.splice(arr.length - 1, 1);
   }
   return arr.join('');
+};
+
+export const toNative = (amount: number, decimals: number): BigInt => {
+  return BigInt(mul10(amount.toString(), decimals));
+};
+
+export const toString = (amount: BN, decimals: number): string => {
+  return parseFloat(div10(amount.toString(), decimals)).toString();
+};
+
+export const numberToString = (amount: number, decimals: number): string => {
+  return parseFloat(div10(amount.toString(), decimals)).toString();
+};
+
+export const toInterest = (amount: number): BigInt => {
+  return BigInt(mul10(amount.toString(), 5));
+};
+
+export const toInterestString = (amount: BN): string => {
+  return parseFloat(div10(amount.toString(), 5)).toString();
+};
+
+export const calculateInterest = (
+  last_payment: number,
+  current_time: number,
+  amount: number,
+  decimal: number,
+  interest_info: InterestRate[],
+  tiers,
+) => {
+  if (current_time <= last_payment) {
+    return 0;
+  } else {
+    let tier_ratio = getRatio(amount, tiers, decimal);
+    interest_info.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
+    let filter = getInterestList(last_payment, current_time, interest_info);
+    let interest = 0;
+    let start_time = current_time;
+    filter.forEach(element => {
+      {
+        let end_time = start_time;
+        start_time = element.unixTimestamp;
+        interest += calculate(
+          amount,
+          Math.max(element.unixTimestamp, last_payment),
+          end_time,
+          element.interestRate,
+          tier_ratio,
+        );
+      }
+
+      interest = Math.max(0, interest);
+    });
+    return interest;
+  }
+};
+
+export const getRatio = (amount, tiers, decimals) => {
+  const tier6 = tiers.find(e => e.name === 6);
+  const tier5 = tiers.find(e => e.name === 5);
+  const tier4 = tiers.find(e => e.name === 4);
+  const tier3 = tiers.find(e => e.name === 3);
+  const tier2 = tiers.find(e => e.name === 2);
+  const tier1 = tiers.find(e => e.name === 1);
+  let tierRatio = 1;
+  let a = numberToString(amount, decimals);
+  if (a >= tier6.minValue && tier6.minValue > 0) {
+    tierRatio = tier6.ratio;
+  } else if (a >= tier5.minValue && tier5.minValue > 0) {
+    tierRatio = tier5.ratio;
+  } else if (a >= tier4.minValue && tier4.minValue > 0) {
+    tierRatio = tier4.ratio;
+  } else if (a >= tier3.minValue && tier3.minValue > 0) {
+    tierRatio = tier3.ratio;
+  } else if (a >= tier2.minValue && tier2.minValue > 0) {
+    tierRatio = tier2.ratio;
+  } else if (a >= tier1.minValue && tier1.minValue > 0) {
+    tierRatio = tier1.ratio;
+  }
+  return tierRatio;
+};
+
+export const getInterestList = (
+  lastPayment: number,
+  currentTime: number,
+  interestInfo: InterestRate[],
+): InterestRate[] => {
+  let filter = [];
+  interestInfo.some(element => {
+    let time = element.unixTimestamp;
+    if (time < currentTime) {
+      filter.push(element);
+    }
+    if (time < lastPayment) {
+      return true;
+    }
+  });
+  return filter;
+};
+
+export const calculate = (
+  amount: number,
+  start_time: number,
+  end_time: number,
+  interest_rate: number,
+  tier_ratio: number,
+) => {
+  const a = Math.floor(
+    (Math.floor(
+      (Math.floor(Math.floor((end_time - start_time) / 3600) * 3600) * interest_rate * tier_ratio) /
+        100,
+    ) *
+      amount) /
+      (365 * 24 * 60 * 60),
+  );
+  return a > 0 ? a : 0;
+};
+
+export const parseError = (err: string) => {
+  const splt = err.split('custom program error:');
+  const errorIndex = parseInt(splt[1]);
+  let rtn = err;
+  switch (errorIndex) {
+    default:
+      break;
+    case 0:
+      rtn = 'Your instruction is invalid, please contact support';
+      break;
+    case 1:
+      rtn = 'Token program is invalid, please contact support';
+      break;
+    case 2:
+      rtn = 'Error: Not rent exempt';
+      break;
+    case 3:
+      rtn = 'Error: Expected amount mismatch';
+      break;
+    case 4:
+      rtn = "Error: You don't have permission to update data";
+      break;
+    case 5:
+      rtn = 'Error: Not request withdrawal';
+      break;
+    case 6:
+      rtn = 'Error: Already request withdrawal';
+      break;
+    case 7:
+      rtn = 'Error: Waiting withdrawal';
+      break;
+    case 8:
+      rtn = "You don't have any staking reward, please try again later";
+      break;
+    case 9:
+      rtn = 'Error: You still have some staking reward, please try to withdraw it first';
+      break;
+    case 10:
+      rtn = 'Error: Invalid authority info';
+      break;
+    case 11:
+      rtn = 'Error: Invalid pool address';
+      break;
+    case 12:
+      rtn = 'Error: Invalid staking amount';
+      break;
+    case 13:
+      rtn = 'Error: Max locked value is reached';
+      break;
+    case 14:
+      rtn = 'Error: Pool not initialized';
+      break;
+    case 15:
+      rtn = 'Error: Incorrect pool deposit address';
+      break;
+    case 16:
+      rtn = 'Error: Incorrect withdrawal address';
+      break;
+    case 17:
+      rtn = 'Error: Insufficient Amount';
+      break;
+    case 18:
+      rtn = 'Less than minimum amount';
+      break;
+    case 19:
+      rtn = 'Error: Invalid initializer';
+      break;
+    case 20:
+      rtn = 'Error: Rate account list is incorrect';
+      break;
+    case 21:
+      rtn = 'Error: End rate account list is incorrect';
+      break;
+    case 22:
+      rtn = 'Error: Amount overflow';
+      break;
+    case 23:
+      rtn = 'Error: Invalid last payment';
+      break;
+    case 24:
+      rtn = 'Error: Invalid time for new rate account';
+      break;
+  }
+  return rtn;
 };

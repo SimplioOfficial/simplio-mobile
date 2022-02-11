@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   AccountCredentials,
@@ -10,14 +10,15 @@ import { IdentityVerificationError } from 'src/app/providers/errors/identity-ver
 import { Translate } from 'src/app/providers/translate';
 import { AuthenticationProvider } from '../../providers/data/authentication.provider';
 import { PlatformProvider } from '../../providers/platform/platform';
+import { USERS_URLS, USERS_URLS_V2 } from '../../providers/routes/account.routes';
 import { IoService } from '../io.service';
-import { httpHeaders, parseJWT } from './utils';
+import { parseJWT } from './utils';
 import { MultiFactorAuthenticationService } from './mfa.service';
-import { USERS_URLS, USERS_URLS_V2 } from 'src/app/providers/routes/swap.routes';
 import { AccountService } from 'src/app/services/authentication/account.service';
 import { SwapProvider } from '../../providers/data/swap.provider';
-import { HttpService } from '../http.service';
 import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
+import { CheckWalletsService } from '../wallets/check-wallets.service';
+import { TransactionsService } from '../transactions.service';
 
 type AfterLoginOptions = { verify: boolean; isNew: boolean };
 
@@ -35,7 +36,7 @@ export class AuthenticationService {
     private authProvider: AuthenticationProvider,
     private swapProvider: SwapProvider,
     private http: HttpFallbackService,
-    private acc: AccountService
+    private acc: AccountService,
   ) {}
 
   serverUrl() {
@@ -54,7 +55,9 @@ export class AuthenticationService {
       password,
     };
 
-    return this.http.post<AccountCredentialsResponse>(url, cred, { headers }).then(res => !!res.refresh_token);
+    return this.http
+      .post<AccountCredentialsResponse>(url, cred, { headers })
+      .then(res => !!res.refresh_token);
   }
 
   isValid(token: string): boolean {
@@ -71,7 +74,7 @@ export class AuthenticationService {
   async login(cred: AccountCredentials, opt: Partial<AfterLoginOptions> = {}): Promise<Acc> {
     try {
       const cr = await this._login(cred);
-      console.log(cr);
+      // console.log(cr);
       const accountLog = await this.io.getLatestAccountLog(cred.userId);
 
       const o: AfterLoginOptions = {
@@ -93,6 +96,7 @@ export class AuthenticationService {
       const account = o.verify
         ? await this._verifyAccount(accountStruct, accountLog)
         : accountStruct;
+
       return this.authProvider.pushAccount(account, { isNew: o.isNew });
     } catch (err) {
       // TODO - resolve error here
@@ -145,19 +149,11 @@ export class AuthenticationService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.post<AccountCredentialsResponse>(url, cred, { headers }).catch((err: HttpErrorResponse) => {
-      if (err.status === 401) {
-        let customErr = new HttpErrorResponse({
-          headers: err.headers,
-          url: err.url,
-          status: err.status,
-          statusText: err.statusText,
-          error: Object.freeze({
-            code: 'NO_SUCH_USER'
-          })
-        });
-        if (err.error.includes('verify your email')) {
-          customErr = new HttpErrorResponse({
+    return this.http
+      .post<AccountCredentialsResponse>(url, cred, { headers })
+      .catch((err: HttpErrorResponse) => {
+        if (err.status === 401) {
+          let customErr = new HttpErrorResponse({
             headers: err.headers,
             url: err.url,
             status: err.status,
@@ -166,13 +162,22 @@ export class AuthenticationService {
               code: 'NO_SUCH_USER',
             }),
           });
+          if (err.error.includes('verify your email')) {
+            customErr = new HttpErrorResponse({
+              headers: err.headers,
+              url: err.url,
+              status: err.status,
+              statusText: err.statusText,
+              error: Object.freeze({
+                code: 'NO_SUCH_USER',
+              }),
+            });
 
-          throw new IdentityVerificationError(customErr, this.$);
+            throw new IdentityVerificationError(customErr, this.$);
+          }
         }
-      };
-      throw err;
-    });
-      
+        throw err;
+      });
   }
 
   private _loginv2(cred: AccountCredentials): Promise<AccountCredentialsResponse> {
@@ -256,7 +261,6 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, body, { headers })
-      
       .then(res => {
         this._refreshServerUrl = url;
         return res;

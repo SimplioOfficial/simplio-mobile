@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AddrUtxo, FeeName, FeeResponsev2, Rate, WalletType } from 'src/app/interface/data';
 import { environment } from 'src/environments/environment';
-import { coinNames } from '../../api/coins';
+import { coinNames } from '@simplio/backend/api/utils/coins';
 import { UtilsService } from '../../utils.service';
 import { BackendService } from '../blockchain/backend.service';
 
@@ -70,7 +70,7 @@ export class Feev2Service {
       if (ticker === coinNames.BTC) {
         return this.getBtcFee().then(res => Math.trunc(res.priority * this.getRatio(feeLevel)));
       } else {
-        price = this.fee[ticker.toLowerCase()].value;
+        price = this.fee[ticker.toLowerCase()]?.value || 10000;
         return Promise.resolve(Math.trunc(price * this.getRatio(feeLevel)));
       }
     } else if (UtilsService.isErcCoin) {
@@ -84,7 +84,7 @@ export class Feev2Service {
   }
 
   getMinFee(ticker: string) {
-    return this.fee[ticker.toLowerCase()]?.minFee;
+    return this.fee[ticker.toLowerCase()]?.minFee || 0;
   }
 
   estimatedFee(data: {

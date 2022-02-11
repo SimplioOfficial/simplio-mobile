@@ -14,27 +14,27 @@ export class AccountWalletsResolver implements Resolve<Wallet[]> {
   constructor(
     private authProvider: AuthenticationProvider,
     private walletsProvider: WalletsProvider,
-    private walletsService: WalletService,
+    private walletService: WalletService,
     private dw: DefaultWalletService,
     private networkService: NetworkService,
   ) {}
 
   async resolve(): Promise<Wallet[]> {
     const account = this.authProvider.accountValue;
-    const wallets = this.walletsService.matchWallets({ uid: account.uid });
+    const wallets = this.walletService.matchWallets({ uid: account.uid });
     const [hasMissing, wds] = this.dw.getWallets(account, wallets);
 
     const noTokenAddress = wallets.filter(e => !e.tokenAddress && isSolanaToken(e.type));
     if (noTokenAddress.length > 0) {
-      noTokenAddress.forEach(async element => {
-        const addr = await this.walletsService.getTokenAddress({
+      for (const element of noTokenAddress) {
+        const addr = await this.walletService.getTokenAddress({
           type: element.type,
           contractAddress: element.contractaddress,
           address: element.mainAddress,
         });
         element.tokenAddress = addr.toString();
-        await this.walletsService.updateWallet(element._uuid, element, false);
-      });
+        await this.walletService.updateWallet(element._uuid, element, false);
+      }
     }
     if (hasMissing) {
       await this.networkService.getNetworks();

@@ -1,0 +1,38 @@
+<sio-simple-page [scroll]="false">
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="cancel()">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <section class="dash">
+    <div class="box box--finger">
+      <sio-fingerprint-illustration [has-circle]="false"></sio-fingerprint-illustration>
+
+      <div #checkRef class="box box--check">
+        <ion-icon #iconRef name="checkmark-outline"></ion-icon>
+      </div>
+
+      <div #logoRef class="box box--simplio">
+        <sio-logo></sio-logo>
+      </div>
+
+      <div #sendRef class="box box--send">
+        <ion-icon name="paper-plane-outline"></ion-icon>
+      </div>
+    </div>
+  </section>
+
+  <section class="content">
+    <h2>{{ $.ACCOUNT_LOCK_TITLE | translate }}</h2>
+    <p>{{ $.ACCOUNT_LOCK_DESC | translate }}</p>
+  </section>
+
+  <div slot="footer" class="footer-padding">
+    <ion-button (click)="onSubmit()" expand="block" mode="ios"
+      >{{ $.VERIFY | translate }}
+    </ion-button>
+  </div>
+</sio-simple-page>

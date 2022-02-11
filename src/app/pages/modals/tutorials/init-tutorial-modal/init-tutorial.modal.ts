@@ -1,12 +1,13 @@
 import { Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { AnimationController, ModalController } from '@ionic/angular';
 import { Translate } from 'src/app/providers/translate';
+import { environment } from '../../../../../environments/environment';
 
 type Action = {
   buttonText: string;
   buttonIcon: string;
   desc: string;
-  commingSoon?: boolean;
+  comingSoon?: boolean;
 };
 
 @Component({
@@ -17,19 +18,30 @@ type Action = {
 export class InitTutorialModal {
   readonly ACTIONS: Action[] = [
     {
+      buttonText: this.$.BUY,
+      buttonIcon: 'logo-bitcoin',
+      desc: this.$.TUT_INIT_BUY,
+      comingSoon: true,
+    },
+    {
       buttonText: this.$.SEND,
-      buttonIcon: 'arrow-up',
+      buttonIcon: 'arrow-up-outline',
       desc: this.$.TUT_INIT_SEND,
     },
     {
       buttonText: this.$.RECEIVE,
-      buttonIcon: 'arrow-down',
+      buttonIcon: 'arrow-down-outline',
       desc: this.$.TUT_INIT_RECEIVE,
     },
     {
       buttonText: this.$.SWAP,
-      buttonIcon: 'repeat',
+      buttonIcon: 'repeat-outline',
       desc: this.$.TUT_INIT_SWAP,
+    },
+    {
+      buttonText: this.$.STAKING,
+      buttonIcon: 'flash',
+      desc: this.$.TUT_INIT_STAKING,
     },
   ];
 

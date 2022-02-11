@@ -1,0 +1,139 @@
+:host {
+  --background: none;
+  display: grid;
+  grid-template-rows: var(--spacing-small) 1fr;
+  grid-template-rows: calc(constant(safe-area-inset-top) + var(--spacing-small)) 1fr;
+  grid-template-rows: calc(env(safe-area-inset-top) + var(--spacing-small)) 1fr;
+  grid-template-columns: 1fr;
+}
+
+.swap-modal {
+  grid-row-start: 2;
+  grid-row-end: auto;
+  background-color: var(--ion-background-color);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.transaction-detail header {
+  padding: var(--spacing-small);
+}
+
+.detail {
+  flex-shrink: 0;
+  flex-grow: 1;
+  width: 100%;
+
+  ion-row {
+    padding: var(--spacing-tiny) 0;
+    border-top: solid 1px var(--ion-color-border);
+
+    &.icon {
+      padding: 15px 0 0 calc(50% - 5px);
+
+      ion-icon {
+        color: #888a88;
+        transform: scaleY(2) scaleX(2);
+      }
+    }
+  }
+}
+
+ion-grid {
+  padding: 0 var(--spacing-small);
+  width: 100%;
+}
+
+ion-col span {
+  font-size: 14px;
+  color: var(--ion-color-step-500);
+}
+
+p {
+  color: var(--ion-text-color);
+  margin: 0;
+}
+
+ion-col[text-right] {
+  text-align: right;
+
+  span {
+    display: block;
+  }
+}
+
+.dash {
+  padding: var(--spacing-medium) var(--spacing-small);
+}
+
+.actions {
+  padding: var(--spacing-medium) var(--spacing-small);
+
+  ion-button {
+    --border-width: 1px;
+    --border-style: solid;
+    --background-focused: none;
+  }
+}
+
+.offset-bottom {
+  grid-row-start: 5;
+  grid-row-end: 6;
+}
+body.light .slide-modal .modal-wrapper {
+  background: none !important;
+}
+
+header {
+  h3 {
+    margin: 0;
+  }
+}
+
+ion-content {
+  height: calc(100% - (env(safe-area-inset-top) + var(--sizing-panel)));
+}
+
+.close-btn {
+  height: var(--sizing-panel);
+  width: var(--sizing-panel);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--icon-medium);
+  color: var(--ion-text-color);
+}
+
+ion-app {
+  border-radius: 0 !important;
+  margin-top: calc(20px + 54px + (env(safe-area-inset-top)));
+}
+
+.thumbnail {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 6%;
+
+  .source-icon,
+  .target-icon {
+    position: relative;
+    left: 6px;
+  }
+
+  .target-icon {
+    left: -6px;
+    transform: scaleX(1.2) scaleY(1.2);
+  }
+}
+
+.actions {
+  display: flex;
+  padding: var(--spacing-medium) var(--spacing-small);
+
+  ion-button {
+    --border-width: 1px;
+    --border-style: solid;
+    --background-focused: none;
+    margin: auto;
+  }
+}

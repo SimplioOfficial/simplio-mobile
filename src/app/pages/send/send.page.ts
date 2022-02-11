@@ -15,7 +15,7 @@ import { SioValueComponent } from 'src/app/components/form/sio-value/sio-value.c
 import { SettingsProvider } from 'src/app/providers/data/settings.provider';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
-import { isGreaterThan, isLowerThan } from 'src/shared/validators';
+import { isGreaterThan, isAmountSufficient } from 'src/shared/validators';
 import { Translate } from 'src/app/providers/translate/';
 import { getPrice } from 'src/app/services/wallets/utils';
 import { RateService } from 'src/app/services/apiv2/connection/rate.service';
@@ -23,7 +23,7 @@ import { TxcoinService } from 'src/app/services/apiv2/transaction/txcoin.service
 import { NetworkService } from 'src/app/services/apiv2/connection/network.service';
 import { Feev2Service } from 'src/app/services/apiv2/connection/feev2.service';
 import { SioNumpadComponent } from 'src/app/components/form/sio-numpad/sio-numpad.component';
-import { coinNames } from '../../services/api/coins';
+import { coinNames } from '@simplio/backend/api/utils/coins';
 import { TranslateService } from '@ngx-translate/core';
 import { TrackedPage } from '../../classes/trackedPage';
 
@@ -59,7 +59,7 @@ export class SendPage extends TrackedPage implements OnDestroy {
       feeLevelName: [this.feePolicy, [Validators.required]],
     },
     {
-      validators: [isLowerThan],
+      validators: [isAmountSufficient],
     },
   );
 
@@ -179,9 +179,16 @@ export class SendPage extends TrackedPage implements OnDestroy {
             decimal: 9,
           };
           break;
+        case WalletType.SAFE_TOKEN:
+          this.dataService.unsignedTransaction.feepipe = {
+            ticker: coinNames.SAFE,
+            type: WalletType.SAFE,
+            decimal: 9,
+          };
+          break;
         case WalletType.ETH_TOKEN:
           this.dataService.unsignedTransaction.feepipe = {
-            ticker: coinNames.ETC,
+            ticker: coinNames.ETH,
             type: WalletType.ETH,
             decimal: 18,
           };

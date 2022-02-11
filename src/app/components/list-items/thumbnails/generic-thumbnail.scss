@@ -1,4 +1,5 @@
 $thumbnail-size: 48px;
+$thumbnail-size--micro: 22px;
 $thumbnail-size--tiny: 30px;
 $thumbnail-size--small: 44px;
 $thumbnail-size--large: 86px;
@@ -21,6 +22,8 @@ $icon-size-large: 60%;
   }
 
   & > div {
+    display: grid;
+    place-content: center;
     width: $icon-size;
     height: $icon-size;
   }
@@ -68,6 +71,23 @@ $icon-size-large: 60%;
   & > div {
     width: $icon-size-large;
     height: $icon-size-large;
+  }
+}
+
+:host[scale='micro'] .thumbnail {
+  width: $thumbnail-size--micro;
+  height: $thumbnail-size--micro;
+
+  & > div {
+    display: grid;
+    place-content: center;
+    width: $icon-size-large;
+    height: $icon-size-large;
+
+    svg {
+      top: 0;
+      left: 0;
+    }
   }
 }
 

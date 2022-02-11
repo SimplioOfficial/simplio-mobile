@@ -4,25 +4,24 @@ import { IonicModule } from '@ionic/angular';
 import { SioLayoutModule } from 'src/app/components/layout/sio-layout.module';
 import { SioListModule } from 'src/app/components/list-items/sio-list.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { VerifySmsModal } from './verify-sms.modal';
-import { SioFormModule } from 'src/app/components/form/sio-form.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PurchaseDetailModal } from './purchase-detail.modal';
+import { FormsModule } from '@angular/forms';
+import { SioSharedModule } from 'src/app/components/shared/sio-shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
     FormsModule,
-    ReactiveFormsModule,
     SioLayoutModule,
     SioListModule,
-    SioFormModule,
+    SioSharedModule,
     TranslateModule.forChild({
       extend: true,
     }),
   ],
-  declarations: [VerifySmsModal],
-  exports: [VerifySmsModal],
-  bootstrap: [VerifySmsModal],
+  declarations: [PurchaseDetailModal],
+  exports: [PurchaseDetailModal],
+  bootstrap: [PurchaseDetailModal],
 })
-export class VerifySmsModalModule {}
+export class PurchaseDetailModalModule {}

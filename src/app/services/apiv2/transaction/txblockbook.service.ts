@@ -80,7 +80,7 @@ export class TxblockbookService extends TxBase {
       const index = addressesList.findIndex(a => item.addresses.indexOf(a) > -1);
       return {
         address: item.addresses?.length > 0 ? item.addresses[0] : undefined,
-        amount: pipeAmount(item.value, coin, type, undefined, true),
+        amount: item.value,
         isMine: index > -1 ? true : false,
       };
     });
@@ -97,7 +97,7 @@ export class TxblockbookService extends TxBase {
         const address = addressesList.find(a => a === primAddress);
         return {
           address: primAddress,
-          amount: pipeAmount(item.value, coin, type, undefined, true),
+          amount: item.value,
           isMine: address ? true : false,
         };
       })
@@ -143,24 +143,17 @@ export class TxblockbookService extends TxBase {
               inputs = this._classifyV2(addressesList, tx.vin, data.ticker, data.type);
               outputs = this._classifyVoutV2(addressesList, tx.vout, data.ticker, data.type);
 
-              amountIn = pipeAmount(this.sum(inputs, false), data.ticker, data.type, undefined);
-              amountInMine = pipeAmount(this.sum(inputs, true), data.ticker, data.type, undefined);
-              amountOut = pipeAmount(
-                this.sumVout(outputs, false),
-                data.ticker,
-                data.type,
-                undefined,
-              );
-              amountOutMine = pipeAmount(
-                this.sumVout(outputs, true),
-                data.ticker,
-                data.type,
-                undefined,
-              );
+              amountIn = this.sum(inputs, false);
+              amountInMine = this.sum(inputs, true);
+              amountOut = this.sumVout(outputs, false);
+              amountOutMine = this.sumVout(outputs, true);
 
               const fee = Number(tx.fees);
 
-              if (amountInMine === amountOutMine + fee) {
+              if (
+                amountInMine === amountOutMine + fee ||
+                (amountInMine === 0 && amountOutMine === 0)
+              ) {
                 amount = amountOutMine;
                 action = TxType.MOVE;
               } else if (amountInMine === 0) {

@@ -174,14 +174,19 @@ export class SwapWalletModal implements OnInit {
   swapWallets() {
     const s = this._sourceWallet.value;
     const d = this._destinationWallet.value;
-    const temp = this.list.filter(
-      e =>
-        e.SourceCurrency === d.ticker &&
-        e.TargetCurrency === s.ticker &&
-        e.SourceCurrencyNetwork === getCurrencyNetwork(d.type, d.ticker) &&
-        e.TargetCurrencyNetwork === getCurrencyNetwork(s.type, s.ticker),
-    );
-    this.isSwapped.next(!!s && !!d && temp.length > 0);
+
+    if (!!s && !!d) {
+      const temp = this.list.filter(
+        e =>
+          e.SourceCurrency === d.ticker &&
+          e.TargetCurrency === s.ticker &&
+          e.SourceCurrencyNetwork === getCurrencyNetwork(d.type, d.ticker) &&
+          e.TargetCurrencyNetwork === getCurrencyNetwork(s.type, s.ticker),
+      );
+      this.isSwapped.next(temp.length > 0);
+    } else {
+      this.isSwapped.next(false);
+    }
   }
 
   getPrice(rates: Rate[], ticker: string, currency: string): number {

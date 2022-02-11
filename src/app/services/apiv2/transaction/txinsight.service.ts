@@ -174,7 +174,7 @@ export class TxinsightService extends TxBase {
                 });
                 addressTo = firstExternalOutput;
               } else {
-                addressTo = inputs[0].address;
+                addressTo = inputs[0]?.address || 'N/A';
               }
             }
             const u = tx.blocktime ? tx.blocktime : tx.blockTime;

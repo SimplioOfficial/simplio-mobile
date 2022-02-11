@@ -10,6 +10,8 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(60px, 100px));
   gap: var(--spacing-smaller);
+
+  height: calc(100% - 54px - 125px);
 }
 
 .seed {
@@ -26,14 +28,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
+  height: 35px;
   text-align: center;
   border-radius: 30em;
   color: var(--ion-color-step-450);
 }
 
 h1 {
-  padding: var(--spacing-smaller) var(--spacing-small);
+  padding: 0 var(--spacing-small);
 }
 
 .loading {

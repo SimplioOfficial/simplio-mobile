@@ -8,7 +8,7 @@ import {
   SwapStatusTranslations,
 } from 'src/app/interface/swap';
 import { Translate } from 'src/app/providers/translate';
-import { coinNames, platformList } from '../api/coins';
+import { coinNames, platformList } from '@simplio/backend/api/utils/coins';
 
 const up = (s: string) => s.toUpperCase();
 
@@ -22,6 +22,8 @@ export const getCurrencyNetwork = (type: WalletType, ticker: string) => {
       return platformList.BSC;
     case WalletType.SOLANA:
     case WalletType.SOLANA_TOKEN:
+    case WalletType.SOLANA_DEV:
+    case WalletType.SOLANA_TOKEN_DEV:
       return platformList.SOL;
     default:
       return ticker;

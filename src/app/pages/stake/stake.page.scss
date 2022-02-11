@@ -1,0 +1,15 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.select-wallet-button {
+  padding: 0 var(--spacing-small) var(--spacing-small) var(--spacing-small);
+}
+
+form {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}

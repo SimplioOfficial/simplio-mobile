@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { from, of } from 'rxjs';
-import { Transaction, TxType } from 'src/app/interface/data';
+import { Transaction } from 'src/app/interface/data';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
 import { WalletService } from 'src/app/services/wallet.service';
 

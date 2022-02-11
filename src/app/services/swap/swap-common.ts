@@ -1,5 +1,5 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { SupportedFiat, Wallet, WalletType } from 'src/app/interface/data';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { SupportedFiat, Wallet } from 'src/app/interface/data';
 import {
   AddAddressesRequestBody,
   SwapPair,
@@ -9,9 +9,9 @@ import {
 } from 'src/app/interface/swap';
 import { PlatformProvider } from 'src/app/providers/platform/platform';
 import { environment } from 'src/environments/environment';
-import { SWAP_URLS, USERS_URLS } from '../../providers/routes/swap.routes';
+import { USERS_URLS } from '../../providers/routes/account.routes';
+import { SWAP_URLS } from '../../providers/routes/swap.routes';
 import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
-import { AuthenticationService } from '../authentication/authentication.service';
 import { getParams } from '../authentication/utils';
 import { getCurrencyNetwork } from './utils';
 
@@ -30,7 +30,7 @@ export class CommonSwap {
   constructor(
     protected plt: PlatformProvider,
     protected http: HttpFallbackService,
-    protected platformProvider: PlatformProvider
+    protected platformProvider: PlatformProvider,
   ) {}
 
   registerWallet(wallet: Wallet): Promise<void> {
@@ -96,9 +96,11 @@ export class CommonSwap {
     });
     const reqParams = getParams(params);
 
-    return this.http.get<SwapReportPage>(url, { headers, params: reqParams }).catch((err: HttpErrorResponse) => {
-      console.error('Reporting swaps has failed');
-      throw err;
-    });
+    return this.http
+      .get<SwapReportPage>(url, { headers, params: reqParams })
+      .catch((err: HttpErrorResponse) => {
+        console.error('Reporting swaps has failed');
+        throw err;
+      });
   }
 }

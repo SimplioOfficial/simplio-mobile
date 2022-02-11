@@ -1,0 +1,29 @@
+<main>
+  <section class="top">
+    <div class="top__left">
+      <sio-wallet-thumbnail [iconID]="wallet.ticker" [attr.scale]="'small'"> </sio-wallet-thumbnail>
+
+      <div class="platform-container">
+        <sio-wallet-thumbnail [iconID]="network" [attr.scale]="'tiny'"></sio-wallet-thumbnail>
+      </div>
+      <div>
+        <p>{{ wallet.name }}</p>
+        <span>{{ $.ON | translate }} {{ network }}</span>
+      </div>
+    </div>
+    <div class="top__right">
+      <ng-content></ng-content>
+    </div>
+  </section>
+
+  <section class="bottom">
+    <div class="title--secondary">
+      <p class="title">{{ $.STAKED | translate }}</p>
+      <p>{{ staked | balance: wallet.ticker:wallet.type:wallet.decimal }} {{ wallet.ticker }}</p>
+    </div>
+    <div class="title">
+      <p class="title">{{ $.EARNED | translate }}</p>
+      <p>{{ earned | balance: wallet.ticker:wallet.type:wallet.decimal }} {{ wallet.ticker }}</p>
+    </div>
+  </section>
+</main>

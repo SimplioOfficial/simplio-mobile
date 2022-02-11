@@ -1,13 +1,12 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Acc } from 'src/app/interface/user';
 import { AccountRegistrationError } from 'src/app/providers/errors/account-registration-error';
 import { Translate } from 'src/app/providers/translate';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { IoService } from 'src/app/services/io.service';
-import { httpHeaders } from './utils';
 import { PlatformProvider } from 'src/app/providers/platform/platform';
-import { USERS_URLS } from 'src/app/providers/routes/swap.routes';
+import { USERS_URLS } from '../../providers/routes/account.routes';
 import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
 
 type AccountUpdateOptions = {
@@ -27,7 +26,7 @@ export class AccountService {
     private io: IoService,
     private plt: PlatformProvider,
     private authProvider: AuthenticationProvider,
-    private http: HttpFallbackService
+    private http: HttpFallbackService,
   ) {}
 
   get canResetPassword(): boolean {

@@ -38,12 +38,20 @@ export class InsertSeedModal implements AfterViewInit {
   onDismissModal(modified = false): void {
     this.modalCtrl.dismiss({
       index: this.index,
-      value: this.formField.get('word').value.trim(),
+      value: this.formField.get('word').value?.trim().toLowerCase(),
       modified,
     });
   }
 
   onSubmit() {
     if (this.formField.valid) this.onDismissModal(true);
+  }
+
+  get isValid(): boolean {
+    return this.formField.valid;
+  }
+
+  get isEmpty(): boolean {
+    return this.formField.get('word').value === '';
   }
 }

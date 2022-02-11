@@ -116,28 +116,34 @@ export class NetworkService {
     return undefined;
   }
 
-  private _postData<T>(data: { explorer: Explorer, extend: string, params: any, url?: string, count: number, timeout?: number }): Promise<T> {
+  private _postData<T>(data: {
+    explorer: Explorer;
+    extend: string;
+    params: any;
+    url?: string;
+    count: number;
+    timeout?: number;
+  }): Promise<T> {
     return new Promise((resolve, reject) => {
       const URL = data.url ? data.url : data.explorer.api + data.extend;
       const rUrl = this.platformProvider.isCordova ? URL : environment.CORS_ANYWHERE + URL;
       const headers = this.httpService.getHttpHeaders();
       const serializer = 'json';
       this.httpService.setDataSerializer(serializer);
-      return this.httpService.post<T>(rUrl, data.params, { headers })
+      return this.httpService
+        .post<T>(rUrl, data.params, { headers })
         .then(resolve)
         .catch(err => {
           if (data.count > 5) {
             reject(err);
-          }
-          else {
+          } else {
             setTimeout(() => {
               data.count++;
               this._postData(data).then(resolve).catch(reject);
-            }, data.timeout ?? 3000)
+            }, data.timeout ?? 3000);
           }
         });
-    })
-
+    });
   }
 
   /**
@@ -148,9 +154,20 @@ export class NetworkService {
    *  params
    *  url
    */
-  postData<T>(explorer: Explorer, extend: string, params: any, url?: string, timeout?: number): Promise<T> {
+  postData<T>(
+    explorer: Explorer,
+    extend: string,
+    params: any,
+    url?: string,
+    timeout?: number,
+  ): Promise<T> {
     return this._postData<T>({
-      explorer, params, extend, url, timeout, count: 0
+      explorer,
+      params,
+      extend,
+      url,
+      timeout,
+      count: 0,
     });
   }
 
@@ -163,27 +180,34 @@ export class NetworkService {
    *  url
    */
 
-  private _getData<T>(data: { explorer: Explorer, extend: string, url?: string, count: number, timeout?: number }): Promise<T> {
+  private _getData<T>(data: {
+    explorer: Explorer;
+    extend: string;
+    url?: string;
+    count: number;
+    timeout?: number;
+  }): Promise<T> {
     return new Promise((resolve, reject) => {
       const URL = data.url ? data.url : data.explorer.api + data.extend;
       const rUrl = this.platformProvider.isCordova ? URL : environment.CORS_ANYWHERE + URL;
       const headers = this.httpService.getHttpHeaders();
       this.httpService.setDataSerializer('json');
       const splt = data.extend.split('/');
-      return this.httpService.get(rUrl, { headers }).then(res => {
-        const d = res as any;
-        d.address = splt[splt.length - 1].split('?')[0];
-        resolve(res as T);
-      })
+      return this.httpService
+        .get(rUrl, { headers })
+        .then(res => {
+          const d = res as any;
+          d.address = splt[splt.length - 1].split('?')[0];
+          resolve(res as T);
+        })
         .catch(err => {
           if (data.count > 5) {
             reject(err);
-          }
-          else {
+          } else {
             setTimeout(() => {
               data.count++;
               this._getData(data).then(resolve).catch(reject);
-            }, data.timeout ?? 3000)
+            }, data.timeout ?? 3000);
           }
         });
     });
@@ -191,23 +215,27 @@ export class NetworkService {
 
   getData<T>(explorer: Explorer, extend: string, url?: string, timeout?: number): Promise<T> {
     return this._getData<T>({
-      explorer, extend, url, timeout, count: 0
-    })
+      explorer,
+      extend,
+      url,
+      timeout,
+      count: 0,
+    });
   }
 
   private _get<T>(url: string, headers, count: number, timeout?: number): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.httpService.get(url, { headers })
+      this.httpService
+        .get(url, { headers })
         .then(resolve)
         .catch(err => {
           if (count > 5) {
             reject(err);
-          }
-          else {
+          } else {
             setTimeout(() => {
               count++;
               this._get(url, count, timeout).then(resolve).catch(reject);
-            }, timeout ?? 3000)
+            }, timeout ?? 3000);
           }
         });
     });
@@ -221,17 +249,17 @@ export class NetworkService {
 
   private _post<T>(url: string, params, headers, count: number, timeout?: number): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.httpService.post<T>(url, params, { headers })
+      this.httpService
+        .post<T>(url, params, { headers })
         .then(resolve)
         .catch(err => {
           if (count > 5) {
             reject(err);
-          }
-          else {
+          } else {
             setTimeout(() => {
               count++;
               this._post(url, params, headers, count, timeout).then(resolve).catch(reject);
-            }, timeout ?? 3000)
+            }, timeout ?? 3000);
           }
         });
     });
@@ -245,27 +273,40 @@ export class NetworkService {
 
   private _postCustom<T>(url: string, params, option, count: number, timeout?: number): Promise<T> {
     return new Promise((resolve, reject) => {
-      return this.httpService.post<T>(url, params, option).then(res => {
-        this.httpService.setDataSerializer('json');
-        resolve(res);
-      })
+      return this.httpService
+        .post<T>(url, params, option)
+        .then(res => {
+          this.httpService.setDataSerializer('json');
+          resolve(res);
+        })
         .catch(err => {
           if (count > 5) {
             reject(err);
-          }
-          else {
+          } else {
             setTimeout(() => {
               count++;
               this._postCustom(url, params, option, count, timeout).then(resolve).catch(reject);
-            }, timeout ?? 3000)
+            }, timeout ?? 3000);
           }
         });
     });
   }
 
+  put(url: string, params): Promise<void> {
+    const rUrl = this.platformProvider.isCordova ? url : environment.CORS_ANYWHERE + url;
+    const headers = this.httpService.getHttpHeaders();
+    return this.httpService.put(rUrl, params, { headers });
+  }
+
+  delete(url: string, params?): Promise<any> {
+    const rUrl = this.platformProvider.isCordova ? url : environment.CORS_ANYWHERE + url;
+    const headers = this.httpService.getHttpHeaders();
+    return this.httpService.delete(rUrl, { headers, params });
+  }
+
   postCustom<T>(url: string, params, contentType): Promise<T> {
     const rUrl = this.platformProvider.isCordova ? url : environment.CORS_ANYWHERE + url;
     const headers = this.httpService.getHttpHeaders(contentType);
-    return this._postCustom(url, params, { headers }, 0);
+    return this._postCustom(rUrl, params, { headers }, 0);
   }
 }

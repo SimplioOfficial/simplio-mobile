@@ -1,0 +1,37 @@
+:host {
+  user-select: none;
+}
+
+p {
+  color: var(--ion-text-color);
+
+  &.is-send {
+    color: var(--ion-color-danger);
+  }
+  &.is-move {
+    color: var(--ion-color-medium);
+  }
+  &.is-receive {
+    color: var(--ion-color-success);
+  }
+  &.is-token {
+    color: var(--ion-color-primary);
+  }
+}
+
+.thumbnail {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 6%;
+
+  .source-icon,
+  .target-icon {
+    position: relative;
+    left: 6px;
+  }
+
+  .target-icon {
+    left: -6px;
+    transform: scaleX(1.2) scaleY(1.2);
+  }
+}

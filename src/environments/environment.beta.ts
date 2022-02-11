@@ -14,4 +14,10 @@ export const environment = {
   DEFAULT_LANGUAGE: 'en',
   PREFIX: 'SIMPLIO_TEST',
   LIVECHAT_LICENCE_ID: 13126005,
+  SUM_SUB_API_URL: 'https://test-api.sumsub.com',
+  USER_API: 'https://simplio-test-8tkjnaqb.ew.gateway.dev',
+  SWIPELUX: 'https://jvm.api.aws-dev.swipelux.com/api',
+  CUSTOM_CONTENT: {
+    SWIPELUX: true,
+  },
 };

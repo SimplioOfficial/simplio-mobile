@@ -1,0 +1,22 @@
+<div class="thumbnail">
+  <sio-wallet-thumbnail
+    class="source-icon"
+    [iconID]="purchase.fromCcy.a3"
+    scale="small"
+  ></sio-wallet-thumbnail>
+  <sio-wallet-thumbnail class="target-icon" [iconID]="purchase.toCcy.a3"></sio-wallet-thumbnail>
+</div>
+
+<div class="title">
+  <p>{{ purchase.fromAmount }} {{ purchase.fromCcy.a3 }}</p>
+  <span>{{ purchaseStatus }}</span>
+</div>
+<div class="balance">
+  <p>
+    {{ purchase.toAmount }}
+    {{ purchase.toCcy.a3 }}
+  </p>
+  <span>{{ purchase.createdAt | date: 'MMM dd, yyyy, HH:mm' }}</span>
+</div>
+
+<ng-content></ng-content>

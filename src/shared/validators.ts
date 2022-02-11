@@ -25,9 +25,9 @@ export function isEqual(compare) {
     return compare === c.value
       ? null
       : {
-        result: false,
-        msg: '',
-      };
+          result: false,
+          msg: '',
+        };
   };
 }
 
@@ -41,9 +41,9 @@ export function isNotEqual(compare) {
     return compare !== c.value
       ? null
       : {
-        result: false,
-        msg: '',
-      };
+          result: false,
+          msg: '',
+        };
   };
 }
 
@@ -77,49 +77,49 @@ export function compareValues(params: Array<string>, equals: boolean = false) {
  */
 export const isMinAmount =
   (dep: { isZeroMsg: string; isInsufficientMsg: string; errMsg: string; swapFeeErrMsg }) =>
-    (c: AbstractControl): null | ValidatorResponse => {
-      const invalidRes: ValidatorResponse = {
-        result: false,
-        msg: dep.isZeroMsg || '',
-      };
-      const { amount, swapResponse, sourceWallet, fee, feeWallet } = c.value as {
-        amount: number;
-        swapResponse: SwapConvertResponse;
-        sourceWallet: Wallet;
-        fee: number;
-        feeWallet: Wallet;
-      };
-
-      if (
-        pipeAmount(amount, sourceWallet?.ticker, sourceWallet?.type, sourceWallet?.decimal) >
-        sourceWallet?.balance
-      ) {
-        invalidRes.msg = dep.errMsg;
-        return invalidRes;
-      }
-
-      // It is invalid if the value is zero
-      if (amount === 0 && fee === 0) {
-        return invalidRes;
-      }
-
-      if (feeWallet && fee > feeWallet.balance) {
-        invalidRes.msg = dep.swapFeeErrMsg;
-        return invalidRes;
-      }
-
-      if (!swapResponse) {
-        return invalidRes;
-      }
-      // It is valid if the source wallet amount is larger than minimum deposit amount
-      if (swapResponse.SourceCurrentAmount >= swapResponse.SourceMinDepositAmount) return null;
-      // It is invalid in any other case
-      invalidRes.msg = dep.isInsufficientMsg
-        .replace('<COIN>', sourceWallet.ticker || '')
-        .replace('<AMOUNT>', swapResponse.SourceMinDepositAmount.toString());
-
-      return invalidRes;
+  (c: AbstractControl): null | ValidatorResponse => {
+    const invalidRes: ValidatorResponse = {
+      result: false,
+      msg: dep.isZeroMsg || '',
     };
+    const { amount, swapResponse, sourceWallet, fee, feeWallet } = c.value as {
+      amount: number;
+      swapResponse: SwapConvertResponse;
+      sourceWallet: Wallet;
+      fee: number;
+      feeWallet: Wallet;
+    };
+
+    if (
+      pipeAmount(amount, sourceWallet?.ticker, sourceWallet?.type, sourceWallet?.decimal) >
+      sourceWallet?.balance
+    ) {
+      invalidRes.msg = dep.errMsg;
+      return invalidRes;
+    }
+
+    // It is invalid if the value is zero
+    if (amount === 0 && fee === 0) {
+      return invalidRes;
+    }
+
+    if (feeWallet && fee > feeWallet.balance) {
+      invalidRes.msg = dep.swapFeeErrMsg;
+      return invalidRes;
+    }
+
+    if (!swapResponse) {
+      return invalidRes;
+    }
+    // It is valid if the source wallet amount is larger than minimum deposit amount
+    if (swapResponse.SourceCurrentAmount >= swapResponse.SourceMinDepositAmount) return null;
+    // It is invalid in any other case
+    invalidRes.msg = dep.isInsufficientMsg
+      .replace('<COIN>', sourceWallet.ticker || '')
+      .replace('<AMOUNT>', swapResponse.SourceMinDepositAmount.toString());
+
+    return invalidRes;
+  };
 
 /**
  * Checks if the source wallet has enough resources.
@@ -132,53 +132,53 @@ const hasBudgetDepDef: HasBudgetDep = {
 };
 export const hasBudget =
   (dep = hasBudgetDepDef) =>
-    (c): null | ValidatorResponse => {
-      const invalidRes: ValidatorResponse = {
-        result: false,
-        msg: dep.errMsg || '',
-      };
-      const { amount, sourceWallet: w } = c.value as {
-        amount: number;
-        sourceWallet: Wallet;
-      };
-      const balance = dep.convert
-        ? pipeAmount(w?.balance, w?.ticker, w?.type, w?.decimal, true)
-        : w?.balance;
-
-      return balance >= amount ? null : invalidRes;
+  (c): null | ValidatorResponse => {
+    const invalidRes: ValidatorResponse = {
+      result: false,
+      msg: dep.errMsg || '',
     };
+    const { amount, sourceWallet: w } = c.value as {
+      amount: number;
+      sourceWallet: Wallet;
+    };
+    const balance = dep.convert
+      ? pipeAmount(w?.balance, w?.ticker, w?.type, w?.decimal, true)
+      : w?.balance;
+
+    return balance >= amount ? null : invalidRes;
+  };
 
 export const hasBudgetSwap =
   (dep = hasBudgetDepDef) =>
-    (c): null | ValidatorResponse => {
-      const invalidRes: ValidatorResponse = {
-        result: false,
-        msg: dep.errMsg || '',
-      };
-      const {
-        amount,
-        sourceWallet: w,
-        fee,
-      } = c.value as {
-        amount: number;
-        sourceWallet: Wallet;
-        fee: number;
-      };
-      const balance = dep.convert
-        ? pipeAmount(w?.balance, w?.ticker, w?.type, w?.decimal, true)
-        : w?.balance;
-      const sFee = dep.convert ? pipeAmount(fee, w?.ticker, w?.type, w?.decimal, true) : fee;
-      const sAmount = dep.convert
-        ? amount
-        : pipeAmount(amount, w?.ticker, w?.type, w?.decimal, false);
-
-      if (!UtilsService.isToken(w?.type)) {
-        if (sAmount > 0) return balance >= sAmount + sFee ? null : invalidRes;
-        else return invalidRes;
-      } else {
-        return balance >= sAmount ? null : invalidRes;
-      }
+  (c): null | ValidatorResponse => {
+    const invalidRes: ValidatorResponse = {
+      result: false,
+      msg: dep.errMsg || '',
     };
+    const {
+      amount,
+      sourceWallet: w,
+      fee,
+    } = c.value as {
+      amount: number;
+      sourceWallet: Wallet;
+      fee: number;
+    };
+    const balance = dep.convert
+      ? pipeAmount(w?.balance, w?.ticker, w?.type, w?.decimal, true)
+      : w?.balance;
+    const sFee = dep.convert ? pipeAmount(fee, w?.ticker, w?.type, w?.decimal, true) : fee;
+    const sAmount = dep.convert
+      ? amount
+      : pipeAmount(amount, w?.ticker, w?.type, w?.decimal, false);
+
+    if (!UtilsService.isToken(w?.type)) {
+      if (sAmount > 0) return balance >= sAmount + sFee ? null : invalidRes;
+      else return invalidRes;
+    } else {
+      return balance >= sAmount ? null : invalidRes;
+    }
+  };
 
 /**
  * Checks if the returned response from API is valid.
@@ -199,15 +199,14 @@ export const isAmountValid = (c: AbstractControl): null | ValidatorResponse => {
  * @note Swap specific validator
  * @param c
  */
-export const isDestinationFiatAmountValid = (dep: { isZeroMsg: string }) =>
+export const isDestinationFiatAmountValid =
+  (dep: { isZeroMsg: string }) =>
   (c): null | ValidatorResponse => {
     const invalidRes: ValidatorResponse = {
       result: false,
       msg: dep.isZeroMsg || '',
     };
-    const {
-      destinationFiatValue,
-    } = c.value as {
+    const { destinationFiatValue } = c.value as {
       destinationFiatValue: number;
     };
 
@@ -224,9 +223,42 @@ export const isGreaterThan = (minValue: number) => {
     return c.value > minValue
       ? null
       : {
-        result: false,
-        msg: '',
-      };
+          result: false,
+          msg: '',
+        };
+  };
+};
+
+export const isGreaterOrEqualThan = (minValue: number) => {
+  return (c: AbstractControl): null | ValidatorResponse => {
+    return c.value >= minValue
+      ? null
+      : {
+          result: false,
+          msg: '',
+        };
+  };
+};
+
+export const isLessThan = (maxValue: number) => {
+  return (c: AbstractControl): null | ValidatorResponse => {
+    return c.value < maxValue
+      ? null
+      : {
+          result: false,
+          msg: '',
+        };
+  };
+};
+
+export const isLessOrEqualThan = (maxValue: number) => {
+  return (c: AbstractControl): null | ValidatorResponse => {
+    return c.value <= maxValue
+      ? null
+      : {
+          result: false,
+          msg: '',
+        };
   };
 };
 
@@ -235,7 +267,7 @@ export const isGreaterThan = (minValue: number) => {
  * a provided value
  *
  */
-export const isLowerThan = (c: AbstractControl): null | ValidatorResponse => {
+export const isAmountSufficient = (c: AbstractControl): null | ValidatorResponse => {
   const { wallet, amount } = c.value as {
     wallet: Wallet;
     amount: number;
@@ -243,9 +275,9 @@ export const isLowerThan = (c: AbstractControl): null | ValidatorResponse => {
   return !!wallet && amount <= wallet.balance && amount > 0
     ? null
     : {
-      result: false,
-      msg: '',
-    };
+        result: false,
+        msg: '',
+      };
 };
 
 /**
@@ -284,22 +316,30 @@ export const checkWord = (c: AbstractControl): null | ValidatorResponse => {
     result: false,
     msg: '',
   };
-  return validateWord(word.trim()) ? null : invalidRes;
+  return validateWord(word?.trim().toLowerCase()) ? null : invalidRes;
 };
 
 export const validateWord = (word: string) => {
+  const split = word?.split(' ');
   if (!environment.production) {
-    const split = word.split(' ');
     if (split.length === 24 || split.length === 12) {
       return true;
     }
   }
-  let found = false;
-  Object.values(wordlists).some(element => {
-    if (element.includes(word)) {
-      found = true;
-      return true;
-    }
-  });
-  return found;
+
+  if (!!split && split.length > 1) {
+    let result = true;
+    split.forEach(word => (result = result && validateWord(word)));
+
+    return result;
+  } else {
+    let found = false;
+    Object.values(wordlists).some(element => {
+      if (element.includes(word)) {
+        found = true;
+        return true;
+      }
+    });
+    return found;
+  }
 };

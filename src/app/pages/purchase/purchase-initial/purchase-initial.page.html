@@ -1,0 +1,56 @@
+<sio-simple-page [scroll]="false" *ngIf="wallet$ | async as wallet">
+  <!-- HEADER -->
+  <sio-header>
+    <sio-header-button slot="header-left" (click)="back()">
+      <ion-icon name="close-outline"></ion-icon>
+    </sio-header-button>
+
+    <span slot="header-title">{{ $.PURCHASE_CRYPTO | translate }}</span>
+
+    <sio-header-button slot="header-right" [enable]="false"></sio-header-button>
+  </sio-header>
+
+  <main class="content" [class]="{ disabled: walletSelectingDisabled }">
+    <sio-wallet-item-select
+      id="sio-t-btn--select-wallet"
+      [wallet]="wallet"
+      [fiatValue]="getFiatValue(wallet)"
+      [rate]="getRate(wallet)"
+      [currency]="currency"
+      [label]="$.SELECT_CRYPTO | translate"
+      (click)="openTargetWalletModal()"
+      [isContent]="true"
+    ></sio-wallet-item-select>
+
+    <form [formGroup]="formField">
+      <sio-buy-value
+        [targetAmount]="targetAmount"
+        [targetCurrency]="wallet.ticker"
+        [currency]="currency"
+        formControlName="amount"
+        [loading]="isPending"
+        [decimalPlaces]="MAX_DECIMAL_PLACES"
+      ></sio-buy-value>
+      <sio-numpad (changed)="onAmountChange($event)"></sio-numpad>
+    </form>
+  </main>
+
+  <div slot="footer">
+    <div class="select-wallet-button">
+      <div *ngIf="currentErrorMsg !== '' && !formField.valid; else submitButtonRef" class="error">
+        <ion-text>{{ currentErrorMsg }}</ion-text>
+      </div>
+
+      <ng-template #submitButtonRef>
+        <ion-button
+          color=""
+          expand="block"
+          mode="ios"
+          [disabled]="isPending || !formField.valid"
+          (click)="onSubmit()"
+          >{{ $.NEXT | translate }}</ion-button
+        >
+      </ng-template>
+    </div>
+  </div>
+</sio-simple-page>

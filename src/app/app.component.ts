@@ -129,7 +129,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         map<Data, boolean>(data => data.tapbar),
       )
       .subscribe(t => this.settingsProvider.pushTapbarVisibility(t));
-
     return data;
   }
 

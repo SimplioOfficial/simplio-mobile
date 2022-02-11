@@ -21,13 +21,15 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./import-recovery-enter.page.scss'],
 })
 export class ImportRecoveryEnterPage implements OnDestroy {
+  wrongSeed = false;
+
   private _loading = new BehaviorSubject(false);
+  loading$ = this._loading.asObservable();
+
   private LENGTH = 24;
   private EMPTY_SEED = Array.from(Array(this.LENGTH), () => '');
   private _seed$ = new BehaviorSubject<string[]>(Array.from(this.EMPTY_SEED));
   private _apply$;
-  private wrongSeed = false;
-  loading$ = this._loading.asObservable();
 
   static formatWord(word: string): string {
     return word.toLowerCase().trim();
@@ -106,13 +108,11 @@ export class ImportRecoveryEnterPage implements OnDestroy {
     if (!modified) return;
 
     const splt = value.split(' ');
-    if (!environment.production && (splt.length === 12 || splt.length === 24)) {
-      let index = 0;
-      splt.forEach(element => {
-        this._pushSeedValue(index++, element);
-      });
-    } else {
-      this._pushSeedValue(index, value);
+    splt.forEach((word, i) => this._pushSeedValue(index + i, word));
+
+    const nextIndex = index + splt.length;
+    if (nextIndex < this.LENGTH) {
+      this.openModal(nextIndex, null);
     }
   }
 

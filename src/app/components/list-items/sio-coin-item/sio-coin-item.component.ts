@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { platform } from 'src/app/services/utils.service';
+import { platform } from '@simplio/backend/utils';
 import { CoinItem } from 'src/assets/json/coinlist';
 
 @Component({
