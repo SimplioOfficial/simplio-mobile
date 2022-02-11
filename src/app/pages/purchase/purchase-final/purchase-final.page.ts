@@ -77,7 +77,7 @@ export class PurchaseFinalPage extends TrackedPage implements OnInit {
   private _redirect() {
     this.router.navigate(['/home', 'swap'], {
       state: {
-        purchases: true,
+        tab: 'purchases',
       },
     });
   }
