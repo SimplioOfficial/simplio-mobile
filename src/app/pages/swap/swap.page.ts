@@ -319,11 +319,11 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
 
         return transactions;
       } else {
-        return null;
+        return [];
       }
     } catch (err) {
       console.error(err);
-      return null;
+      return [];
     }
   }
 
@@ -481,5 +481,9 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
         pool: this.poolsInfo.find(e => e.mintAddress === w.contractaddress),
       },
     });
+  }
+
+  segmentChanged() {
+    console.log(487, 'segment changed');
   }
 }

@@ -19,10 +19,8 @@ export class ImportWalletService implements WalletsCreator {
 
   async createWallet(walletData: WalletData): Promise<Wallet> {
     let mnemo;
-    const mainxp = null;
-    let mainAddress;
+    const mainAddress = null;
 
-    const { coin } = walletData.value();
     const msed = this.walletsProvider.masterSeedValue;
     const acc = this.authProvider.accountValue;
 

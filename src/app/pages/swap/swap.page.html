@@ -45,15 +45,17 @@
   </ng-template>
   <ng-container *ngIf="pendingSwaps$ | async as pendingSwaps">
     <!-- tab sections   -->
+
     <ion-segment
-      scrollable="true"
+      color="primary"
+      scrollable="false"
       swipe-gesture="true"
       mode="md"
       [(ngModel)]="segment"
-      value="home"
+      (ionChange)="segmentChanged()"
     >
       <ion-segment-button value="swaps">
-        <ion-label>{{ $.SWAPS | translate }}</ion-label>
+        <ion-label>{{ $.SWAPS | translate }} </ion-label>
       </ion-segment-button>
 
       <ion-segment-button value="purchases">
