@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 type Action = {
+  id: string;
   title: string;
   icon: string;
   cssClass: string[];

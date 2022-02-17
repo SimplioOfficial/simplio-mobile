@@ -45,15 +45,17 @@
   </ng-template>
   <ng-container *ngIf="pendingSwaps$ | async as pendingSwaps">
     <!-- tab sections   -->
+
     <ion-segment
-      scrollable="true"
+      color="primary"
+      scrollable="false"
       swipe-gesture="true"
       mode="md"
       [(ngModel)]="segment"
-      value="home"
+      (ionChange)="segmentChanged()"
     >
       <ion-segment-button value="swaps">
-        <ion-label>{{ $.SWAPS | translate }}</ion-label>
+        <ion-label>{{ $.SWAPS | translate }} </ion-label>
       </ion-segment-button>
 
       <ion-segment-button value="purchases">
@@ -116,18 +118,23 @@
       </ion-grid>
       <!-- Purchase tab   -->
       <ion-grid *ngSwitchCase="'purchases'">
-        <section class="history tab-container" *ngIf="purchases$ | async as purchases">
-          <header class="section-header">
-            <p class="section-title">{{ $.HISTORY | translate }}</p>
-          </header>
-          <sio-purchase-item
-            *ngFor="let purchase of purchases"
-            [purchase]="purchase"
-            [locale]="locale"
-            [unconfirmed-message]="$.UNCONFIRMED | translate"
-            (click)="openPurchaseDetail(purchase)"
-          ></sio-purchase-item>
-        </section>
+        <ng-container *ngIf="useSwipelux">
+          <section class="history tab-container" *ngIf="purchases$ | async as purchases">
+            <header class="section-header">
+              <p class="section-title">{{ $.HISTORY | translate }}</p>
+            </header>
+            <sio-purchase-item
+              *ngFor="let purchase of purchases"
+              [purchase]="purchase"
+              [locale]="locale"
+              [unconfirmed-message]="$.UNCONFIRMED | translate"
+              (click)="openPurchaseDetail(purchase)"
+            ></sio-purchase-item> </section
+        ></ng-container>
+
+        <section *ngIf="!useSwipelux" class="empty__transactions">
+          <ion-chip color="primary">Coming soon...</ion-chip></section
+        >
       </ion-grid>
       <!-- Staking tab   -->
       <ion-grid *ngSwitchCase="'staking'">

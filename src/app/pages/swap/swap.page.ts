@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { flatten } from 'lodash';
 
-import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, of, Subscription } from 'rxjs';
 import { filter, map, skipWhile, startWith } from 'rxjs/operators';
 import { IonInfiniteScroll, ModalController } from '@ionic/angular';
 
@@ -52,6 +52,8 @@ const DEFAULTS = {
   styleUrls: ['./swap.page.scss'],
 })
 export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
+  useSwipelux = environment.CUSTOM_CONTENT.SWIPELUX;
+
   private get _nextPage(): number {
     return this.currentPage + 1;
   }
@@ -317,11 +319,11 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
 
         return transactions;
       } else {
-        return null;
+        return [];
       }
     } catch (err) {
       console.error(err);
-      return null;
+      return [];
     }
   }
 
@@ -381,10 +383,13 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     clean = false,
   ): Promise<[SwapReportPage, SwapReportPage, Transaction[], Stake[], Pool[]]> {
     if (clean) this._setDefaults();
+
     return Promise.all([
       this._fetchSwapHistory({ pageNumber: this._nextPage, clean }),
       this._fetchPendingSwaps(clean),
-      this._fetchTransactionHistory({ pageNumber: this._nextPage, clean }),
+      this.useSwipelux
+        ? this._fetchTransactionHistory({ pageNumber: this._nextPage, clean })
+        : of([]).toPromise(),
       this._fetchStaking(),
       this._getPoolsInfo(),
     ]);
@@ -433,12 +438,10 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   }
 
   private async _getPoolsInfo() {
-    // FIXME: HOT-FIX
     const data: any = await this.networkService.get(environment.POOLS_INFO + 'poolsinfo');
-    console.log(437, data, this.io.decrypt(data.result, environment.DATA_PASSWORD));
-    const decrypted = this.io.decrypt(data.result, environment.DATA_PASSWORD);
-    if (!!decrypted) {
-      this.poolsInfo = JSON.parse(this.io.decrypt(data.result, environment.DATA_PASSWORD));
+    const decryptedString = this.io.decrypt(data.result, environment.DATA_PASSWORD);
+    if (!!decryptedString) {
+      this.poolsInfo = JSON.parse(decryptedString);
     } else {
       this.poolsInfo = [];
     }
@@ -478,5 +481,9 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
         pool: this.poolsInfo.find(e => e.mintAddress === w.contractaddress),
       },
     });
+  }
+
+  segmentChanged() {
+    console.log(487, 'segment changed');
   }
 }

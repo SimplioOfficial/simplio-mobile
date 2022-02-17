@@ -18,9 +18,6 @@ h1 {
 
 ion-list.has-tapbar {
   padding-bottom: calc(
-    var(--sizing-element-medium) + (var(--sizing-element-medium) / 2) + constant(safe-area-inset-bottom)
-  ) !important;
-  padding-bottom: calc(
     var(--sizing-element-medium) + (var(--sizing-element-medium) / 2) + env(safe-area-inset-bottom)
   ) !important;
 }
@@ -98,8 +95,7 @@ ion-list.has-tapbar {
 }
 
 ion-slides {
-  padding: 4px 0;
-  padding-bottom: var(--spacing-small);
+  padding: 4px 0 var(--spacing-small);
 
   ion-slide:first-of-type {
     margin-left: var(--spacing-small);
@@ -130,28 +126,28 @@ ion-segment {
   background: var(--ion-background-color);
   z-index: 10;
   width: 100%;
-  --offset-bottom: auto!important;
+  --offset-bottom: auto !important;
   --overflow: hidden;
   overflow: auto;
   &::-webkit-scrollbar {
     display: none;
   }
 }
-ion-segment-button{
+ion-segment-button {
   text-transform: none !important;
   --indicator-height: 1px;
   margin: 30px 0 0 0;
 }
-section.tab-container{
+section.tab-container {
   margin-top: 87px;
 }
 
 ion-label {
-  padding: 0px 20px;
+  padding: 0 20px;
 }
 
 ion-segment {
-  --offset-bottom: auto!important;
+  --offset-bottom: auto !important;
   --overflow: hidden;
   border-bottom: 1px solid #f2f2f2;
   position: fixed;
@@ -163,16 +159,17 @@ ion-segment {
     display: none;
   }
 }
-ion-segment-button{
+
+ion-segment-button {
   text-transform: none !important;
   --indicator-height: 1px;
   margin: 30px 0 0 0;
 }
 
-section.tab-container{
+section.tab-container {
   margin-top: 87px;
 }
 
 ion-label {
-  padding: 0px 20px;
+  padding: 0 20px;
 }

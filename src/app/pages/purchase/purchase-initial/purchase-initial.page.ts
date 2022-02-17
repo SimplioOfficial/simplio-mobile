@@ -86,6 +86,7 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     super();
     this._wallets = this.walletsProvider.walletsValue;
 
+    this.swipeluxProvider.setAuthToken('');
     this.swipeluxService.getPairs().then(res => {
       this._swapList = res.items
         .filter(a => a.fromCurrency.isEnabled && a.toCurrency.isEnabled)

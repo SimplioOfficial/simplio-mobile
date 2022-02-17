@@ -30,7 +30,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (!acc) return next.handle(req);
 
     // requests to swipelux needs to be authorized with different token
-    if (req.url.includes(environment.SWIPELUX) || req.url.includes(environment.SWIPELUX_NEW)) {
+    if (req.url.includes(environment.SWIPELUX)) {
       const cloned = req.clone({
         setHeaders: {
           Authorization: this.swipeluxProvider.authToken ?? '',

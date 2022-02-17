@@ -4,6 +4,7 @@ import { LoadingController } from '@ionic/angular';
 import { Translate } from 'src/app/providers/translate';
 import { OrderResponse } from '../../../interface/swipelux';
 import { SwipeluxService } from '../../../services/swipelux/swipelux.service';
+import { UtilsService } from '../../../services/utils.service';
 
 @Component({
   selector: 'purchase-summary-page',
@@ -15,6 +16,7 @@ export class PurchaseSummaryPage {
 
   constructor(
     private router: Router,
+    private utils: UtilsService,
     private route: ActivatedRoute,
     private loadingCtrl: LoadingController,
     private swipeluxService: SwipeluxService,
@@ -31,13 +33,17 @@ export class PurchaseSummaryPage {
     const loading = await this.loadingCtrl.create();
     loading.present();
 
-    const paymentData = await this.swipeluxService.initializePayment();
-
-    await this.router.navigate(['../gateway-iframe'], {
-      relativeTo: this.route.parent,
-      state: {
-        iframeUrl: paymentData.paymentUrl,
-      },
-    });
+    try {
+      const paymentData = await this.swipeluxService.initializePayment();
+      await this.router.navigate(['../gateway-iframe'], {
+        relativeTo: this.route.parent,
+        state: {
+          iframeUrl: paymentData.paymentUrl,
+        },
+      });
+    } catch {
+      this.utils.showToast('An error occurred, please try it later', 2000, 'warning');
+      loading.dismiss();
+    }
   }
 }
