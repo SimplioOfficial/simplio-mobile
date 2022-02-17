@@ -172,7 +172,7 @@ export class TxblockbookService extends TxBase {
                 });
                 addressTo = firstExternalOutput;
               } else {
-                addressTo = inputs[0].address;
+                addressTo = inputs[0]?.address || data.addresses[0];
               }
             }
             const u = tx.blocktime ? tx.blocktime : tx.blockTime;
@@ -237,6 +237,7 @@ export class TxblockbookService extends TxBase {
             });
           })
           .catch(err => {
+            console.log(err)
             if (explorers.length > 0) {
               const ex = explorers.pop();
               console.log('Get transaction switch to', ex.api);
