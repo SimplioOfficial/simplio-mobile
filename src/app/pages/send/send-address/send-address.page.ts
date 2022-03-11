@@ -35,7 +35,7 @@ import { WalletService } from 'src/app/services/wallet.service';
 import { BalancePipe } from 'src/app/pipes/balance.pipe';
 import { SioSearchComponent } from '../../../components/layout/sio-search/sio-search.component';
 import { SettingsProvider } from 'src/app/providers/data/settings.provider';
-import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
+import { BlockchainService } from 'src/app/services/apiv2/blockchain/blockchain.service';
 import { isToken, pipeAmount, Utils } from '@simplio/backend/utils';
 
 @Component({
@@ -113,7 +113,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
     private modalCtrl: ModalController,
     private coinsService: CoinsService,
     private settingsProvider: SettingsProvider,
-    private backendService: BackendService,
+    private blockchainService: BlockchainService,
   ) {
     this.unsignedTransaction = this.dataService.unsignedTransaction;
     this.unsignedTransaction.keepAlive = true;
@@ -423,7 +423,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
         return rej(new Error('Missing values'));
       }
 
-      const isValid = await this.backendService.validateAddress({
+      const isValid = await this.blockchainService.validateAddress({
         ticker: this.unsignedTransaction.wallet.ticker,
         type: this.unsignedTransaction.wallet.type,
         address,
@@ -532,7 +532,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
   private async _broadcast() {
     await this.presentLoading(this.$.SENDING);
     this.broadcasting = true;
-    return this.backendService
+    return this.blockchainService
       .createTransaction({
         _uuid: this.unsignedTransaction.wallet._uuid,
         seeds: this.unsignedTransaction.mnemo,
@@ -610,7 +610,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
     const { idt } = this.authProvider.accountValue;
 
     if (Utils.isSolanaToken(this.wallet.type)) {
-      const minimumRent = await this.backendService.solana.getMinimumRentExemption({
+      const minimumRent = await this.blockchainService.solana.getMinimumRentExemption({
         api: wallet.api,
       });
 
@@ -660,7 +660,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
                 this.disableSend = true;
                 await this.presentLoading(this.$.INITIALIZING_TOKEN);
                 try {
-                  await this.backendService.solana.createTokenAddress({
+                  await this.blockchainService.solana.createTokenAddress({
                     address: address,
                     api: wallet.api,
                     contractAddress: wallet.contractaddress,
@@ -681,7 +681,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
       });
       await alert.present();
     } else {
-      const minimumRent = await this.backendService.safecoin.getMinimumRentExemption({
+      const minimumRent = await this.blockchainService.safecoin.getMinimumRentExemption({
         api: wallet.api,
       });
 
@@ -728,7 +728,7 @@ export class SendAddressPage implements OnInit, OnDestroy {
                 this.disableSend = true;
                 await this.presentLoading(this.$.INITIALIZING_TOKEN);
                 try {
-                  await this.backendService.safecoin.createTokenAddress({
+                  await this.blockchainService.safecoin.createTokenAddress({
                     address: address,
                     api: wallet.api,
                     contractAddress: wallet.contractaddress,

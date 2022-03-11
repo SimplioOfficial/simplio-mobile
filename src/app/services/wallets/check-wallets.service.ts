@@ -16,6 +16,7 @@ import {
 import { IoService } from '../io.service';
 import { isToken, UtilsService } from '../utils.service';
 import Bottleneck from 'bottleneck';
+import { BlockchainService } from '../apiv2/blockchain/blockchain.service';
 
 type CheckTransactionData = {
   wallets: Wallet[];
@@ -30,6 +31,7 @@ export class CheckWalletsService {
     private tx: TransactionsService,
     private txs: TransactionsProvider,
     private authProvider: AuthenticationProvider,
+    private blockchainService: BlockchainService,
     private io: IoService,
   ) {
     this._isChecking.next(false);
@@ -50,7 +52,8 @@ export class CheckWalletsService {
       if (!!acc) {
         const wallets = this.io.getWallets(acc.uid);
         const self = this;
-        this.tx.subscribleSolChange(wallets, (accountInfo, address) => {
+        const explorer = this.blockchainService.getSolExplorer({ important: true });
+        this.tx.subscribleSolChange(wallets, explorer.ws, (accountInfo, address) => {
           const w = wallets.filter(e => e.mainAddress === address);
           if (!!w.length) {
             self.checkTransactionsAll({

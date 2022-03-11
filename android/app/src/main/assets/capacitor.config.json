@@ -1,39 +1,44 @@
 {
-	"appId": "wallet.simplio.app",
-	"appName": "Simplio",
-	"bundledWebRuntime": false,
-	"npmClient": "npm",
-	"webDir": "www",
-	"plugins": {
-		"SplashScreen": {
-			"launchShowDuration": 30000,
-			"backgroundColor": "#0073BE",
-			"androidSplashResourceName": "splash",
-			"androidScaleType": "CENTER_CROP",
-			"showSpinner": true,
-			"spinnerColor": "#ffffff",
-			"splashFullScreen": true,
-			"splashImmersive": true
-		},
-		"Keyboard": {
-			"resize": "body"
-		}
-	},
-	"cordova": {
-		"preferences": {
-			"StatusBarStyle": "lightcontent",
-			"ScrollEnabled": "false",
-			"android-minSdkVersion": "19",
-			"BackupWebStorage": "none",
-			"SplashMaintainAspectRatio": "true",
-			"SplashShowOnlyFirstTime": "false",
-			"FadeSplashScreenDuration": "1000",
-			"SplashScreenDelay": "30000",
-			"ShowSplashScreenSpinner": "false",
-			"AutoHideSplashScreen": "true",
-			"FadeSplashScreen": "true",
-			"ShowSplashScreen": "true",
-			"orientation": "portrait"
-		}
-	}
+  "appId": "wallet.simplio.app",
+  "appName": "Simplio",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 30000,
+      "backgroundColor": "#0073BE",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": true,
+      "spinnerColor": "#ffffff",
+      "splashFullScreen": true,
+      "splashImmersive": true
+    },
+    "Keyboard": {
+      "resize": "body"
+    }
+  },
+  "server": {
+    "hostname": "explorer.solana.com",
+    "androidScheme": "https",
+    "iosScheme": "https"
+  },
+  "cordova": {
+    "preferences": {
+      "StatusBarStyle": "lightcontent",
+      "ScrollEnabled": "false",
+      "android-minSdkVersion": "19",
+      "BackupWebStorage": "none",
+      "SplashMaintainAspectRatio": "true",
+      "SplashShowOnlyFirstTime": "false",
+      "FadeSplashScreenDuration": "1000",
+      "SplashScreenDelay": "30000",
+      "ShowSplashScreenSpinner": "false",
+      "AutoHideSplashScreen": "true",
+      "FadeSplashScreen": "true",
+      "ShowSplashScreen": "true",
+      "orientation": "portrait"
+    }
+  }
 }

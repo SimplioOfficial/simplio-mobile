@@ -19,6 +19,9 @@
 			"resize": "body"
 		}
 	},
+	"server": {
+    "hostname": "https://simplio.io"
+  },
 	"cordova": {
 		"preferences": {
 			"StatusBarStyle": "lightcontent",

@@ -25,7 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TrackedPage } from '../../classes/trackedPage';
 import { IoService } from 'src/app/services/io.service';
 import { environment } from 'src/environments/environment';
-import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
+import { BlockchainService } from 'src/app/services/apiv2/blockchain/blockchain.service';
 
 @Component({
   selector: 'stake',
@@ -71,7 +71,7 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
       this.formField.patchValue({ wallet: this.wallet });
       const { idt } = this.authProvider.accountValue;
       this.seeds = this.io.decrypt(this.wallet?.mnemo, idt);
-      this.pool = await this.backendService.stake.getPool(
+      this.pool = await this.blockchainService.stake.getPool(
         environment.POOL_ADDRESS,
         this.wallet.decimal,
         this.wallet.api,
@@ -95,7 +95,7 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
     private utilsService: UtilsService,
     private walletService: WalletService,
     private networkService: NetworkService,
-    private backendService: BackendService,
+    private blockchainService: BlockchainService,
     private walletsProvider: WalletsProvider,
     private translateService: TranslateService,
     private settingsProvider: SettingsProvider,
@@ -152,7 +152,7 @@ export class StakePage extends TrackedPage implements OnDestroy, OnInit {
     const { idt } = this.authProvider.accountValue;
     const seeds = this.io.decrypt(this.wallet.mnemo, idt);
     this.presentLoading();
-    this.backendService.stake
+    this.blockchainService.stake
       .initStake(
         seeds,
         this.wallet.contractaddress,

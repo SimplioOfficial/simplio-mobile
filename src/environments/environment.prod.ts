@@ -24,5 +24,6 @@ export const environment = {
   SWIPELUX: 'https://jvm.api.aws-stage.swipelux.com/api',
   CUSTOM_CONTENT: {
     SWIPELUX: false,
+    STAKING: false,
   },
 };

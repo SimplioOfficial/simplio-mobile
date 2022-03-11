@@ -76,11 +76,6 @@ export class CardError extends CodeError<CardErrorCode> {
       'warning',
     ]);
 
-    this._options.set('NO_SUCH_CARD', [
-      this.$.instant(this.$.NO_SUCH_CARD_IN_THE_DATABASE),
-      'warning',
-    ]);
-
     this._init(this.httpError);
   }
 }

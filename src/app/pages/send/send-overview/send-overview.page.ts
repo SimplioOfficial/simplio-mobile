@@ -11,7 +11,7 @@ import { CheckWalletsService } from 'src/app/services/wallets/check-wallets.serv
 import { RateService } from 'src/app/services/apiv2/connection/rate.service';
 import { IoService } from 'src/app/services/io.service';
 import { SettingsProvider } from 'src/app/providers/data/settings.provider';
-import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
+import { BlockchainService } from 'src/app/services/apiv2/blockchain/blockchain.service';
 
 @Component({
   selector: 'app-send-overview',
@@ -35,7 +35,7 @@ export class SendOverviewPage implements OnInit {
     private checker: CheckWalletsService,
     private io: IoService,
     public $: Translate,
-    private backendService: BackendService,
+    private blockchainService: BlockchainService,
   ) {}
 
   ngOnInit() {
@@ -94,7 +94,7 @@ export class SendOverviewPage implements OnInit {
 
   broadcast() {
     this.disabledBroadcast = true;
-    this.backendService
+    this.blockchainService
       .createTransaction({
         _uuid: this.sendData.wallet._uuid,
         seeds: this.sendData.mnemo,
@@ -115,7 +115,7 @@ export class SendOverviewPage implements OnInit {
         lasttx: this.sendData.wallet.lasttx,
         api: this.sendData.wallet.api,
         feeContractAddress: 'BVe7rDXoCm6UhWh1P5mTnVZAnov6MFxGzykqNmhLB7HH',
-        addressType: this.sendData.wallet.addressType
+        addressType: this.sendData.wallet.addressType,
       })
       .then(res => {
         this.check(this.sendData.wallet);

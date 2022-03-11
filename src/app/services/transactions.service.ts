@@ -116,16 +116,16 @@ export class TransactionsService {
     this.transactionProvider.pushTransactions(null);
   } // this.utilsService.grantCameraPermission(onSuccess, onError);
 
-  subscribleSolChange(wallets: Wallet[], callback) {
+  subscribleSolChange(wallets: Wallet[], ws: string, callback) {
     const sol = wallets.find(e => e.ticker === coinNames.SOL && e.type === WalletType.SOLANA);
     if (!!sol) {
-      this.txsolana.subscribleChange(sol.mainAddress, false, callback);
+      this.txsolana.subscribleChange(sol.mainAddress, ws, false, callback);
     }
     const solDev = wallets.find(
       e => e.ticker === coinNames.SOLD && e.type === WalletType.SOLANA_DEV,
     );
     if (!!solDev) {
-      this.txsolana.subscribleChange(solDev.mainAddress, true, callback);
+      this.txsolana.subscribleChange(solDev.mainAddress, ws, true, callback);
     }
   }
 }

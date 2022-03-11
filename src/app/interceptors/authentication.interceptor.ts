@@ -6,7 +6,7 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, Observable, throwError } from '@polkadot/x-rxjs';
+import { BehaviorSubject, EMPTY, from, Observable, throwError } from '@polkadot/x-rxjs';
 import { catchError, filter, switchMap, take, tap } from 'rxjs/operators';
 import { Acc } from 'src/app/interface/user';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
@@ -28,6 +28,11 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const acc = this.authProvider.accountValue;
     if (!acc) return next.handle(req);
+
+    if (req.urlWithParams.indexOf('swipelux') > -1 && !environment.CUSTOM_CONTENT.SWIPELUX) {
+      console.log('Disabled swipelux content');
+      return EMPTY;
+    }
 
     // requests to swipelux needs to be authorized with different token
     if (req.url.includes(environment.SWIPELUX)) {

@@ -4,13 +4,16 @@ import * as safecoinWeb3 from '@safecoin/web3.js';
 import { environment } from 'src/environments/environment';
 import { NetworkService } from '../connection/network.service';
 import { mnemonicToSeedSync } from 'bip39';
-import { BackendService } from '../blockchain/backend.service';
+import { BlockchainService } from '../blockchain/blockchain.service';
 import { AddressType } from '@simplio/backend/interface/data';
 @Injectable({
   providedIn: 'root',
 })
 export class BalSafecoinService extends BalBase {
-  constructor(private backendService: BackendService, private networkService: NetworkService) {
+  constructor(
+    private blockchainService: BlockchainService,
+    private networkService: NetworkService,
+  ) {
     super('Balweb3Service');
   }
 
@@ -26,7 +29,7 @@ export class BalSafecoinService extends BalBase {
     important?: boolean;
   }): Promise<number> {
     const publickey = new safecoinWeb3.PublicKey(data.address);
-    const connection = this.backendService.safecoin.getConnection(data);
+    const connection = this.blockchainService.safecoin.getConnection(data);
     return connection
       .getBalance(publickey)
       .then(bal => bal)
@@ -57,8 +60,8 @@ export class BalSafecoinService extends BalBase {
     important?: boolean;
     addressType: AddressType;
   }): Promise<number> {
-    const connection = this.backendService.safecoin.getConnection(data);
-    const publickey = await this.backendService.safecoin.getAddress({
+    const connection = this.blockchainService.safecoin.getConnection(data);
+    const publickey = await this.blockchainService.safecoin.getAddress({
       mnemo: data.seeds,
     });
     const myMint = new safecoinWeb3.PublicKey(data.contractAddress);

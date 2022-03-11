@@ -18,7 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { coinNames } from '@simplio/backend/api/utils/coins';
 import { CheckWalletsService } from 'src/app/services/wallets/check-wallets.service';
 import { TrackedPage } from '../../classes/trackedPage';
-import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
+import { BlockchainService } from 'src/app/services/apiv2/blockchain/blockchain.service';
 import { Utils } from '@simplio/backend/utils';
 
 @Component({
@@ -65,7 +65,7 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
     private dataService: DataService,
     private modalCtrl: ModalController,
     private io: IoService,
-    private backendService: BackendService,
+    private blockchainService: BlockchainService,
     private navCtrl: NavController,
     private translateService: TranslateService,
     private checker: CheckWalletsService,
@@ -148,7 +148,7 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
 
   async presentCreateTokenAccountPrompt() {
     if (UtilsService.isSolanaToken(this.wallet.type)) {
-      const minimumRent = await this.backendService.solana.getMinimumRentExemption({
+      const minimumRent = await this.blockchainService.solana.getMinimumRentExemption({
         api: this.wallet.api,
       });
       const alertMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_FEE);
@@ -198,7 +198,7 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
                 );
               }
               await this.presentLoading(this.$.INITIALIZING_TOKEN);
-              this.backendService.solana
+              this.blockchainService.solana
                 .createTokenAddress({
                   address: this.wallet.mainAddress,
                   api: this.wallet.api,
@@ -228,7 +228,7 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
       });
       await alert.present();
     } else {
-      const minimumRent = await this.backendService.safecoin.getMinimumRentExemption({
+      const minimumRent = await this.blockchainService.safecoin.getMinimumRentExemption({
         api: this.wallet.api,
       });
       const alertMsg = this.instant(this.$.CREATE_NEW_SAFE_TOKEN_ACCOUNT_FEE);
@@ -275,7 +275,7 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
                 );
               }
               await this.presentLoading(this.$.INITIALIZING_TOKEN);
-              this.backendService.safecoin
+              this.blockchainService.safecoin
                 .createTokenAddress({
                   address: this.wallet.mainAddress,
                   api: this.wallet.api,

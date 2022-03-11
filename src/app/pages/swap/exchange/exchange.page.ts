@@ -81,6 +81,8 @@ type RouteData = {
   styleUrls: ['./exchange.page.scss'],
 })
 export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
+  disabledSwapPair = false;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -695,6 +697,7 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
           ),
         });
       })
+      .then(() => this.checkDisabledSwapPair())
       .catch((err: Error) => this.utilsService.showToast(err.message, 1500, 'warning'));
   }
 
@@ -735,9 +738,12 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
   onAmountChange(value: number) {
     this._feeEstimated = undefined;
     this.valueComponent.updateInputValue(value);
+
+    this.checkDisabledSwapPair();
   }
 
   async onMaxClick(_event) {
+    this.checkDisabledSwapPair();
     if (!this.isMax) {
       this.isMax = true;
       await this.presentLoading(this.$.CALCULATING);
@@ -1027,5 +1033,25 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     this.formField.patchValue({ feeWallet: mainWallet });
+  }
+
+  checkDisabledSwapPair() {
+    const disabledPairs: { from: string; to: string }[] = [{ from: 'BUSD', to: 'BNB' }];
+
+    const result = disabledPairs.some(
+      pair =>
+        (pair.from === this.sourceWallet.ticker || pair.to === this.sourceWallet.ticker) &&
+        (pair.from === this.destinationWallet.ticker || pair.to === this.destinationWallet.ticker),
+    );
+
+    if (result) {
+      this.utilsService.showToast(
+        'This swap pair is temporary disabled. Please try it again later.',
+        3000,
+        'warning',
+      );
+    }
+
+    this.disabledSwapPair = result;
   }
 }

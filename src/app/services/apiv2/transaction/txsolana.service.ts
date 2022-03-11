@@ -4,10 +4,12 @@ import * as solanaWeb3 from '@solana/web3.js';
 import { TransactionData, TransactionDataResponse } from '../../transactions.service';
 import { Transaction, TransactionAPI, TxType } from 'src/app/interface/data';
 import { NetworkService } from '../connection/network.service';
-import { BackendService } from '../blockchain/backend.service';
+import { BlockchainService } from '../blockchain/blockchain.service';
 // import WebSocket from 'ws';
 
 // import WebSocket from 'ws';
+// import { Client } from 'rpc-websockets';
+// import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 @Injectable({
   providedIn: 'root',
@@ -16,43 +18,38 @@ export class TxsolanaService extends TxBase {
   listSubscribe = [];
   connection: solanaWeb3.Connection;
   connectionDev: solanaWeb3.Connection;
-  constructor(private backendService: BackendService, private networkService: NetworkService) {
+  constructor(
+    private blockchainService: BlockchainService,
+    private networkService: NetworkService,
+  ) {
     super('TxSolana');
-    this.connection = this.backendService.solana.getConnection({
+    this.connection = this.blockchainService.solana.getConnection({
       api: solanaWeb3.clusterApiUrl('mainnet-beta'),
     });
-    this.connectionDev = this.backendService.solana.getConnection({
+    this.connectionDev = this.blockchainService.solana.getConnection({
       api: solanaWeb3.clusterApiUrl('devnet'),
     });
   }
 
   init() {}
 
-  subscribleChange(address, isDev, callback) {
+  subscribleChange(address, ws, isDev, callback) {
     let apiEndpoint;
     if (!isDev) {
-      apiEndpoint = 'ws://api.mainnet-beta.solana.com';
+      apiEndpoint = ws;
     } else {
-      apiEndpoint = 'ws://api.devnet.solana.com';
+      apiEndpoint = 'wss://api.devnet.solana.com';
     }
     if (!this.listSubscribe[apiEndpoint]) {
       this.listSubscribe[apiEndpoint] = true;
       this.wsSubscribe(apiEndpoint, address, 'confirmed', callback);
-      // if(!isDev){
-      //   this.connection.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
-      //     callback(accountInfo, address);
-      //   })
-      // } else {
-      //   this.connectionDev.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
-      //     callback(accountInfo, address);
-      //   })
-      // }
     }
   }
 
   async wsSubscribe(endpoint: string, address: string, commitment, callback) {
-    const ws = new WebSocket(endpoint);
     let timer;
+
+    const ws = new WebSocket(endpoint);
     ws.onopen = () => {
       console.log(Date.now(), `Web socket opened to ${endpoint}`);
       timer = setInterval(() => {
@@ -126,8 +123,8 @@ export class TxsolanaService extends TxBase {
       }
 
       try {
-        const apiUrl = this.backendService.getSolApi(data);
-        const connection = this.backendService.solana.getConnection({ api: apiUrl });
+        const apiUrl = this.blockchainService.getSolApi(data);
+        const connection = this.blockchainService.solana.getConnection({ api: apiUrl });
         // const myMint = new solanaWeb3.PublicKey(data.tokenId);
         const address = new solanaWeb3.PublicKey(data.address);
         const txs = [];
@@ -161,8 +158,8 @@ export class TxsolanaService extends TxBase {
     important?: boolean;
   }): Promise<any[]> {
     const publickey = new solanaWeb3.PublicKey(data.address);
-    const apiUrl = this.backendService.getSolApi(data);
-    const connection = this.backendService.solana.getConnection({ api: apiUrl });
+    const apiUrl = this.blockchainService.getSolApi(data);
+    const connection = this.blockchainService.solana.getConnection({ api: apiUrl });
     return connection
       .getConfirmedSignaturesForAddress2(publickey, { limit: 20 }, 'confirmed')
       .then(txs => {
@@ -317,8 +314,8 @@ export class TxsolanaService extends TxBase {
             );
             all = all.flat();
             all = all.map(t => t.signature);
-            const apiUrl = this.backendService.getSolApi({ api: res[0].txData.api });
-            const connection = this.backendService.solana.getConnection({ api: apiUrl });
+            const apiUrl = this.blockchainService.getSolApi({ api: res[0].txData.api });
+            const connection = this.blockchainService.solana.getConnection({ api: apiUrl });
             const confirmedTransactions = await connection.getParsedConfirmedTransactions(all);
 
             res.forEach(async solanaTxs => {
@@ -368,8 +365,8 @@ export class TxsolanaService extends TxBase {
       setTimeout(async () => {
         try {
           let txs: Transaction[] = [];
-          const apiUrl = this.backendService.getSolApi(data);
-          const connection = this.backendService.solana.getConnection({ api: apiUrl });
+          const apiUrl = this.blockchainService.getSolApi(data);
+          const connection = this.blockchainService.solana.getConnection({ api: apiUrl });
           const signatures = data.txs.solanaTxs.map(t => t.signature);
           let confirmedTransactions = await connection.getParsedConfirmedTransactions(signatures);
           confirmedTransactions = confirmedTransactions.filter(e => !!e);
@@ -477,8 +474,8 @@ export class TxsolanaService extends TxBase {
       setTimeout(async () => {
         try {
           const txs: Transaction[] = [];
-          const apiUrl = this.backendService.getSolApi(data);
-          const connection = this.backendService.solana.getConnection({ api: apiUrl });
+          const apiUrl = this.blockchainService.getSolApi(data);
+          const connection = this.blockchainService.solana.getConnection({ api: apiUrl });
           const signatures = data.txs.solanaTxs.map(t => t.signature);
           const confirmedTransactions = await connection.getParsedConfirmedTransactions(signatures);
           confirmedTransactions.forEach(tx => {

@@ -5,7 +5,7 @@ import { Explorer, ExplorerType } from 'src/app/interface/explorer';
 import { environment } from 'src/environments/environment';
 import { TransactionData, TransactionDataResponse } from '../../transactions.service';
 import { UtilsService } from '../../utils.service';
-import { BackendService } from '../blockchain/backend.service';
+import { BlockchainService } from '../blockchain/blockchain.service';
 import { NetworkService } from '../connection/network.service';
 import { TxBase } from './txbase';
 
@@ -13,7 +13,10 @@ import { TxBase } from './txbase';
   providedIn: 'root',
 })
 export class Txweb3Service extends TxBase {
-  constructor(private networkService: NetworkService, private backendService: BackendService) {
+  constructor(
+    private networkService: NetworkService,
+    private blockchainService: BlockchainService,
+  ) {
     super('Txweb3Service');
   }
 
@@ -26,7 +29,7 @@ export class Txweb3Service extends TxBase {
   }): Promise<TransactionDataResponse> {
     // return new Promise((resolve, reject) => {
     try {
-      const lastBlock = await this.backendService.getLastWeb3Block(data.walletUnit.type);
+      const lastBlock = await this.blockchainService.getLastWeb3Block(data.walletUnit.type);
       let url = data.explorers[0].api_transaction
         .replace('<address>', data.walletUnit.addresses[0])
         .replace('<start>', '0')
@@ -60,7 +63,7 @@ export class Txweb3Service extends TxBase {
           };
         })
         .catch(err => {
-            throw new Error(data.walletUnit._uuid + '/001');
+          throw new Error(data.walletUnit._uuid + '/001');
         });
     } catch (_) {
       throw new Error(data.walletUnit._uuid + '/001');
@@ -74,7 +77,7 @@ export class Txweb3Service extends TxBase {
   }): Promise<TransactionDataResponse[]> {
     // return new Promise((resolve, reject) => {
     try {
-      const lastBlock = await this.backendService.getLastWeb3Block(data.walletUnits[0].type);
+      const lastBlock = await this.blockchainService.getLastWeb3Block(data.walletUnits[0].type);
       // const startBlock = lastBlock - 6500 * 30; // scan the last 30 days
       const startBlock = Math.min(...data.walletUnits.map(e => e.lastBlock));
       // const startBlock = 0;
@@ -116,7 +119,7 @@ export class Txweb3Service extends TxBase {
           return txResponse;
         })
         .catch(err => {
-            throw new Error('Get multiple transaction error' + '/003');
+          throw new Error('Get multiple transaction error' + '/003');
         });
     } catch (_) {
       throw new Error('Get multiple transaction error' + '/003');

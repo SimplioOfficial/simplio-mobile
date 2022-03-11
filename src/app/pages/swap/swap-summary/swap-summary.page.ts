@@ -39,7 +39,7 @@ import { Feev2Service } from '../../../services/apiv2/connection/feev2.service';
 import { SettingsProvider } from '../../../providers/data/settings.provider';
 import { TxcoinService } from '../../../services/apiv2/transaction/txcoin.service';
 import { NetworkService } from '../../../services/apiv2/connection/network.service';
-import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
+import { BlockchainService } from 'src/app/services/apiv2/blockchain/blockchain.service';
 
 @Component({
   selector: 'swap-summary-page',
@@ -83,7 +83,7 @@ export class SwapSummaryPage implements OnInit, OnDestroy {
     private walletsProvider: WalletsProvider,
     private alertController: AlertController,
     private settingsProvider: SettingsProvider,
-    private backendService: BackendService,
+    private blockchainService: BlockchainService,
     private mfa: MultiFactorAuthenticationService,
     public $: Translate,
   ) {
@@ -493,7 +493,7 @@ export class SwapSummaryPage implements OnInit, OnDestroy {
       loading.message = this.ts.instant(this.$.INITIATING_SWAP);
       const { type: wType } = this.swapTx.source.wallet;
 
-      const txid = await this.backendService.createTransaction({
+      const txid = await this.blockchainService.createTransaction({
         _uuid: this.swapTx.source.wallet._uuid,
         seeds: this.swapTx.source.mnemo,
         explorer: this.swapTx.source.explorer,

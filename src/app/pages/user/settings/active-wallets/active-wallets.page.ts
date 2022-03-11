@@ -21,8 +21,7 @@ const isLockedWallet = isLocked(Object.values(defaultWallets));
 export class ActiveWalletsPage {
   wallets$: Observable<Wallet[]> = this.walletsProvider.allWallets$.pipe(
     tap(wallets => {
-      this.isLockedWalletArr = [];
-      wallets.forEach(w => this.isLockedWalletArr.push(this.isLocked(w)));
+      this.isLockedWalletArr = wallets.map(w => this.isLocked(w));
 
       this.canLockDefaultWallet =
         this.isLockedWalletArr

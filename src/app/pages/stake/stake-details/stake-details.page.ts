@@ -16,7 +16,7 @@ import { parseError, UtilsService } from 'src/app/services/utils.service';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { IoService } from 'src/app/services/io.service';
 import { TranslateService } from '@ngx-translate/core';
-import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
+import { BlockchainService } from 'src/app/services/apiv2/blockchain/blockchain.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -38,7 +38,7 @@ export class StakeDetailsPage extends TrackedPage implements OnInit {
     private io: IoService,
     private loadingController: LoadingController,
     private translateService: TranslateService,
-    private backendService: BackendService,
+    private blockchainService: BlockchainService,
   ) {
     super();
   }
@@ -171,7 +171,7 @@ export class StakeDetailsPage extends TrackedPage implements OnInit {
     const { idt } = this.authProvider.accountValue;
     const seeds = this.io.decrypt(this.wallet.mnemo, idt);
     await this._presentLoading(this.$.CANCELLING_STAKE);
-    this.backendService.stake
+    this.blockchainService.stake
       .cancel(seeds, this.stake.stakingAccount, environment.PROGRAM_ID, this.wallet.api)
       .then(async _ => {
         await this._closeLoading();
@@ -188,7 +188,7 @@ export class StakeDetailsPage extends TrackedPage implements OnInit {
     const { idt } = this.authProvider.accountValue;
     const seeds = this.io.decrypt(this.wallet.mnemo, idt);
     await this._presentLoading(this.$.ACTION_HARVESTING);
-    this.backendService.stake
+    this.blockchainService.stake
       .withdrawInterest(
         seeds,
         this.stake.stakingAccount,

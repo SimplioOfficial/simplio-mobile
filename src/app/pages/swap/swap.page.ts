@@ -25,7 +25,7 @@ import { TransactionsProvider } from '../../providers/data/transactions.provider
 import { SwipeluxService } from '../../services/swipelux/swipelux.service';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { Transaction, TxType, Wallet, WalletType } from 'src/app/interface/data';
-import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
+import { BlockchainService } from 'src/app/services/apiv2/blockchain/blockchain.service';
 import { environment } from 'src/environments/environment';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { IoService } from 'src/app/services/io.service';
@@ -53,6 +53,7 @@ const DEFAULTS = {
 })
 export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   useSwipelux = environment.CUSTOM_CONTENT.SWIPELUX;
+  useStaking = environment.CUSTOM_CONTENT.STAKING;
 
   private get _nextPage(): number {
     return this.currentPage + 1;
@@ -71,7 +72,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     private utils: UtilsService,
     private plt: PlatformProvider,
     private authService: AuthenticationService,
-    private backendService: BackendService,
+    private blockchainService: BlockchainService,
     private authProvider: AuthenticationProvider,
     private io: IoService,
     private networkService: NetworkService,
@@ -319,40 +320,42 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
 
         return transactions;
       } else {
-        return null;
+        return [];
       }
     } catch (err) {
       console.error(err);
-      return null;
+      return [];
     }
   }
 
   private async _getStaking(idt: string, wallet) {
     const seeds = this.io.decrypt(wallet.mnemo, idt);
-    return this.backendService.stake.getAllStaking(seeds, environment.PROGRAM_ID, wallet.api);
+    return this.blockchainService.stake.getAllStaking(seeds, environment.PROGRAM_ID, wallet.api);
   }
 
   private async _fetchStaking() {
     try {
-      if (!this.isGettingStake) {
-        this.isGettingStake = true;
-        const { idt } = this.authProvider.accountValue;
-        const promisesToMake = [];
-        this.stakingWalletList.forEach(element => {
-          const wallet = this.wallets.find(
-            e => e.ticker === element.name && e.type === element.type,
-          );
-          if (!!wallet) {
-            promisesToMake.push(this._getStaking(idt, wallet));
-          }
-        });
-        return Promise.all(promisesToMake).then((res: Stake[]) => {
-          const flat = res.flat().sort((a, b) => a.lastPayment - b.lastPayment);
-          this.isGettingStake = false;
-          this._stakingList.next(flat);
-          return flat;
-        });
-      }
+      // @TODO temprary disable staking
+      // if (!this.isGettingStake) {
+      //   this.isGettingStake = true;
+      //   const { idt } = this.authProvider.accountValue;
+      //   const promisesToMake = [];
+      //   this.stakingWalletList.forEach(element => {
+      //     const wallet = this.wallets.find(
+      //       e => e.ticker === element.name && e.type === element.type,
+      //     );
+      //     if (!!wallet) {
+      //       promisesToMake.push(this._getStaking(idt, wallet));
+      //     }
+      //   });
+      //   return Promise.all(promisesToMake).then((res: Stake[]) => {
+      //     const flat = res.flat().sort((a, b) => a.lastPayment - b.lastPayment);
+      //     this.isGettingStake = false;
+      //     this._stakingList.next(flat);
+      //     return flat;
+      //   });
+      // }
+      return [];
     } catch (err) {
       console.error(err);
       throw new Error(err);
@@ -390,7 +393,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       this.useSwipelux
         ? this._fetchTransactionHistory({ pageNumber: this._nextPage, clean })
         : of([]).toPromise(),
-      this._fetchStaking(),
+      this.useStaking ? this._fetchStaking() : of([]).toPromise(),
       this._getPoolsInfo(),
     ]);
   }
@@ -481,5 +484,9 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
         pool: this.poolsInfo.find(e => e.mintAddress === w.contractaddress),
       },
     });
+  }
+
+  segmentChanged() {
+    console.log(487, 'segment changed');
   }
 }
