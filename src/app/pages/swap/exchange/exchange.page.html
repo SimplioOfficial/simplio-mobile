@@ -50,7 +50,7 @@
             color=""
             expand="block"
             mode="ios"
-            [disabled]="isPending || !formField.valid"
+            [disabled]="isPending || !formField.valid || disabledSwapPair"
             (click)="onSubmit()"
             >{{ $.NEXT | translate }}</ion-button
           >
