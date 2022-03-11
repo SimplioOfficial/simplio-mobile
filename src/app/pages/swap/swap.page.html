@@ -118,7 +118,7 @@
       </ion-grid>
       <!-- Purchase tab   -->
       <ion-grid *ngSwitchCase="'purchases'">
-        <ng-container *ngIf="useSwipelux">
+        <ng-container *ngIf="useSwipelux; else comingSoon">
           <section class="history tab-container" *ngIf="purchases$ | async as purchases">
             <header class="section-header">
               <p class="section-title">{{ $.HISTORY | translate }}</p>
@@ -131,27 +131,25 @@
               (click)="openPurchaseDetail(purchase)"
             ></sio-purchase-item> </section
         ></ng-container>
-
-        <section *ngIf="!useSwipelux" class="empty__transactions">
-          <ion-chip color="primary">Coming soon...</ion-chip></section
-        >
       </ion-grid>
       <!-- Staking tab   -->
       <ion-grid *ngSwitchCase="'staking'">
-        <ng-container *ngIf="stakingWalletList$ | async as stakingList">
-          <section class="tab-container">
-            <sio-stake-item
-              *ngFor="let s of stakingList"
-              [wallet]="walletInfo(s.contractAddress)"
-              [staked]="s.amount"
-              [earned]="calculateEarn(s, walletInfo(s.contractAddress))"
-              (click)="openStakeDetails(s, walletInfo(s.contractAddress))"
-            >
-              <!-- <sio-embeded-chart [dataset]="[130, 180, 218, 190, 300, 330, 580, 618, 290, 300, 130]">
+        <ng-container *ngIf="useStaking; else comingSoon">
+          <ng-container *ngIf="stakingWalletList$ | async as stakingList">
+            <section class="tab-container">
+              <sio-stake-item
+                *ngFor="let s of stakingList"
+                [wallet]="walletInfo(s.contractAddress)"
+                [staked]="s.amount"
+                [earned]="calculateEarn(s, walletInfo(s.contractAddress))"
+                (click)="openStakeDetails(s, walletInfo(s.contractAddress))"
+              >
+                <!-- <sio-embeded-chart [dataset]="[130, 180, 218, 190, 300, 330, 580, 618, 290, 300, 130]">
             </sio-embeded-chart> -->
-            </sio-stake-item>
-          </section>
-        </ng-container>
+              </sio-stake-item>
+            </section>
+          </ng-container></ng-container
+        >
       </ion-grid>
     </div>
   </ng-container>
@@ -179,5 +177,11 @@
 <ng-template #initLoadingRef>
   <section class="loading">
     <sio-spinner></sio-spinner>
+  </section>
+</ng-template>
+
+<ng-template #comingSoon>
+  <section class="empty__transactions">
+    <ion-chip color="primary">Coming soon...</ion-chip>
   </section>
 </ng-template>

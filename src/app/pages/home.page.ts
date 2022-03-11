@@ -101,7 +101,9 @@ export class HomePage extends TrackedPage implements OnInit {
         this._navigateStake('home', 'stake');
       },
     },
-  ].filter(a => a.id !== 'purchase' || environment.CUSTOM_CONTENT.SWIPELUX);
+  ]
+    .filter(a => a.id !== 'purchase' || environment.CUSTOM_CONTENT.SWIPELUX)
+    .filter(a => a.id !== 'staking' || environment.CUSTOM_CONTENT.STAKING);
 
   tapbarVisibility$ = this.settingsProvider.tapbarVisibility$;
 
@@ -248,7 +250,8 @@ export class HomePage extends TrackedPage implements OnInit {
     this.coinsService.init();
     this.routerOutlet.swipeGesture = false; // disable swiping back
 
-    this.kycService.getVerificationsRecords();
+    // tslint:disable-next-line:no-unused-expression
+    environment.CUSTOM_CONTENT.SWIPELUX ? this.kycService.getVerificationsRecords() : null;
   }
 
   private async _presentPreparingSwap() {

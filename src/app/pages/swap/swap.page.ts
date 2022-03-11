@@ -53,6 +53,7 @@ const DEFAULTS = {
 })
 export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   useSwipelux = environment.CUSTOM_CONTENT.SWIPELUX;
+  useStaking = environment.CUSTOM_CONTENT.STAKING;
 
   private get _nextPage(): number {
     return this.currentPage + 1;
@@ -392,7 +393,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       this.useSwipelux
         ? this._fetchTransactionHistory({ pageNumber: this._nextPage, clean })
         : of([]).toPromise(),
-      this._fetchStaking(),
+      this.useStaking ? this._fetchStaking() : of([]).toPromise(),
       this._getPoolsInfo(),
     ]);
   }
