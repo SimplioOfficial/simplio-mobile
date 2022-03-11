@@ -31,7 +31,7 @@ import { RateService } from 'src/app/services/apiv2/connection/rate.service';
 import { TransactionsProvider } from 'src/app/providers/data/transactions.provider';
 import { IoService } from 'src/app/services/io.service';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
-import { BackendService } from 'src/app/services/apiv2/blockchain/backend.service';
+import { BlockchainService } from 'src/app/services/apiv2/blockchain/blockchain.service';
 import { TrackedPage } from '../../../classes/trackedPage';
 import { SioPageComponent } from '../../../components/layout/sio-page/sio-page.component';
 
@@ -161,7 +161,7 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
     private checker: CheckWalletsService,
     private transactionProvider: TransactionsProvider,
     private io: IoService,
-    private backendService: BackendService,
+    private blockchainService: BlockchainService,
     private navCtrl: NavController,
     private animCtrl: AnimationController,
     private authProvider: AuthenticationProvider,
@@ -453,7 +453,7 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
 
   async presentCreateTokenAccountPrompt() {
     if (UtilsService.isSolanaToken(this._wallet.type)) {
-      const minimumRent = await this.backendService.solana.getMinimumRentExemption({
+      const minimumRent = await this.blockchainService.solana.getMinimumRentExemption({
         api: this._wallet.api,
       });
       const alertMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_FEE);
@@ -503,7 +503,7 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
                 );
               }
               await this.presentLoading(this.$.INITIALIZING_TOKEN);
-              this.backendService.solana
+              this.blockchainService.solana
                 .createTokenAddress({
                   address: this._wallet.mainAddress,
                   api: this._wallet.api,
@@ -532,7 +532,7 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
       });
       await alert.present();
     } else {
-      const minimumRent = await this.backendService.safecoin.getMinimumRentExemption({
+      const minimumRent = await this.blockchainService.safecoin.getMinimumRentExemption({
         api: this._wallet.api,
       });
       const alertMsg = this.instant(this.$.CREATE_NEW_SAFE_TOKEN_ACCOUNT_FEE);
@@ -579,7 +579,7 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
                 );
               }
               await this.presentLoading(this.$.INITIALIZING_TOKEN);
-              this.backendService.safecoin
+              this.blockchainService.safecoin
                 .createTokenAddress({
                   address: this._wallet.mainAddress,
                   api: this._wallet.api,

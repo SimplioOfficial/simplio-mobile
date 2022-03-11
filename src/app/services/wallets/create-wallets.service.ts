@@ -11,7 +11,7 @@ import { getCoinDerive } from '../apiv2/utils';
 import { AbiService } from '../apiv2/connection/abi.service';
 import { CoinsService } from '../apiv2/connection/coins.service';
 import { CoinItem } from 'src/assets/json/coinlist';
-import { BackendService } from '../apiv2/blockchain/backend.service';
+import { BlockchainService } from '../apiv2/blockchain/blockchain.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,34 +20,34 @@ export class CreateWalletService implements WalletsCreator {
   isPushingMissingWallet = false;
   coins: CoinItem[] = [];
   private readonly GET_ADDRESS_OF = {
-    [WalletType.BITCORE_ZCASHY]: this.backendService.bitcorelibZcash.getAddress.bind(
-      this.backendService.bitcorelibZcash,
+    [WalletType.BITCORE_ZCASHY]: this.blockchainService.bitcorelibZcash.getAddress.bind(
+      this.blockchainService.bitcorelibZcash,
     ),
-    [WalletType.BITCORE_LIB]: this.backendService.bitcoreLib.getAddress.bind(
-      this.backendService.bitcoreLib,
+    [WalletType.BITCORE_LIB]: this.blockchainService.bitcoreLib.getAddress.bind(
+      this.blockchainService.bitcoreLib,
     ),
-    [WalletType.BITCORE_CUSTOM]: this.backendService.bitcorelibCustom.getAddress.bind(
-      this.backendService.bitcorelibCustom,
+    [WalletType.BITCORE_CUSTOM]: this.blockchainService.bitcorelibCustom.getAddress.bind(
+      this.blockchainService.bitcorelibCustom,
     ),
-    [WalletType.ETH]: this.backendService.web3.getAddress.bind(this.backendService.web3),
-    [WalletType.ETH_TOKEN]: this.backendService.web3.getAddress.bind(this.backendService.web3),
-    [WalletType.BSC]: this.backendService.web3.getAddress.bind(this.backendService.web3),
-    [WalletType.BSC_TOKEN]: this.backendService.web3.getAddress.bind(this.backendService.web3),
-    [WalletType.ETC]: this.backendService.web3.getAddress.bind(this.backendService.web3),
-    [WalletType.SOLANA]: this.backendService.solana.getAddress.bind(this.backendService.solana),
-    [WalletType.SOLANA_TOKEN]: this.backendService.solana.getAddress.bind(
-      this.backendService.solana,
+    [WalletType.ETH]: this.blockchainService.web3.getAddress.bind(this.blockchainService.web3),
+    [WalletType.ETH_TOKEN]: this.blockchainService.web3.getAddress.bind(this.blockchainService.web3),
+    [WalletType.BSC]: this.blockchainService.web3.getAddress.bind(this.blockchainService.web3),
+    [WalletType.BSC_TOKEN]: this.blockchainService.web3.getAddress.bind(this.blockchainService.web3),
+    [WalletType.ETC]: this.blockchainService.web3.getAddress.bind(this.blockchainService.web3),
+    [WalletType.SOLANA]: this.blockchainService.solana.getAddress.bind(this.blockchainService.solana),
+    [WalletType.SOLANA_TOKEN]: this.blockchainService.solana.getAddress.bind(
+      this.blockchainService.solana,
     ),
-    [WalletType.SOLANA_DEV]: this.backendService.solana.getAddress.bind(this.backendService.solana),
-    [WalletType.SOLANA_TOKEN_DEV]: this.backendService.solana.getAddress.bind(
-      this.backendService.solana,
+    [WalletType.SOLANA_DEV]: this.blockchainService.solana.getAddress.bind(this.blockchainService.solana),
+    [WalletType.SOLANA_TOKEN_DEV]: this.blockchainService.solana.getAddress.bind(
+      this.blockchainService.solana,
     ),
-    [WalletType.SAFE]: this.backendService.safecoin.getAddress.bind(this.backendService.safecoin),
-    [WalletType.SAFE_TOKEN]: this.backendService.safecoin.getAddress.bind(
-      this.backendService.safecoin,
+    [WalletType.SAFE]: this.blockchainService.safecoin.getAddress.bind(this.blockchainService.safecoin),
+    [WalletType.SAFE_TOKEN]: this.blockchainService.safecoin.getAddress.bind(
+      this.blockchainService.safecoin,
     ),
-    [WalletType.POLKADOT]: this.backendService.polkadot.getAddress.bind(
-      this.backendService.polkadot,
+    [WalletType.POLKADOT]: this.blockchainService.polkadot.getAddress.bind(
+      this.blockchainService.polkadot,
     ),
   };
 
@@ -55,7 +55,7 @@ export class CreateWalletService implements WalletsCreator {
     private io: IoService,
     private authProvider: AuthenticationProvider,
     private walletsProvider: WalletsProvider,
-    private backendService: BackendService,
+    private blockchainService: BlockchainService,
     private coinsService: CoinsService,
     private abiService: AbiService,
     private walletService: WalletService,
@@ -105,7 +105,7 @@ export class CreateWalletService implements WalletsCreator {
       }
 
       if (Utils.isToken(walletData.value().type)) {
-        const decimal = await this.backendService.getDecimals({
+        const decimal = await this.blockchainService.getDecimals({
           abi: abi?.abi,
           api: c?.api || walletData.value().api,
           type: walletData.value().type,

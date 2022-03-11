@@ -4,13 +4,13 @@ import * as solanaWeb3 from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
 import { NetworkService } from '../connection/network.service';
 import { mnemonicToSeedSync } from 'bip39';
-import { BackendService } from '../blockchain/backend.service';
+import { BlockchainService } from '../blockchain/blockchain.service';
 import { AddressType } from '@simplio/backend/interface/data';
 @Injectable({
   providedIn: 'root',
 })
 export class BalsolanaService extends BalBase {
-  constructor(private backendService: BackendService, private networkService: NetworkService) {
+  constructor(private blockchainService: BlockchainService, private networkService: NetworkService) {
     super('Balweb3Service');
   }
 
@@ -34,8 +34,8 @@ export class BalsolanaService extends BalBase {
     important?: boolean;
   }): Promise<number> {
     const publickey = new solanaWeb3.PublicKey(data.address);
-    const apiUrl = this.backendService.getSolApi(data);
-    const connection = this.backendService.solana.getConnection({ api: apiUrl });
+    const apiUrl = this.blockchainService.getSolApi(data);
+    const connection = this.blockchainService.solana.getConnection({ api: apiUrl });
     return connection
       .getBalance(publickey)
       .then(bal => bal)
@@ -66,13 +66,13 @@ export class BalsolanaService extends BalBase {
     important?: boolean;
     addressType: AddressType;
   }): Promise<number> {
-    const apiUrl = this.backendService.getSolApi(data);
-    const connection = this.backendService.solana.getConnection({ api: apiUrl });
-    const mainPublickey = await this.backendService.solana.getAddress({
+    const apiUrl = this.blockchainService.getSolApi(data);
+    const connection = this.blockchainService.solana.getConnection({ api: apiUrl });
+    const mainPublickey = await this.blockchainService.solana.getAddress({
       mnemo: data.seeds,
       addressType: data.addressType,
     });
-    const publickey = await this.backendService.solana.getTokenAddress({
+    const publickey = await this.blockchainService.solana.getTokenAddress({
       address: mainPublickey.address.toString(),
       contractAddress: data.contractAddress,
       api: data.api,

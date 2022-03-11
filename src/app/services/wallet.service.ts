@@ -21,7 +21,7 @@ import { BalSafecoinService } from './apiv2/balance/balsafecoin.service';
 import { BalpolkadotService } from './apiv2/balance/balpolkadot.service';
 import { BalcoinService } from './apiv2/balance/balcoin.service';
 import { CheckWalletsService } from './wallets/check-wallets.service';
-import { BackendService } from './apiv2/blockchain/backend.service';
+import { BlockchainService } from './apiv2/blockchain/blockchain.service';
 
 export interface WalletsCreator {
   createWallet(walletData: WalletData): Promise<Wallet>;
@@ -64,7 +64,7 @@ export class WalletService {
     private balSolana: BalsolanaService,
     private balSafecoin: BalSafecoinService,
     private balPolkadot: BalpolkadotService,
-    private backendService: BackendService,
+    private blockchainService: BlockchainService,
   ) {
     this.data = { wallets: [] };
     this.walletChange = this.walletsProvider.wallets$.subscribe(res => {
@@ -223,7 +223,7 @@ export class WalletService {
       case WalletType.SOLANA_TOKEN_DEV:
       case WalletType.SOLANA_TOKEN:
       case WalletType.SAFE_TOKEN:
-        return this.backendService.getTokenAddress(data);
+        return this.blockchainService.getTokenAddress(data);
       default:
         return data.address;
     }

@@ -4,13 +4,13 @@ import * as safecoinWeb3 from '@safecoin/web3.js';
 import { TransactionData, TransactionDataResponse } from '../../transactions.service';
 import { Transaction, TransactionAPI, TxType } from 'src/app/interface/data';
 import { NetworkService } from '../connection/network.service';
-import { BackendService } from '../blockchain/backend.service';
+import { BlockchainService } from '../blockchain/blockchain.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TxSafecoinService extends TxBase {
-  constructor(private backendService: BackendService, private networkService: NetworkService) {
+  constructor(private blockchainService: BlockchainService, private networkService: NetworkService) {
     super('TxSafecoin');
   }
 
@@ -41,8 +41,8 @@ export class TxSafecoinService extends TxBase {
       }
 
       try {
-        const apiUrl = this.backendService.getSafeApi(data);
-        const connection = this.backendService.safecoin.getConnection({ api: apiUrl });
+        const apiUrl = this.blockchainService.getSafeApi(data);
+        const connection = this.blockchainService.safecoin.getConnection({ api: apiUrl });
         // const myMint = new safecoinWeb3.PublicKey(data.tokenId);
         const address = new safecoinWeb3.PublicKey(data.address);
         const txs = [];
@@ -76,8 +76,8 @@ export class TxSafecoinService extends TxBase {
     important?: boolean;
   }): Promise<any[]> {
     const publickey = new safecoinWeb3.PublicKey(data.address);
-    const apiUrl = this.backendService.getSafeApi(data);
-    const connection = this.backendService.safecoin.getConnection({ api: apiUrl });
+    const apiUrl = this.blockchainService.getSafeApi(data);
+    const connection = this.blockchainService.safecoin.getConnection({ api: apiUrl });
     return connection
       .getConfirmedSignaturesForAddress2(publickey, { limit: 20 }, 'confirmed')
       .then(txs => {
@@ -232,8 +232,8 @@ export class TxSafecoinService extends TxBase {
             );
             all = all.flat();
             all = all.map(t => t.signature);
-            const apiUrl = this.backendService.getSafeApi({ api: res[0].txData.api });
-            const connection = this.backendService.safecoin.getConnection({ api: apiUrl });
+            const apiUrl = this.blockchainService.getSafeApi({ api: res[0].txData.api });
+            const connection = this.blockchainService.safecoin.getConnection({ api: apiUrl });
             const confirmedTransactions = await connection.getParsedConfirmedTransactions(all);
 
             res.forEach(async safecoinTxs => {
@@ -283,8 +283,8 @@ export class TxSafecoinService extends TxBase {
       setTimeout(async () => {
         try {
           let txs: Transaction[] = [];
-          const apiUrl = this.backendService.getSafeApi(data);
-          const connection = this.backendService.safecoin.getConnection({ api: apiUrl });
+          const apiUrl = this.blockchainService.getSafeApi(data);
+          const connection = this.blockchainService.safecoin.getConnection({ api: apiUrl });
           const signatures = data.txs.safecoinTxs.map(t => t.signature);
           let confirmedTransactions = await connection.getParsedConfirmedTransactions(signatures);
           confirmedTransactions = confirmedTransactions.filter(e => !!e);
@@ -392,8 +392,8 @@ export class TxSafecoinService extends TxBase {
       setTimeout(async () => {
         try {
           const txs: Transaction[] = [];
-          const apiUrl = this.backendService.getSafeApi(data);
-          const connection = this.backendService.safecoin.getConnection({ api: apiUrl });
+          const apiUrl = this.blockchainService.getSafeApi(data);
+          const connection = this.blockchainService.safecoin.getConnection({ api: apiUrl });
           const signatures = data.txs.safecoinTxs.map(t => t.signature);
           const confirmedTransactions = await connection.getParsedConfirmedTransactions(signatures);
           confirmedTransactions.forEach(tx => {

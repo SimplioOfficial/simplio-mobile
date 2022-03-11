@@ -3,7 +3,7 @@ import { AddrUtxo, FeeName, FeeResponsev2, Rate, WalletType } from 'src/app/inte
 import { environment } from 'src/environments/environment';
 import { coinNames }from "@simplio/backend/api/utils/coins"
 import { UtilsService } from '../../utils.service';
-import { BackendService } from '../blockchain/backend.service';
+import { BlockchainService } from '../blockchain/blockchain.service';
 
 import { NetworkService } from './network.service';
 
@@ -15,7 +15,7 @@ export class Feev2Service {
   feev2Url = 'https://data.simplio.io/feev2.json';
   blockChainFee = 'https://api.blockchain.info/mempool/fees';
 
-  constructor(private networkService: NetworkService, private backendService: BackendService) {
+  constructor(private networkService: NetworkService, private blockchainService: BlockchainService) {
     this.refresh();
   }
 
@@ -74,7 +74,7 @@ export class Feev2Service {
         return Promise.resolve(Math.trunc(price * this.getRatio(feeLevel)));
       }
     } else if (UtilsService.isErcCoin) {
-      return this.backendService.web3
+      return this.blockchainService.web3
         .getGasPrice(type)
         .then(res => Math.trunc(res * this.getRatio(feeLevel)));
     } else {
@@ -105,6 +105,6 @@ export class Feev2Service {
     signature: number;
     tokenData?: any;
   }): Promise<any> {
-    return this.backendService.estimatedFee(data);
+    return this.blockchainService.estimatedFee(data);
   }
 }

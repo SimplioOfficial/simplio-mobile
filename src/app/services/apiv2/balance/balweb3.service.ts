@@ -6,12 +6,12 @@ import { NetworkService } from '../connection/network.service';
 import { BalBase } from './balancebase';
 import { AbiItem } from 'web3-utils';
 import { getAbi } from '../utils';
-import { BackendService } from '../blockchain/backend.service';
+import { BlockchainService } from '../blockchain/blockchain.service';
 @Injectable({
   providedIn: 'root',
 })
 export class Balweb3Service extends BalBase {
-  constructor(private backendService: BackendService, private networkService: NetworkService) {
+  constructor(private blockchainService: BlockchainService, private networkService: NetworkService) {
     super('Balweb3Service');
   }
 
@@ -37,7 +37,7 @@ export class Balweb3Service extends BalBase {
   }
 
   getBalance(data: { address: string; type: WalletType }): Promise<number> {
-    return this.backendService.web3
+    return this.blockchainService.web3
       .getLib(data.type)
       .eth.getBalance(data.address)
       .then(balance => parseInt(balance));
@@ -92,7 +92,7 @@ export class Balweb3Service extends BalBase {
     uuid: string;
     ticker: string;
   }): Promise<number> {
-    const lib = this.backendService.web3.getLib(data.type);
+    const lib = this.blockchainService.web3.getLib(data.type);
     const contract = new lib.eth.Contract(getAbi(data.abi), data.contractAddress);
     try {
       const balance = await contract.methods.balanceOf(data.address).call();

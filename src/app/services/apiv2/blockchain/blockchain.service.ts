@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as backend from '@simplio/backend/api';
+import * as blockchain from '@simplio/backend/api';
 import {
   AddressType,
   AddrUtxo,
@@ -27,34 +27,34 @@ import { TxinsightService } from '../transaction/txinsight.service';
 @Injectable({
   providedIn: 'root',
 })
-export class BackendService {
-  private blib: backend.BitcoreLib;
-  private blibC: backend.BitcoreLibCustom;
-  private blibZ: backend.BitcoreZcashy;
-  private sol: backend.Solana;
-  private safe: backend.Safecoin;
-  private dot: backend.Polkadot;
-  private w3: backend.Web3Sio;
-  private vAddress: backend.ValidateaddressService;
-  private dec: backend.DecimalsService;
-  private tx: backend.Createtransaction;
-  private stk: backend.StakeService;
+export class BlockchainService {
+  private blib: blockchain.BitcoreLib;
+  private blibC: blockchain.BitcoreLibCustom;
+  private blibZ: blockchain.BitcoreZcashy;
+  private sol: blockchain.Solana;
+  private safe: blockchain.Safecoin;
+  private dot: blockchain.Polkadot;
+  private w3: blockchain.Web3Sio;
+  private vAddress: blockchain.ValidateaddressService;
+  private dec: blockchain.DecimalsService;
+  private tx: blockchain.Createtransaction;
+  private stk: blockchain.StakeService;
   constructor(
     private networkService: NetworkService,
     private txblockbook: TxblockbookService,
     private txinsight: TxinsightService,
     private txs: TransactionsProvider,
   ) {
-    this.blib = new backend.BitcoreLib();
-    this.blibC = new backend.BitcoreLibCustom();
-    this.blibZ = new backend.BitcoreZcashy();
-    this.sol = new backend.Solana();
-    this.safe = new backend.Safecoin();
-    this.dot = new backend.Polkadot();
-    this.safe = new backend.Safecoin();
-    this.w3 = new backend.Web3Sio();
-    this.stk = new backend.StakeService(this.sol);
-    this.vAddress = new backend.ValidateaddressService(
+    this.blib = new blockchain.BitcoreLib();
+    this.blibC = new blockchain.BitcoreLibCustom();
+    this.blibZ = new blockchain.BitcoreZcashy();
+    this.sol = new blockchain.Solana();
+    this.safe = new blockchain.Safecoin();
+    this.dot = new blockchain.Polkadot();
+    this.safe = new blockchain.Safecoin();
+    this.w3 = new blockchain.Web3Sio();
+    this.stk = new blockchain.StakeService(this.sol);
+    this.vAddress = new blockchain.ValidateaddressService(
       this.blibZ,
       this.blib,
       this.blibC,
@@ -63,8 +63,8 @@ export class BackendService {
       this.safe,
       this.dot,
     );
-    this.dec = new backend.DecimalsService(this.sol, this.safe, this.w3);
-    this.tx = new backend.Createtransaction(
+    this.dec = new blockchain.DecimalsService(this.sol, this.safe, this.w3);
+    this.tx = new blockchain.Createtransaction(
       this.blibZ,
       this.blib,
       this.blibC,
@@ -302,6 +302,25 @@ export class BackendService {
       data.api = this.getSafeApi(data);
     }
     return this.decimals.getDecimals(data);
+  }
+
+  getSolExplorer(data: { important?: boolean }): Explorer {
+    let explorers = this.networkService.getCoinExplorers(undefined, WalletType.SOLANA);
+    if (!data.important) {
+      function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+      }
+      explorers = explorers.filter(e => e.priority >= 2);
+      while (explorers.length > 0) {
+        let rnd = getRandomInt(explorers.length);
+        if (explorers[rnd].priority >= 2) {
+          return explorers[rnd];
+        }
+      }
+    } else {
+      const ex = explorers.find(e => e.priority === 1);
+      return ex;
+    }
   }
 
   getSolApi(data: { important?: boolean; api?: string }) {

@@ -16,6 +16,7 @@ export interface Explorer {
   api_balance?: string;
   abi?: string;
   priority?: number;
+  ws?: string;
 }
 
 export enum ExplorerType {
