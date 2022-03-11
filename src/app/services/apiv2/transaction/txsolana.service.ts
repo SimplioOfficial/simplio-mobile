@@ -8,6 +8,8 @@ import { BlockchainService } from '../blockchain/blockchain.service';
 // import WebSocket from 'ws';
 
 // import WebSocket from 'ws';
+// import { Client } from 'rpc-websockets';
+// import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 @Injectable({
   providedIn: 'root',
@@ -16,90 +18,87 @@ export class TxsolanaService extends TxBase {
   listSubscribe = [];
   connection: solanaWeb3.Connection;
   connectionDev: solanaWeb3.Connection;
-  constructor(private blockchainService: BlockchainService, private networkService: NetworkService) {
+  constructor(
+    private blockchainService: BlockchainService,
+    private networkService: NetworkService,
+  ) {
     super('TxSolana');
-    this.connection = this.blockchainService.solana.getConnection({ api: solanaWeb3.clusterApiUrl('mainnet-beta') });
-    this.connectionDev = this.blockchainService.solana.getConnection({ api: solanaWeb3.clusterApiUrl('devnet') });
+    this.connection = this.blockchainService.solana.getConnection({
+      api: solanaWeb3.clusterApiUrl('mainnet-beta'),
+    });
+    this.connectionDev = this.blockchainService.solana.getConnection({
+      api: solanaWeb3.clusterApiUrl('devnet'),
+    });
   }
 
-  init() { }
+  init() {}
 
   subscribleChange(address, ws, isDev, callback) {
     let apiEndpoint;
     if (!isDev) {
       apiEndpoint = ws;
     } else {
-      apiEndpoint = "ws://api.devnet.solana.com";
+      apiEndpoint = 'wss://api.devnet.solana.com';
     }
     if (!this.listSubscribe[apiEndpoint]) {
       this.listSubscribe[apiEndpoint] = true;
       this.wsSubscribe(apiEndpoint, address, 'confirmed', callback);
-      // if(!isDev){
-      //   this.connection.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
-      //     callback(accountInfo, address);
-      //   })
-      // } else {
-      //   this.connectionDev.onAccountChange(new solanaWeb3.PublicKey(address), function(accountInfo: solanaWeb3.AccountInfo<Buffer>, context: solanaWeb3.Context) {
-      //     callback(accountInfo, address);
-      //   })
-      // }
     }
   }
 
   async wsSubscribe(endpoint: string, address: string, commitment, callback) {
-    const ws = new WebSocket(endpoint);
+
     let timer;
+
+
+    const ws = new WebSocket(endpoint);
     ws.onopen = () => {
       console.log(Date.now(), `Web socket opened to ${endpoint}`);
       timer = setInterval(() => {
         // console.log(Date.now(), "ping");
         ws.send('{}');
       }, 20000);
-      ws.send(JSON.stringify({
-        "jsonrpc": "2.0",
-        "id": 1,
-        "method": "accountSubscribe",
-        "params": [
-          address,
-          {
-            "encoding": "base64",
-            commitment
-          }
-        ]
-      }));
+      ws.send(
+        JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'accountSubscribe',
+          params: [
+            address,
+            {
+              encoding: 'base64',
+              commitment,
+            },
+          ],
+        }),
+      );
       ws.onmessage = evt => {
         const msg = JSON.parse(evt.data as string);
         if (msg.params?.result) {
           // console.log("msg", msg);
-          callback(msg.params?.result, address)
-        }
-        else if (msg.error) {
+          callback(msg.params?.result, address);
+        } else if (msg.error) {
           // console.log("error", msg.error);
           if (msg.error.code !== -32600) {
-
-            console.log("error", msg.error);
-          }
-          else {
+            console.log('error', msg.error);
+          } else {
             // do nothing because it's the response of ping msg
           }
-
-        }
-        else {
+        } else {
           console.log(commitment, evt.data);
         }
-      }
-    }
+      };
+    };
 
-    ws.onerror = (err) => {
-      console.log(Date.now(), "Socket error", err);
-    }
-    ws.onclose = (err) => {
-      console.log(Date.now(), "Socket close, auto connect");
+    ws.onerror = err => {
+      console.log(Date.now(), 'Socket error', err);
+    };
+    ws.onclose = err => {
+      console.log(Date.now(), 'Socket close, auto connect');
       clearInterval(timer);
       this.wsSubscribe(endpoint, address, commitment, callback);
-    }
+    };
   }
-
 
   getHistoryToken(data: {
     tokenId: string;
@@ -505,18 +504,17 @@ export class TxsolanaService extends TxBase {
                     if (instructions) {
                       instructions.some((ee: solanaWeb3.ParsedInstruction) => {
                         currParsed = this._parseInstruction(ee);
-                        if (data.addresses.find(
-                          e => e.toString() === (currParsed.sender).toString(),
-                        )) {
+                        if (
+                          data.addresses.find(e => e.toString() === currParsed.sender.toString())
+                        ) {
                           parsed.amount -= currParsed.amount;
                           if (parsed.amount < 0) {
                             parsed.sender = currParsed.sender;
                             parsed.receiver = currParsed.receiver;
                           }
-                        }
-                        else if (data.addresses.find(
-                          e => e.toString() === (currParsed.receiver).toString(),
-                        )) {
+                        } else if (
+                          data.addresses.find(e => e.toString() === currParsed.receiver.toString())
+                        ) {
                           parsed.amount += currParsed.amount;
                           if (parsed.amount > 0) {
                             parsed.sender = currParsed.sender;
