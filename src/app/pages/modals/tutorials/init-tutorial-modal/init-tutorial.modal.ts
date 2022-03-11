@@ -21,7 +21,7 @@ export class InitTutorialModal {
       buttonText: this.$.BUY,
       buttonIcon: 'logo-bitcoin',
       desc: this.$.TUT_INIT_BUY,
-      comingSoon: true,
+      comingSoon: !environment.CUSTOM_CONTENT.SWIPELUX,
     },
     {
       buttonText: this.$.SEND,
@@ -42,6 +42,7 @@ export class InitTutorialModal {
       buttonText: this.$.STAKING,
       buttonIcon: 'flash',
       desc: this.$.TUT_INIT_STAKING,
+      comingSoon: !environment.CUSTOM_CONTENT.STAKING,
     },
   ];
 
