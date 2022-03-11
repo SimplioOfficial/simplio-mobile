@@ -8,8 +8,8 @@ import { BlockchainService } from '../blockchain/blockchain.service';
 // import WebSocket from 'ws';
 
 // import WebSocket from 'ws';
-import { Client } from 'rpc-websockets';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+// import { Client } from 'rpc-websockets';
+// import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +38,7 @@ export class TxsolanaService extends TxBase {
     if (!isDev) {
       apiEndpoint = ws;
     } else {
-      apiEndpoint = 'ws://api.devnet.solana.com';
+      apiEndpoint = 'wss://api.devnet.solana.com';
     }
     if (!this.listSubscribe[apiEndpoint]) {
       this.listSubscribe[apiEndpoint] = true;
@@ -47,109 +47,57 @@ export class TxsolanaService extends TxBase {
   }
 
   async wsSubscribe(endpoint: string, address: string, commitment, callback) {
-    var self = this;
-    var ws = new Client(endpoint);
+
     let timer;
-    ws.on('open', function () {
 
-      ws.call('accountSubscribe', [
-        address,
-        {
-          commitment,
-        },
-      ]).then(function (result) {
-      });
 
-      ws.on('accountNotification', function (result) {
-        callback(result, address);
-      });
-    });
+    const ws = new WebSocket(endpoint);
+    ws.onopen = () => {
+      console.log(Date.now(), `Web socket opened to ${endpoint}`);
+      timer = setInterval(() => {
+        // console.log(Date.now(), "ping");
+        ws.send('{}');
+      }, 20000);
+      ws.send(
+        JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'accountSubscribe',
+          params: [
+            address,
+            {
+              encoding: 'base64',
+              commitment,
+            },
+          ],
+        }),
+      );
+      ws.onmessage = evt => {
+        const msg = JSON.parse(evt.data as string);
+        if (msg.params?.result) {
+          // console.log("msg", msg);
+          callback(msg.params?.result, address);
+        } else if (msg.error) {
+          // console.log("error", msg.error);
+          if (msg.error.code !== -32600) {
+            console.log('error', msg.error);
+          } else {
+            // do nothing because it's the response of ping msg
+          }
+        } else {
+          console.log(commitment, evt.data);
+        }
+      };
+    };
 
-    ws.on('close', function () {
-      self.wsSubscribe(endpoint, address, commitment, callback);
-    });
-
-    // const ws = webSocket(endpoint);
-
-    // let timer = setInterval(() => {
-    //   ws.next('{}');
-    // }, 20000);
-    // ws.subscribe(
-    //   msg => {
-    //     console.log('message received: ', msg);
-    //     callback(msg);
-    //   }, // Called whenever there is a message from the server.
-    //   err => {
-    //     console.log(err);
-    //   }, // Called if at any point WebSocket API signals some kind of error.
-    //   () => {
-    //     console.log('complete');
-    //     clearInterval(timer);
-    //     this.wsSubscribe(endpoint, address, commitment, callback);
-    //   }, // Called when connection is closed (for whatever reason).
-    // );
-
-    // ws.next(
-    //   JSON.stringify({
-    //     jsonrpc: '2.0',
-    //     id: 1,
-    //     method: 'accountSubscribe',
-    //     params: [
-    //       address,
-    //       {
-    //         encoding: 'base64',
-    //         commitment,
-    //       },
-    //     ],
-    //   }),
-    // );
-
-    // ws.onopen = () => {
-    //   console.log(Date.now(), `Web socket opened to ${endpoint}`);
-    //   timer = setInterval(() => {
-    //     // console.log(Date.now(), "ping");
-    //     ws.send('{}');
-    //   }, 20000);
-    //   ws.send(
-    //     JSON.stringify({
-    //       jsonrpc: '2.0',
-    //       id: 1,
-    //       method: 'accountSubscribe',
-    //       params: [
-    //         address,
-    //         {
-    //           encoding: 'base64',
-    //           commitment,
-    //         },
-    //       ],
-    //     }),
-    //   );
-    //   ws.onmessage = evt => {
-    //     const msg = JSON.parse(evt.data as string);
-    //     if (msg.params?.result) {
-    //       // console.log("msg", msg);
-    //       callback(msg.params?.result, address);
-    //     } else if (msg.error) {
-    //       // console.log("error", msg.error);
-    //       if (msg.error.code !== -32600) {
-    //         console.log('error', msg.error);
-    //       } else {
-    //         // do nothing because it's the response of ping msg
-    //       }
-    //     } else {
-    //       console.log(commitment, evt.data);
-    //     }
-    //   };
-    // };
-
-    // ws.onerror = err => {
-    //   console.log(Date.now(), 'Socket error', err);
-    // };
-    // ws.onclose = err => {
-    //   console.log(Date.now(), 'Socket close, auto connect');
-    //   clearInterval(timer);
-    //   this.wsSubscribe(endpoint, address, commitment, callback);
-    // };
+    ws.onerror = err => {
+      console.log(Date.now(), 'Socket error', err);
+    };
+    ws.onclose = err => {
+      console.log(Date.now(), 'Socket close, auto connect');
+      clearInterval(timer);
+      this.wsSubscribe(endpoint, address, commitment, callback);
+    };
   }
 
   getHistoryToken(data: {
@@ -184,7 +132,7 @@ export class TxsolanaService extends TxBase {
         const txs = [];
 
         return connection
-          .getSignaturesForAddress(address, { limit: 20 }, 'confirmed')
+          .getConfirmedSignaturesForAddress2(address, { limit: 20 }, 'confirmed')
           .then(res2 => {
             for (const [index, element] of res2.entries()) {
               txs.push({
@@ -215,7 +163,7 @@ export class TxsolanaService extends TxBase {
     const apiUrl = this.blockchainService.getSolApi(data);
     const connection = this.blockchainService.solana.getConnection({ api: apiUrl });
     return connection
-      .getSignaturesForAddress(publickey, { limit: 20 }, 'confirmed')
+      .getConfirmedSignaturesForAddress2(publickey, { limit: 20 }, 'confirmed')
       .then(txs => {
         // console.log(data.ticker, txs);
         return [
@@ -370,7 +318,7 @@ export class TxsolanaService extends TxBase {
             all = all.map(t => t.signature);
             const apiUrl = this.blockchainService.getSolApi({ api: res[0].txData.api });
             const connection = this.blockchainService.solana.getConnection({ api: apiUrl });
-            const confirmedTransactions = await connection.getParsedTransactions(all);
+            const confirmedTransactions = await connection.getParsedConfirmedTransactions(all);
 
             res.forEach(async solanaTxs => {
               const txs = solanaTxs.txs.reduce((t, curr) => {
@@ -422,7 +370,7 @@ export class TxsolanaService extends TxBase {
           const apiUrl = this.blockchainService.getSolApi(data);
           const connection = this.blockchainService.solana.getConnection({ api: apiUrl });
           const signatures = data.txs.solanaTxs.map(t => t.signature);
-          let confirmedTransactions = await connection.getParsedTransactions(signatures);
+          let confirmedTransactions = await connection.getParsedConfirmedTransactions(signatures);
           confirmedTransactions = confirmedTransactions.filter(e => !!e);
           confirmedTransactions.forEach(tx => {
             const meta = tx.meta;
@@ -531,7 +479,7 @@ export class TxsolanaService extends TxBase {
           const apiUrl = this.blockchainService.getSolApi(data);
           const connection = this.blockchainService.solana.getConnection({ api: apiUrl });
           const signatures = data.txs.solanaTxs.map(t => t.signature);
-          const confirmedTransactions = await connection.getParsedTransactions(signatures);
+          const confirmedTransactions = await connection.getParsedConfirmedTransactions(signatures);
           confirmedTransactions.forEach(tx => {
             if (tx) {
               const signature = tx.transaction.signatures[0];
@@ -625,7 +573,7 @@ export class TxsolanaService extends TxBase {
   }
 
   async parseTxsToken2(data: {
-    txs: solanaWeb3.ParsedTransactionWithMeta[];
+    txs: solanaWeb3.ParsedConfirmedTransaction[];
     address: string[];
     uuid: string;
     ticker: string;
