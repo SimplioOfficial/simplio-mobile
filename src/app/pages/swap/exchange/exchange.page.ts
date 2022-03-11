@@ -24,7 +24,12 @@ import { SettingsProvider } from 'src/app/providers/data/settings.provider';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { Acc } from 'src/app/interface/user';
 import { Translate } from 'src/app/providers/translate/';
-import { hasBudgetSwap, isAmountValid, isDestinationFiatAmountValid, isMinAmount } from 'src/shared/validators';
+import {
+  hasBudgetSwap,
+  isAmountValid,
+  isDestinationFiatAmountValid,
+  isMinAmount,
+} from 'src/shared/validators';
 import { WalletsProvider } from 'src/app/providers/data/wallets.provider';
 import { BalancePipe } from 'src/app/pipes/balance.pipe';
 import {
@@ -57,7 +62,7 @@ import { SioNumpadComponent } from 'src/app/components/form/sio-numpad/sio-numpa
 import { SwapListModal } from '../../modals/swap-list-modal/swap-list.modal';
 import { CoinsService } from 'src/app/services/apiv2/connection/coins.service';
 import { CoinItem } from 'src/assets/json/coinlist';
-import { coinNames }from "@simplio/backend/api/utils/coins"
+import { coinNames } from '@simplio/backend/api/utils/coins';
 import { findWallet, getPrice } from 'src/app/services/wallets/utils';
 
 enum WalletTypes {
@@ -76,6 +81,8 @@ type RouteData = {
   styleUrls: ['./exchange.page.scss'],
 })
 export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
+  disabledSwapPair = false;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -100,7 +107,7 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
     public loadingController: LoadingController,
     private translateService: TranslateService,
     public $: Translate,
-  ) { }
+  ) {}
 
   get convertedAmount(): number {
     const res = this.formField.get('swapResponse').value;
@@ -143,7 +150,10 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
         p =>
           p.SourceCurrency === this.sourceWallet.ticker &&
           p.SourceCurrencyNetwork ===
-          getCurrencyNetwork(this.sourceWallet.type, this.sourceWallet.ticker) && p.TargetCurrency === this.destinationWallet.ticker && p.TargetCurrencyNetwork === getCurrencyNetwork(this.destinationWallet.type, this.destinationWallet.ticker),
+            getCurrencyNetwork(this.sourceWallet.type, this.sourceWallet.ticker) &&
+          p.TargetCurrency === this.destinationWallet.ticker &&
+          p.TargetCurrencyNetwork ===
+            getCurrencyNetwork(this.destinationWallet.type, this.destinationWallet.ticker),
       ) || null
     );
   }
@@ -350,7 +360,7 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
         sourceWallet.ticker !== sourceWalletNew?.ticker ||
         destinationWallet.ticker !== destinationWalletNew?.ticker ||
         pipeAmount(amount, sourceWallet.ticker, sourceWallet.type, sourceWallet.decimal, false) !==
-        data.amount
+          data.amount
       ) {
         this._swapData = data;
 
@@ -418,7 +428,7 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
         this.formField.patchValue({
           swapResponse: convertRes,
           sourceFiatValue: getPrice(this._rates, data.SourceCurrency, 'USD'),
-          destinationFiatValue: getPrice(this._rates, data.TargetCurrency, 'USD')
+          destinationFiatValue: getPrice(this._rates, data.TargetCurrency, 'USD'),
         });
       } else {
         this._cleanData();
@@ -453,7 +463,8 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
               throw new Error(`Cannot get data for sending`);
           }
           throw new Error(
-            `Insufficient amount, you need more ${chainMsg} in address ${feeWallet.mainAddress
+            `Insufficient amount, you need more ${chainMsg} in address ${
+              feeWallet.mainAddress
             } for the fee or decrease fee level, current balance ${tf(
               balance,
               feeWallet.ticker,
@@ -670,7 +681,7 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
             feeWallet: null,
             swapResponse: null,
             destinationFiatValue: 0,
-            sourceFiatValue: 0
+            sourceFiatValue: 0,
           });
           this.setValue(0);
         }
@@ -686,6 +697,7 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
           ),
         });
       })
+      .then(() => this.checkDisabledSwapPair())
       .catch((err: Error) => this.utilsService.showToast(err.message, 1500, 'warning'));
   }
 
@@ -726,9 +738,12 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
   onAmountChange(value: number) {
     this._feeEstimated = undefined;
     this.valueComponent.updateInputValue(value);
+
+    this.checkDisabledSwapPair();
   }
 
   async onMaxClick(_event) {
+    this.checkDisabledSwapPair();
     if (!this.isMax) {
       this.isMax = true;
       await this.presentLoading(this.$.CALCULATING);
@@ -1018,5 +1033,25 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     this.formField.patchValue({ feeWallet: mainWallet });
+  }
+
+  checkDisabledSwapPair() {
+    const disabledPairs: { from: string; to: string }[] = [{ from: 'BUSD', to: 'BNB' }];
+
+    const result = disabledPairs.some(
+      pair =>
+        (pair.from === this.sourceWallet.ticker || pair.to === this.sourceWallet.ticker) &&
+        (pair.from === this.destinationWallet.ticker || pair.to === this.destinationWallet.ticker),
+    );
+
+    if (result) {
+      this.utilsService.showToast(
+        'This swap pair is temporary disabled. Please try it again later.',
+        3000,
+        'warning',
+      );
+    }
+
+    this.disabledSwapPair = result;
   }
 }
