@@ -5,7 +5,7 @@ import { ToastController, AlertController, ModalController } from '@ionic/angula
 import { PredefinedColors } from '@ionic/core/dist/types/interface';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { HTTP } from '@ionic-native/http/ngx';
-import { WalletType, Account } from 'src/app/interface/data';
+import { WalletType, Account, Wallet } from 'src/app/interface/data';
 import { Translate, ExtendedAlertOptions, sanitizeExtendedInput } from '../providers/translate/';
 
 import { fromPairs, isString, toPairs } from 'lodash';
@@ -720,4 +720,21 @@ export const parseError = (err: string) => {
       break;
   }
   return rtn;
+};
+
+export const getChainId = (wallet: Wallet) => {
+  switch (wallet.type) {
+    case WalletType.BSC_TOKEN:
+      return coinNames.BSC;
+    case WalletType.ETH_TOKEN:
+      return coinNames.ETH;
+    case WalletType.SOLANA_TOKEN:
+    case WalletType.SOLANA_TOKEN_DEV:
+      return coinNames.SOL;
+    case WalletType.SAFE_TOKEN:
+      return coinNames.SAFE;
+    case WalletType.CUSTOM_TOKEN:
+    default:
+      return '';
+  }
 };
