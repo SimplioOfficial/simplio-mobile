@@ -18,7 +18,7 @@ import {
 } from 'src/app/interface/data';
 import { WalletService } from 'src/app/services/wallet.service';
 import { DataService } from 'src/app/services/data.service';
-import { pipeAmount, UtilsService } from 'src/app/services/utils.service';
+import { getChainId, pipeAmount, UtilsService } from 'src/app/services/utils.service';
 import { TransactionsService } from 'src/app/services/transactions.service';
 import { SettingsProvider } from 'src/app/providers/data/settings.provider';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
@@ -74,6 +74,8 @@ type RouteData = {
   wallets: WalletsData;
   pairs: SwapPair[];
 };
+
+type SwapCoin = { from: string; to: string; fromChain?: string; toChain?: string };
 
 @Component({
   selector: 'app-create',
@@ -1035,13 +1037,38 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
     this.formField.patchValue({ feeWallet: mainWallet });
   }
 
-  checkDisabledSwapPair() {
-    const disabledPairs: { from: string; to: string }[] = [{ from: 'BUSD', to: 'BNB' }];
+  private checkDisabledSwapPair() {
+    const disabledPairs: SwapCoin[] = [
+      { from: coinNames.BUSD, to: coinNames.BNB },
+      { from: coinNames.BUSD, to: coinNames.ZEC },
+      { from: coinNames.USDC, fromChain: coinNames.BSC, to: coinNames.BNB },
+      { from: coinNames.BUSD, to: coinNames.SOL },
+      { from: coinNames.LTC, to: coinNames.USDC, toChain: coinNames.BSC },
+      { from: coinNames.ETH, to: coinNames.USDT, toChain: coinNames.BSC },
+    ];
+
+    const fromChainTicker = getChainId(this.sourceWallet);
+    const toChainTicker = getChainId(this.destinationWallet);
+
+    const fromChainCondition = (pair: SwapCoin) => {
+      if (!pair.fromChain) return true;
+
+      return pair.fromChain === fromChainTicker || pair.fromChain === toChainTicker;
+    };
+
+    const toChainCondition = (pair: SwapCoin) => {
+      if (!pair.toChain) return true;
+
+      return pair.toChain === fromChainTicker || pair.toChain === toChainTicker;
+    };
 
     const result = disabledPairs.some(
       pair =>
         (pair.from === this.sourceWallet.ticker || pair.to === this.sourceWallet.ticker) &&
-        (pair.from === this.destinationWallet.ticker || pair.to === this.destinationWallet.ticker),
+        (pair.from === this.destinationWallet.ticker ||
+          pair.to === this.destinationWallet.ticker) &&
+        fromChainCondition(pair) &&
+        toChainCondition(pair),
     );
 
     if (result) {
