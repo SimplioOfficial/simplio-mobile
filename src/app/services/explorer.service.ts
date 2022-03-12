@@ -2,15 +2,8 @@ import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { UtilsService } from './utils.service';
-import {
-  Explorer,
-    ExplorerType,
-  NetworkFallback,
-} from 'src/app/interface/explorer';
-import {
-  AddrUtxo,
-  ExplorerTransactionData,
-} from 'src/app/interface/data';
+import { Explorer, ExplorerType, NetworkFallback } from 'src/app/interface/explorer';
+import { AddrUtxo, ExplorerTransactionData } from 'src/app/interface/data';
 import { environment } from '../../environments/environment';
 import { PlatformProvider } from '../providers/platform/platform';
 import { NetworkService } from './apiv2/connection/network.service';

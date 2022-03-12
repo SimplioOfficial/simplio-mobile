@@ -3,7 +3,7 @@ import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@a
 @Component({
   selector: 'sio-country-code',
   templateUrl: './sio-country-code.component.html',
-  styleUrls: ['./sio-country-code.component.scss']
+  styleUrls: ['./sio-country-code.component.scss'],
 })
 export class SioCountryCodeComponent implements OnInit {
   @Input() flag = '';

@@ -14,7 +14,7 @@ export class TxinsightService extends TxBase {
     super('TxInsight');
   }
 
-  init() { }
+  init() {}
 
   getTxs(data: {
     walletUnit: TransactionData;
@@ -174,7 +174,7 @@ export class TxinsightService extends TxBase {
                 });
                 addressTo = firstExternalOutput;
               } else {
-                addressTo = inputs[0]?.address || "N/A";
+                addressTo = inputs[0]?.address || 'N/A';
               }
             }
             const u = tx.blocktime ? tx.blocktime : tx.blockTime;
@@ -193,8 +193,8 @@ export class TxinsightService extends TxBase {
                 Number(tx.confirmations) === 0
                   ? 'Not confirmed yet'
                   : new Date(u * 1000).toLocaleString('ja-JP', {
-                    hour12: false,
-                  }),
+                      hour12: false,
+                    }),
               block: height,
             };
             if (txs.findIndex(e => e.hash === t.hash) === -1) txs.push(t);

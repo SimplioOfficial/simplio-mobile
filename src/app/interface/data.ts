@@ -54,7 +54,7 @@ export interface Address {
 
 export enum AddressType {
   DEFAULT = 1,
-  HD
+  HD,
 }
 
 export enum WalletType {
@@ -82,7 +82,7 @@ export enum TokenType {
   SOLANA_TOKEN = 'SPL Token',
   ETH_TOKEN = 'ERC20 Token',
   BSC_TOKEN = 'BEP20 Token',
-  SAFE_TOKEN = 'SAFE Token'
+  SAFE_TOKEN = 'SAFE Token',
 }
 
 export enum SeedType {
@@ -626,4 +626,4 @@ export interface Stake {
   stakingOwner: string;
   startTime: number;
   withdrawAccount: string;
-}  
+}

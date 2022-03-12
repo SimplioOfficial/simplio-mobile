@@ -5,5 +5,4 @@ import { Component } from '@angular/core';
   templateUrl: './sio-floating-tapbar.component.html',
   styleUrls: ['./sio-floating-tapbar.component.scss'],
 })
-export class SioFloatingTapbarComponent { }
-
+export class SioFloatingTapbarComponent {}

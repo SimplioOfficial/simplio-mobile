@@ -14,8 +14,8 @@ const routes: Routes = [
   {
     path: '',
     component: KycSumSubPage,
-    data: { tapbar: false }
-  }
+    data: { tapbar: false },
+  },
 ];
 
 @NgModule({
@@ -28,9 +28,9 @@ const routes: Routes = [
     SioFormModule,
     SioSharedModule,
     TranslateModule.forChild({
-      extend: true
-    })
+      extend: true,
+    }),
   ],
-  declarations: [KycSumSubPage]
+  declarations: [KycSumSubPage],
 })
 export class KycSumSubPageModule {}

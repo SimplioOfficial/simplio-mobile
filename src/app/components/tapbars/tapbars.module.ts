@@ -6,13 +6,8 @@ import { SioFloatingTapbarComponent } from 'src/app/components/tapbars/sio-float
 import { SioFloatingTapbarButtonComponent } from 'src/app/components/tapbars/sio-floating-tapbar-button/sio-floating-tapbar-button.component';
 
 @NgModule({
-  imports: [
-	  IonicModule,
-	  CommonModule, 
-	  RouterModule
-	],
+  imports: [IonicModule, CommonModule, RouterModule],
   declarations: [SioFloatingTapbarComponent, SioFloatingTapbarButtonComponent],
   exports: [SioFloatingTapbarComponent, SioFloatingTapbarButtonComponent],
 })
 export class SioTapbarsModule {}
-

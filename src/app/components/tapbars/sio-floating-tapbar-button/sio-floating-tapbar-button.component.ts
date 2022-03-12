@@ -6,11 +6,8 @@ import { Component, HostBinding, Input } from '@angular/core';
   styleUrls: ['./sio-floating-tapbar-button.component.scss'],
 })
 export class SioFloatingTapbarButtonComponent {
-
   @Input() title = '';
 
   @HostBinding('class') class = 'ion-activatable ripple-parent';
   ngOnInit() {}
-
 }
-

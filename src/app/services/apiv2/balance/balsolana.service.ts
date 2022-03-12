@@ -10,7 +10,10 @@ import { AddressType } from '@simplio/backend/interface/data';
   providedIn: 'root',
 })
 export class BalsolanaService extends BalBase {
-  constructor(private blockchainService: BlockchainService, private networkService: NetworkService) {
+  constructor(
+    private blockchainService: BlockchainService,
+    private networkService: NetworkService,
+  ) {
     super('Balweb3Service');
   }
 

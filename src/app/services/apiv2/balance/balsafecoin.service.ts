@@ -10,7 +10,10 @@ import { AddressType } from '@simplio/backend/interface/data';
   providedIn: 'root',
 })
 export class BalSafecoinService extends BalBase {
-  constructor(private blockchainService: BlockchainService, private networkService: NetworkService) {
+  constructor(
+    private blockchainService: BlockchainService,
+    private networkService: NetworkService,
+  ) {
     super('Balweb3Service');
   }
 
@@ -55,7 +58,7 @@ export class BalSafecoinService extends BalBase {
     api: string;
     count: 0;
     important?: boolean;
-    addressType: AddressType
+    addressType: AddressType;
   }): Promise<number> {
     const connection = this.blockchainService.safecoin.getConnection(data);
     const publickey = await this.blockchainService.safecoin.getAddress({
@@ -64,7 +67,9 @@ export class BalSafecoinService extends BalBase {
     const myMint = new safecoinWeb3.PublicKey(data.contractAddress);
     let balance = 0;
     return connection
-      .getParsedTokenAccountsByOwner(new safecoinWeb3.PublicKey(publickey.address), { mint: myMint })
+      .getParsedTokenAccountsByOwner(new safecoinWeb3.PublicKey(publickey.address), {
+        mint: myMint,
+      })
       .then(res => {
         if (res.value.length > 0) {
           const accounts = res.value;
@@ -89,14 +94,19 @@ export class BalSafecoinService extends BalBase {
       });
   }
 
-  getTokenBalance(data: { seeds: string; contractAddress: string; api: string; addressType: AddressType }): Promise<number> {
+  getTokenBalance(data: {
+    seeds: string;
+    contractAddress: string;
+    api: string;
+    addressType: AddressType;
+  }): Promise<number> {
     return this._getTokenBalance({
       seeds: data.seeds,
       contractAddress: data.contractAddress,
       api: data.api,
       count: 0,
       important: true,
-      addressType: data.addressType
+      addressType: data.addressType,
     });
   }
 }

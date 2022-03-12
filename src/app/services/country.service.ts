@@ -32,7 +32,7 @@ type RequestConfig = {
 };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CountryService {
   private readonly BASE_URL = 'https://restcountries.com/v2';
@@ -47,7 +47,7 @@ export class CountryService {
   getPhoneCodes(onSuccess = (res: CountryCode[]) => {}, onError = (err: Error) => {}): void {
     const config: RequestConfig = {
       url: `${this.BASE_URL}/all`,
-      fields: []
+      fields: [],
       // fields: ['nativeName', 'callingCodes', 'flag', 'alpha3Code']
     };
 
@@ -59,14 +59,14 @@ export class CountryService {
             name: r.nativeName,
             englishName: r.name,
             code: r.alpha3Code,
-            callingCode: `+${r.callingCodes[0]}`
+            callingCode: `+${r.callingCodes[0]}`,
           }))
           .map(r => ({
             code: r.callingCode,
             englishName: r.englishName,
             flag: r.flag,
-            name: r.name
-          }))
+            name: r.name,
+          })),
       );
     };
 
@@ -81,7 +81,7 @@ export class CountryService {
   getCountryCodes(onSuccess = (res: CountryCode[]) => {}, onError = (err: Error) => {}): void {
     const config: RequestConfig = {
       url: `${this.BASE_URL}/all`,
-      fields: ['nativeName', 'alpha3Code', 'flag']
+      fields: ['nativeName', 'alpha3Code', 'flag'],
     };
 
     const _onSuccess = (res: CountryCodesResponse) => {
@@ -90,8 +90,8 @@ export class CountryService {
           flag: r.flag,
           name: r.nativeName,
           englishName: r.name,
-          code: r.alpha3Code
-        }))
+          code: r.alpha3Code,
+        })),
       );
     };
 
@@ -101,7 +101,7 @@ export class CountryService {
   getCountryCode(code: string = 'cze'): Promise<CountryCode> {
     const config: RequestConfig = {
       url: `${this.BASE_URL}/${code}`,
-      fields: ['nativeName', 'alpha3Code', 'flag']
+      fields: ['nativeName', 'alpha3Code', 'flag'],
     };
 
     return new Promise((res, rej) => {
@@ -110,7 +110,7 @@ export class CountryService {
           flag: r.flag,
           name: r.nativeName,
           englishName: r.name,
-          code: r.alpha3Code
+          code: r.alpha3Code,
         });
       this._getCodes<CountryCodeResponse>(config, _onSuccess, rej);
     });
@@ -124,7 +124,7 @@ export class CountryService {
   private _getCodes<T>(
     config: RequestConfig = { url: '', fields: [] },
     onSuccess = (res: T) => {},
-    onError = (err: Error) => {}
+    onError = (err: Error) => {},
   ): void {
     const params = new HttpParams().set('fields', config.fields.join(';'));
 

@@ -128,16 +128,16 @@ export const getSwapPair = (
 };
 
 export const referenceCodeHandler =
-  (cb = (ref: string, originalRef: string) => { }) =>
-    ({ ref = '' }: { ref: string }) => {
-      const r = ref.split(' ').join('').slice(0, 49).toUpperCase();
-      cb(r, ref);
-    };
+  (cb = (ref: string, originalRef: string) => {}) =>
+  ({ ref = '' }: { ref: string }) => {
+    const r = ref.split(' ').join('').slice(0, 49).toUpperCase();
+    cb(r, ref);
+  };
 
 export const getConvertResponseOf =
   (type: PaymentType) =>
-    (res: BuySwapConvertResponse): BuySwapConvert =>
-      Array.isArray(res) ? res.find(r => r.PaymentGatewayProvider === type) : res;
+  (res: BuySwapConvertResponse): BuySwapConvert =>
+    Array.isArray(res) ? res.find(r => r.PaymentGatewayProvider === type) : res;
 
 export const getSwapStatusTranslations = ($: Translate): SwapStatusTranslations => ({
   [SwapStatusText.Validating]: $.instant($.SWAP_STATUS_VALIDATING_NAME),

@@ -86,6 +86,6 @@ import { SioCountryCodeComponent } from './sio-phone-code/sio-country-code.compo
     SioPurchaseItemComponent,
     SioStakeTransactionItemComponent,
     SioStakeItemComponent,
-  ]
+  ],
 })
 export class SioListModule {}

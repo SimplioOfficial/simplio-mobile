@@ -26,7 +26,7 @@ export class AccountService {
     private io: IoService,
     private plt: PlatformProvider,
     private authProvider: AuthenticationProvider,
-    private http: HttpFallbackService
+    private http: HttpFallbackService,
   ) {}
 
   get canResetPassword(): boolean {

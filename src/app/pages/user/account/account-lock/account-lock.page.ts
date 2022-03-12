@@ -8,7 +8,7 @@ import { TrackedPage } from '../../../../classes/trackedPage';
 @Component({
   selector: 'account-lock-page',
   templateUrl: './account-lock.page.html',
-  styleUrls: ['./account-lock.page.scss']
+  styleUrls: ['./account-lock.page.scss'],
 })
 export class AccountLockPage extends TrackedPage implements AfterViewInit {
   origin = this.router.getCurrentNavigation().extras?.state?.url || '/home/wallets';
@@ -24,24 +24,24 @@ export class AccountLockPage extends TrackedPage implements AfterViewInit {
     .keyframes([
       {
         offset: 0,
-        transform: 'translate3d(0, 0, 0) rotate(0)'
+        transform: 'translate3d(0, 0, 0) rotate(0)',
       },
       {
         offset: 0.25,
-        transform: 'translate3d(10px, 10px, 0) rotate(40deg)'
+        transform: 'translate3d(10px, 10px, 0) rotate(40deg)',
       },
       {
         offset: 0.5,
-        transform: 'translate3d(0, 0, 0) rotate(0)'
+        transform: 'translate3d(0, 0, 0) rotate(0)',
       },
       {
         offset: 0.75,
-        transform: 'translate3d(-10px, -10px, 0) rotate(-20deg)'
+        transform: 'translate3d(-10px, -10px, 0) rotate(-20deg)',
       },
       {
         offset: 1,
-        transform: 'translate3d(0, 0, 0) rotate(0)'
-      }
+        transform: 'translate3d(0, 0, 0) rotate(0)',
+      },
     ]);
 
   jumpAnim = this.animCtrl
@@ -52,24 +52,24 @@ export class AccountLockPage extends TrackedPage implements AfterViewInit {
     .keyframes([
       {
         offset: 0,
-        transform: 'translateY(0)'
+        transform: 'translateY(0)',
       },
       {
         offset: 0.25,
-        transform: 'translateY(5px)'
+        transform: 'translateY(5px)',
       },
       {
         offset: 0.5,
-        transform: 'translateY(0)'
+        transform: 'translateY(0)',
       },
       {
         offset: 0.75,
-        transform: 'translateY(-5px)'
+        transform: 'translateY(-5px)',
       },
       {
         offset: 1,
-        transform: 'translateY(0)'
-      }
+        transform: 'translateY(0)',
+      },
     ]);
 
   flyTriangleAnim = this.animCtrl
@@ -79,31 +79,31 @@ export class AccountLockPage extends TrackedPage implements AfterViewInit {
     .keyframes([
       {
         offset: 0,
-        transform: 'translate3d(0, 0, 0) rotate(0)'
+        transform: 'translate3d(0, 0, 0) rotate(0)',
       },
       {
         offset: 0.25,
-        transform: 'translate3d(-5px, 2px, 0) rotate(40deg)'
+        transform: 'translate3d(-5px, 2px, 0) rotate(40deg)',
       },
       {
         offset: 0.5,
-        transform: 'translate3d(0, 0, 0) rotate(0)'
+        transform: 'translate3d(0, 0, 0) rotate(0)',
       },
       {
         offset: 0.75,
-        transform: 'translate3d(-3px, -5px, 0) rotate(-20deg)'
+        transform: 'translate3d(-3px, -5px, 0) rotate(-20deg)',
       },
       {
         offset: 1,
-        transform: 'translate3d(0, 0, 0) rotate(0)'
-      }
+        transform: 'translate3d(0, 0, 0) rotate(0)',
+      },
     ]);
 
   constructor(
     private animCtrl: AnimationController,
     private authProvider: AuthenticationProvider,
     private router: Router,
-    public $: Translate
+    public $: Translate,
   ) {
     super();
   }
@@ -116,7 +116,7 @@ export class AccountLockPage extends TrackedPage implements AfterViewInit {
     await Promise.all([
       this.flyLineAnim.addElement(this.$send.nativeElement).play(),
       this.jumpAnim.addElement(this.$check.nativeElement).play(),
-      this.flyTriangleAnim.addElement(this.$logo.nativeElement).play()
+      this.flyTriangleAnim.addElement(this.$logo.nativeElement).play(),
     ]);
   }
 
@@ -127,8 +127,8 @@ export class AccountLockPage extends TrackedPage implements AfterViewInit {
   onSubmit() {
     this.router.navigate(['/home', 'user', 'account', 'kyc'], {
       state: {
-        url: this.origin
-      }
+        url: this.origin,
+      },
     });
   }
 }

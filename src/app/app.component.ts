@@ -44,7 +44,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private coinsService: CoinsService,
     private rateService: RateService,
     private liveChat: LivechatService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     Network.addListener('networkStatusChange', s => this._resolveNetwork(s));
