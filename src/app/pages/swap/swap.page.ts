@@ -355,7 +355,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
       //     return flat;
       //   });
       // }
-      return []
+      return [];
     } catch (err) {
       console.error(err);
       throw new Error(err);

@@ -14,8 +14,8 @@ const routes: Routes = [
   {
     path: '',
     component: AccountLockPage,
-    data: { tapbar: false }
-  }
+    data: { tapbar: false },
+  },
 ];
 
 @NgModule({
@@ -29,9 +29,9 @@ const routes: Routes = [
     SioIllustrationModule,
     SioSharedModule,
     TranslateModule.forChild({
-      extend: true
-    })
+      extend: true,
+    }),
   ],
-  declarations: [AccountLockPage]
+  declarations: [AccountLockPage],
 })
 export class AccountLockPageModule {}

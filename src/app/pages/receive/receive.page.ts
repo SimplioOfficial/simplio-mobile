@@ -15,7 +15,7 @@ import { IoService } from 'src/app/services/io.service';
 import { RateService } from 'src/app/services/apiv2/connection/rate.service';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { TranslateService } from '@ngx-translate/core';
-import { coinNames }from "@simplio/backend/api/utils/coins"
+import { coinNames } from '@simplio/backend/api/utils/coins';
 import { CheckWalletsService } from 'src/app/services/wallets/check-wallets.service';
 import { TrackedPage } from '../../classes/trackedPage';
 import { BlockchainService } from 'src/app/services/apiv2/blockchain/blockchain.service';
@@ -82,7 +82,9 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
   }
 
   get isInitialized() {
-    if (!(UtilsService.isSolanaToken(this.wallet.type) || Utils.isSafecoinToken(this.wallet.type))) {
+    if (
+      !(UtilsService.isSolanaToken(this.wallet.type) || Utils.isSafecoinToken(this.wallet.type))
+    ) {
       return true;
     } else {
       return this.wallet.isInitialized;
@@ -146,7 +148,6 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
 
   async presentCreateTokenAccountPrompt() {
     if (UtilsService.isSolanaToken(this.wallet.type)) {
-
       const minimumRent = await this.blockchainService.solana.getMinimumRentExemption({
         api: this.wallet.api,
       });
@@ -178,7 +179,10 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
               const solWallet = this.wallets.find(
                 e => e.ticker === coinNames.SOL && UtilsService.isSolana(e.type),
               );
-              if (!solWallet || (minimumRent > solWallet.balance && !UtilsService.isSolanaDev(this.wallet.type))) {
+              if (
+                !solWallet ||
+                (minimumRent > solWallet.balance && !UtilsService.isSolanaDev(this.wallet.type))
+              ) {
                 const errorMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_ERROR);
                 throw new Error(
                   errorMsg.replace(
@@ -200,7 +204,7 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
                   api: this.wallet.api,
                   contractAddress: this.wallet.contractaddress,
                   seeds: this.io.decrypt(this.wallet.mnemo, idt),
-                  addressType: this.wallet.addressType
+                  addressType: this.wallet.addressType,
                 })
                 .then(_ => {
                   this.checker.checkTransactions(
@@ -277,7 +281,7 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
                   api: this.wallet.api,
                   contractAddress: this.wallet.contractaddress,
                   seeds: this.io.decrypt(this.wallet.mnemo, idt),
-                  addressType: this.wallet.addressType
+                  addressType: this.wallet.addressType,
                 })
                 .then(_ => {
                   this.checker.checkTransactions(

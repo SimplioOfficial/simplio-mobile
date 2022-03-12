@@ -36,7 +36,7 @@ export class AuthenticationService {
     private authProvider: AuthenticationProvider,
     private swapProvider: SwapProvider,
     private http: HttpFallbackService,
-    private acc: AccountService
+    private acc: AccountService,
   ) {}
 
   serverUrl() {

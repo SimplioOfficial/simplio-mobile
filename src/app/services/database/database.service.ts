@@ -120,7 +120,7 @@ export class DatabaseService implements DatabaseStruct {
       isInitialized: toBool(w.is_initialized),
       transactions: await this._getTransactions(w._uuid),
       addressType: w.address_type,
-      api: w.apiurl
+      api: w.apiurl,
     };
   }
 
@@ -288,7 +288,7 @@ export class DatabaseService implements DatabaseStruct {
       origin: wallet.origin,
       unique_id: wallet.uniqueId,
       is_initialized: fromBool(wallet.isInitialized),
-      address_type: wallet.addressType
+      address_type: wallet.addressType,
     };
     const sqlKeys = Object.keys(data);
     const sqlValues = Object.values(data);
@@ -543,7 +543,7 @@ export class DatabaseService implements DatabaseStruct {
       origin: wallet.origin,
       unique_id: wallet.uniqueId,
       is_initialized: fromBool(wallet.isInitialized),
-      address_type: wallet.addressType
+      address_type: wallet.addressType,
     };
     const sqlKeys = Object.keys(data);
     const sqlValues = Object.values(data);

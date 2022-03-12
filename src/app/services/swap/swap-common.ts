@@ -30,7 +30,7 @@ export class CommonSwap {
   constructor(
     protected plt: PlatformProvider,
     protected http: HttpFallbackService,
-    protected platformProvider: PlatformProvider
+    protected platformProvider: PlatformProvider,
   ) {}
 
   registerWallet(wallet: Wallet): Promise<void> {
@@ -96,9 +96,11 @@ export class CommonSwap {
     });
     const reqParams = getParams(params);
 
-    return this.http.get<SwapReportPage>(url, { headers, params: reqParams }).catch((err: HttpErrorResponse) => {
-      console.error('Reporting swaps has failed');
-      throw err;
-    });
+    return this.http
+      .get<SwapReportPage>(url, { headers, params: reqParams })
+      .catch((err: HttpErrorResponse) => {
+        console.error('Reporting swaps has failed');
+        throw err;
+      });
   }
 }

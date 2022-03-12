@@ -111,7 +111,7 @@ export class BlockchainService {
     return this.tx;
   }
 
-  get stake(){
+  get stake() {
     return this.stk;
   }
 

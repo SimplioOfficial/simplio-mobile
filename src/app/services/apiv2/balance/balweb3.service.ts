@@ -11,7 +11,10 @@ import { BlockchainService } from '../blockchain/blockchain.service';
   providedIn: 'root',
 })
 export class Balweb3Service extends BalBase {
-  constructor(private blockchainService: BlockchainService, private networkService: NetworkService) {
+  constructor(
+    private blockchainService: BlockchainService,
+    private networkService: NetworkService,
+  ) {
     super('Balweb3Service');
   }
 

@@ -1,17 +1,17 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { EChartsOption } from 'echarts';
 
-@Component( {
+@Component({
   selector: 'sio-embeded-chart',
   templateUrl: './sio-embeded-chart.component.html',
-  styleUrls: ['./sio-embeded-chart.component.scss']
-} )
+  styleUrls: ['./sio-embeded-chart.component.scss'],
+})
 export class SioEmbededChartComponent implements OnChanges {
   private readonly _green = '#2dd36f';
   private readonly _red = '#eb445a';
   private readonly _initialDataset = [0];
 
-  @Input() dataset: number[]
+  @Input() dataset: number[];
 
   options: EChartsOption = {
     xAxis: {
@@ -30,7 +30,7 @@ export class SioEmbededChartComponent implements OnChanges {
         onZero: true,
       },
       splitLine: {
-        show: false
+        show: false,
       },
     },
     yAxis: {
@@ -51,7 +51,7 @@ export class SioEmbededChartComponent implements OnChanges {
         onZero: false,
       },
       splitLine: {
-        show: false
+        show: false,
       },
     },
 
@@ -74,13 +74,15 @@ export class SioEmbededChartComponent implements OnChanges {
     if (!ch?.dataset) return;
 
     const data = ch.dataset.currentValue;
-    this.options.series = [{
+    this.options.series = [
+      {
         type: 'line',
         smooth: true,
         animation: true,
         data: this._makeDataset(data),
         color: this._makeColor(data),
-    }]
+      },
+    ];
   }
 
   private _makeDataset(data: number[] = []): number[] {
@@ -96,6 +98,4 @@ export class SioEmbededChartComponent implements OnChanges {
     if (b >= a) return this._green;
     return this._red;
   }
-
 }
-

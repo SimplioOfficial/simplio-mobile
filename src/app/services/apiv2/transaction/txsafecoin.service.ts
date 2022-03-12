@@ -10,11 +10,14 @@ import { BlockchainService } from '../blockchain/blockchain.service';
   providedIn: 'root',
 })
 export class TxSafecoinService extends TxBase {
-  constructor(private blockchainService: BlockchainService, private networkService: NetworkService) {
+  constructor(
+    private blockchainService: BlockchainService,
+    private networkService: NetworkService,
+  ) {
     super('TxSafecoin');
   }
 
-  init() { }
+  init() {}
 
   getHistoryToken(data: {
     tokenId: string;
@@ -294,7 +297,7 @@ export class TxSafecoinService extends TxBase {
             let amount = 0;
             if (meta) {
               amount = meta.preBalances[0] - meta.postBalances[0];
-              if(amount > 0){
+              if (amount > 0) {
                 amount -= meta.fee;
               }
             }
@@ -420,18 +423,17 @@ export class TxSafecoinService extends TxBase {
                     if (instructions) {
                       instructions.some((ee: safecoinWeb3.ParsedInstruction) => {
                         currParsed = this._parseInstruction(ee);
-                        if (data.addresses.find(
-                          e => e.toString() === (currParsed.sender).toString(),
-                        )) {
+                        if (
+                          data.addresses.find(e => e.toString() === currParsed.sender.toString())
+                        ) {
                           parsed.amount -= currParsed.amount;
                           if (parsed.amount < 0) {
                             parsed.sender = currParsed.sender;
                             parsed.receiver = currParsed.receiver;
                           }
-                        }
-                        else if (data.addresses.find(
-                          e => e.toString() === (currParsed.receiver).toString(),
-                        )) {
+                        } else if (
+                          data.addresses.find(e => e.toString() === currParsed.receiver.toString())
+                        ) {
                           parsed.amount += currParsed.amount;
                           if (parsed.amount > 0) {
                             parsed.sender = currParsed.sender;

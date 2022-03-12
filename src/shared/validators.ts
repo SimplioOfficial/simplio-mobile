@@ -235,7 +235,7 @@ export const isGreaterOrEqualThan = (minValue: number) => {
       ? null
       : {
           result: false,
-          msg: ''
+          msg: '',
         };
   };
 };
@@ -246,7 +246,7 @@ export const isLessThan = (maxValue: number) => {
       ? null
       : {
           result: false,
-          msg: ''
+          msg: '',
         };
   };
 };
@@ -257,7 +257,7 @@ export const isLessOrEqualThan = (maxValue: number) => {
       ? null
       : {
           result: false,
-          msg: ''
+          msg: '',
         };
   };
 };

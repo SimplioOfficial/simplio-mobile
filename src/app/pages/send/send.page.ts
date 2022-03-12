@@ -59,8 +59,8 @@ export class SendPage extends TrackedPage implements OnDestroy {
       feeLevelName: [this.feePolicy, [Validators.required]],
     },
     {
-      validators: [isAmountSufficient]
-    }
+      validators: [isAmountSufficient],
+    },
   );
 
   wallets$ = this.walletsProvider.wallets$.subscribe(w => (this.wallets = w));

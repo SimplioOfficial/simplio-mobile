@@ -53,7 +53,7 @@ export class WalletData {
       origin: this._origin,
       isInitialized: this._isInitialized,
       uniqueId: this._uniqueId,
-      addressType: this._addressType
+      addressType: this._addressType,
     };
   }
 

@@ -47,9 +47,7 @@ export class TxsolanaService extends TxBase {
   }
 
   async wsSubscribe(endpoint: string, address: string, commitment, callback) {
-
     let timer;
-
 
     const ws = new WebSocket(endpoint);
     ws.onopen = () => {

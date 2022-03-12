@@ -13,7 +13,10 @@ import { TxBase } from './txbase';
   providedIn: 'root',
 })
 export class Txweb3Service extends TxBase {
-  constructor(private networkService: NetworkService, private blockchainService: BlockchainService) {
+  constructor(
+    private networkService: NetworkService,
+    private blockchainService: BlockchainService,
+  ) {
     super('Txweb3Service');
   }
 
@@ -60,7 +63,7 @@ export class Txweb3Service extends TxBase {
           };
         })
         .catch(err => {
-            throw new Error(data.walletUnit._uuid + '/001');
+          throw new Error(data.walletUnit._uuid + '/001');
         });
     } catch (_) {
       throw new Error(data.walletUnit._uuid + '/001');
@@ -116,7 +119,7 @@ export class Txweb3Service extends TxBase {
           return txResponse;
         })
         .catch(err => {
-            throw new Error('Get multiple transaction error' + '/003');
+          throw new Error('Get multiple transaction error' + '/003');
         });
     } catch (_) {
       throw new Error('Get multiple transaction error' + '/003');

@@ -10,7 +10,7 @@ import { Action } from 'src/app/components/list-items/sio-action-item/sio-action
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { getSwapStatusTranslations, getWalletType } from 'src/app/services/swap/utils';
-import { coinNames }from "@simplio/backend/api/utils/coins"
+import { coinNames } from '@simplio/backend/api/utils/coins';
 import { WalletService } from 'src/app/services/wallet.service';
 import { getPrice } from '../../../services/wallets/utils';
 import { Rate, WalletType } from '../../../interface/data';
@@ -26,7 +26,7 @@ export class SwapDetailModal implements OnInit {
   @Input() progress = 0;
 
   expanded = false;
-  locale = 'USD'
+  locale = 'USD';
   txFeePipe;
   items: TransactionProgressItem[] = [];
   private _actions = new BehaviorSubject<Action[]>([]);

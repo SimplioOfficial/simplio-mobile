@@ -10,7 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { SvgIcon } from 'src/assets/icon/icons';
-import { coinNames }from "@simplio/backend/api/utils/coins"
+import { coinNames } from '@simplio/backend/api/utils/coins';
 import { ThemeMode } from '../../../../interface/settings';
 import { SettingsProvider } from '../../../../providers/data/settings.provider';
 @Component({

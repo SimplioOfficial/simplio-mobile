@@ -115,7 +115,7 @@ export class SendOverviewPage implements OnInit {
         lasttx: this.sendData.wallet.lasttx,
         api: this.sendData.wallet.api,
         feeContractAddress: 'BVe7rDXoCm6UhWh1P5mTnVZAnov6MFxGzykqNmhLB7HH',
-        addressType: this.sendData.wallet.addressType
+        addressType: this.sendData.wallet.addressType,
       })
       .then(res => {
         this.check(this.sendData.wallet);

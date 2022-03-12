@@ -9,7 +9,7 @@ import { Translate } from 'src/app/providers/translate/';
 @Component({
   selector: 'country-list-modal',
   templateUrl: './country-list.modal.html',
-  styleUrls: ['./country-list.modal.scss']
+  styleUrls: ['./country-list.modal.scss'],
 })
 export class CountryListModal implements OnInit {
   private _list = new BehaviorSubject<CountryCode[]>([]);
@@ -33,7 +33,10 @@ export class CountryListModal implements OnInit {
   onSearchContent(e) {
     const v: string = e.target.value.toString().toUpperCase();
     const filtered = this.codes.filter(
-      c => c.code.toUpperCase().includes(v) || c.name.toUpperCase().includes(v) || c.englishName.toUpperCase().includes(v)
+      c =>
+        c.code.toUpperCase().includes(v) ||
+        c.name.toUpperCase().includes(v) ||
+        c.englishName.toUpperCase().includes(v),
     );
     this._list.next(filtered);
   }

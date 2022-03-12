@@ -20,7 +20,7 @@ export interface UserDataItem {
   providedIn: 'root',
 })
 export class UserDataService {
-  constructor(private http: HttpFallbackService) { }
+  constructor(private http: HttpFallbackService) {}
 
   get(property: string): Promise<any> {
     const url = USERS_URLS.data.href;
@@ -28,7 +28,9 @@ export class UserDataService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.get<UserDataItem[]>(url, { headers }).then(res => res.find(a => a.Name === property)?.Value);
+    return this.http
+      .get<UserDataItem[]>(url, { headers })
+      .then(res => res.find(a => a.Name === property)?.Value);
   }
 
   create(name: string, type: string, value: any): Promise<any> {

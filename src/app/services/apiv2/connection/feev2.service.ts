@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AddrUtxo, FeeName, FeeResponsev2, Rate, WalletType } from 'src/app/interface/data';
 import { environment } from 'src/environments/environment';
-import { coinNames }from "@simplio/backend/api/utils/coins"
+import { coinNames } from '@simplio/backend/api/utils/coins';
 import { UtilsService } from '../../utils.service';
 import { BlockchainService } from '../blockchain/blockchain.service';
 
@@ -15,7 +15,10 @@ export class Feev2Service {
   feev2Url = 'https://data.simplio.io/feev2.json';
   blockChainFee = 'https://api.blockchain.info/mempool/fees';
 
-  constructor(private networkService: NetworkService, private blockchainService: BlockchainService) {
+  constructor(
+    private networkService: NetworkService,
+    private blockchainService: BlockchainService,
+  ) {
     this.refresh();
   }
 

@@ -145,12 +145,15 @@ export class TxblockbookService extends TxBase {
 
               amountIn = this.sum(inputs, false);
               amountInMine = this.sum(inputs, true);
-              amountOut =  this.sumVout(outputs, false);
+              amountOut = this.sumVout(outputs, false);
               amountOutMine = this.sumVout(outputs, true);
 
               const fee = Number(tx.fees);
 
-              if (amountInMine === amountOutMine + fee || (amountInMine === 0 && amountOutMine === 0)) {
+              if (
+                amountInMine === amountOutMine + fee ||
+                (amountInMine === 0 && amountOutMine === 0)
+              ) {
                 amount = amountOutMine;
                 action = TxType.MOVE;
               } else if (amountInMine === 0) {
@@ -237,7 +240,7 @@ export class TxblockbookService extends TxBase {
             });
           })
           .catch(err => {
-            console.log(err)
+            console.log(err);
             if (explorers.length > 0) {
               const ex = explorers.pop();
               console.log('Get transaction switch to', ex.api);

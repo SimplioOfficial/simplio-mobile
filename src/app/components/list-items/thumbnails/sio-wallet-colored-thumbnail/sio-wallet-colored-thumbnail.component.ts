@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ThemeMode } from 'src/app/interface/settings';
-import { coinNames }from "@simplio/backend/api/utils/coins"
+import { coinNames } from '@simplio/backend/api/utils/coins';
 
 @Component({
   selector: 'sio-wallet-colored-thumbnail',

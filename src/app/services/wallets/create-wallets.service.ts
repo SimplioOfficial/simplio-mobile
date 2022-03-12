@@ -30,19 +30,29 @@ export class CreateWalletService implements WalletsCreator {
       this.blockchainService.bitcorelibCustom,
     ),
     [WalletType.ETH]: this.blockchainService.web3.getAddress.bind(this.blockchainService.web3),
-    [WalletType.ETH_TOKEN]: this.blockchainService.web3.getAddress.bind(this.blockchainService.web3),
+    [WalletType.ETH_TOKEN]: this.blockchainService.web3.getAddress.bind(
+      this.blockchainService.web3,
+    ),
     [WalletType.BSC]: this.blockchainService.web3.getAddress.bind(this.blockchainService.web3),
-    [WalletType.BSC_TOKEN]: this.blockchainService.web3.getAddress.bind(this.blockchainService.web3),
+    [WalletType.BSC_TOKEN]: this.blockchainService.web3.getAddress.bind(
+      this.blockchainService.web3,
+    ),
     [WalletType.ETC]: this.blockchainService.web3.getAddress.bind(this.blockchainService.web3),
-    [WalletType.SOLANA]: this.blockchainService.solana.getAddress.bind(this.blockchainService.solana),
+    [WalletType.SOLANA]: this.blockchainService.solana.getAddress.bind(
+      this.blockchainService.solana,
+    ),
     [WalletType.SOLANA_TOKEN]: this.blockchainService.solana.getAddress.bind(
       this.blockchainService.solana,
     ),
-    [WalletType.SOLANA_DEV]: this.blockchainService.solana.getAddress.bind(this.blockchainService.solana),
+    [WalletType.SOLANA_DEV]: this.blockchainService.solana.getAddress.bind(
+      this.blockchainService.solana,
+    ),
     [WalletType.SOLANA_TOKEN_DEV]: this.blockchainService.solana.getAddress.bind(
       this.blockchainService.solana,
     ),
-    [WalletType.SAFE]: this.blockchainService.safecoin.getAddress.bind(this.blockchainService.safecoin),
+    [WalletType.SAFE]: this.blockchainService.safecoin.getAddress.bind(
+      this.blockchainService.safecoin,
+    ),
     [WalletType.SAFE_TOKEN]: this.blockchainService.safecoin.getAddress.bind(
       this.blockchainService.safecoin,
     ),
@@ -113,10 +123,7 @@ export class CreateWalletService implements WalletsCreator {
         });
         walletData.setDecimal(decimal);
       } else {
-        const decimal = Utils.getDecimals(
-          walletData.value().type,
-          walletData.value().ticker,
-        );
+        const decimal = Utils.getDecimals(walletData.value().type, walletData.value().ticker);
         walletData.setDecimal(decimal);
       }
 
@@ -130,7 +137,12 @@ export class CreateWalletService implements WalletsCreator {
         }
       }
 
-      if (!(Utils.isSolanaToken(walletData.value().type) || Utils.isSafecoinToken(walletData.value().type))) {
+      if (
+        !(
+          Utils.isSolanaToken(walletData.value().type) ||
+          Utils.isSafecoinToken(walletData.value().type)
+        )
+      ) {
         walletData.setIsInitialized(true);
       }
       walletData.setMnemo(mnemo);
@@ -154,7 +166,7 @@ export class CreateWalletService implements WalletsCreator {
       type: walletData.value().type,
       contractAddress: walletData.value().contractaddress,
       api: walletData.value().api,
-      addressType: walletData.value().addressType
+      addressType: walletData.value().addressType,
     }).then(async data => {
       walletData.pushAddress({
         address: data.address,

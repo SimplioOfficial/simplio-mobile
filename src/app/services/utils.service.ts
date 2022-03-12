@@ -5,14 +5,14 @@ import { ToastController, AlertController, ModalController } from '@ionic/angula
 import { PredefinedColors } from '@ionic/core/dist/types/interface';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { HTTP } from '@ionic-native/http/ngx';
-import { WalletType, Account } from 'src/app/interface/data';
+import { WalletType, Account, Wallet } from 'src/app/interface/data';
 import { Translate, ExtendedAlertOptions, sanitizeExtendedInput } from '../providers/translate/';
 
 import { fromPairs, isString, toPairs } from 'lodash';
 import { coinNames } from './api/coins';
 import { validateMnemonic } from 'bip39';
 import { InterestRate } from '@simplio/backend/interface/stake';
-import BN from "bn.js";
+import BN from 'bn.js';
 
 @Injectable({
   providedIn: 'root',
@@ -520,27 +520,25 @@ export const mul10 = (amount: string, decimal: number): string => {
   return arr.join('');
 };
 
-
 export const toNative = (amount: number, decimals: number): BigInt => {
   return BigInt(mul10(amount.toString(), decimals));
-}
+};
 
 export const toString = (amount: BN, decimals: number): string => {
   return parseFloat(div10(amount.toString(), decimals)).toString();
-}
+};
 
 export const numberToString = (amount: number, decimals: number): string => {
   return parseFloat(div10(amount.toString(), decimals)).toString();
-}
+};
 
 export const toInterest = (amount: number): BigInt => {
   return BigInt(mul10(amount.toString(), 5));
-}
+};
 
 export const toInterestString = (amount: BN): string => {
   return parseFloat(div10(amount.toString(), 5)).toString();
-}
-
+};
 
 export const calculateInterest = (
   last_payment: number,
@@ -555,22 +553,27 @@ export const calculateInterest = (
   } else {
     let tier_ratio = getRatio(amount, tiers, decimal);
     interest_info.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
-    let filter =
-      getInterestList(last_payment, current_time, interest_info);
+    let filter = getInterestList(last_payment, current_time, interest_info);
     let interest = 0;
     let start_time = current_time;
     filter.forEach(element => {
       {
         let end_time = start_time;
         start_time = element.unixTimestamp;
-        interest += calculate(amount, Math.max(element.unixTimestamp, last_payment), end_time, element.interestRate, tier_ratio);
+        interest += calculate(
+          amount,
+          Math.max(element.unixTimestamp, last_payment),
+          end_time,
+          element.interestRate,
+          tier_ratio,
+        );
       }
 
       interest = Math.max(0, interest);
     });
     return interest;
   }
-}
+};
 
 export const getRatio = (amount, tiers, decimals) => {
   const tier6 = tiers.find(e => e.name === 6);
@@ -595,12 +598,13 @@ export const getRatio = (amount, tiers, decimals) => {
     tierRatio = tier1.ratio;
   }
   return tierRatio;
-}
+};
 
 export const getInterestList = (
   lastPayment: number,
   currentTime: number,
-  interestInfo: InterestRate[]): InterestRate[] => {
+  interestInfo: InterestRate[],
+): InterestRate[] => {
   let filter = [];
   interestInfo.some(element => {
     let time = element.unixTimestamp;
@@ -611,8 +615,8 @@ export const getInterestList = (
       return true;
     }
   });
-  return filter
-}
+  return filter;
+};
 
 export const calculate = (
   amount: number,
@@ -621,96 +625,116 @@ export const calculate = (
   interest_rate: number,
   tier_ratio: number,
 ) => {
-  const a = Math.floor(Math.floor(Math.floor(Math.floor(((end_time - start_time) / 3600)) * 3600) * interest_rate
-    * tier_ratio
-    / 100)
-    * amount
-    / (365 * 24 * 60 * 60));
+  const a = Math.floor(
+    (Math.floor(
+      (Math.floor(Math.floor((end_time - start_time) / 3600) * 3600) * interest_rate * tier_ratio) /
+        100,
+    ) *
+      amount) /
+      (365 * 24 * 60 * 60),
+  );
   return a > 0 ? a : 0;
-}
+};
 
 export const parseError = (err: string) => {
-  const splt = err.split("custom program error:");
+  const splt = err.split('custom program error:');
   const errorIndex = parseInt(splt[1]);
   let rtn = err;
   switch (errorIndex) {
     default:
       break;
     case 0:
-      rtn = "Your instruction is invalid, please contact support";
+      rtn = 'Your instruction is invalid, please contact support';
       break;
     case 1:
-      rtn = "Token program is invalid, please contact support";
+      rtn = 'Token program is invalid, please contact support';
       break;
     case 2:
-      rtn = "Error: Not rent exempt";
+      rtn = 'Error: Not rent exempt';
       break;
     case 3:
-      rtn = "Error: Expected amount mismatch";
+      rtn = 'Error: Expected amount mismatch';
       break;
     case 4:
       rtn = "Error: You don't have permission to update data";
       break;
     case 5:
-      rtn = "Error: Not request withdrawal";
+      rtn = 'Error: Not request withdrawal';
       break;
     case 6:
-      rtn = "Error: Already request withdrawal";
+      rtn = 'Error: Already request withdrawal';
       break;
     case 7:
-      rtn = "Error: Waiting withdrawal";
+      rtn = 'Error: Waiting withdrawal';
       break;
     case 8:
       rtn = "You don't have any staking reward, please try again later";
       break;
     case 9:
-      rtn = "Error: You still have some staking reward, please try to withdraw it first";
+      rtn = 'Error: You still have some staking reward, please try to withdraw it first';
       break;
     case 10:
-      rtn = "Error: Invalid authority info";
+      rtn = 'Error: Invalid authority info';
       break;
     case 11:
-      rtn = "Error: Invalid pool address";
+      rtn = 'Error: Invalid pool address';
       break;
     case 12:
-      rtn = "Error: Invalid staking amount";
+      rtn = 'Error: Invalid staking amount';
       break;
     case 13:
-      rtn = "Error: Max locked value is reached";
+      rtn = 'Error: Max locked value is reached';
       break;
     case 14:
-      rtn = "Error: Pool not initialized";
+      rtn = 'Error: Pool not initialized';
       break;
     case 15:
-      rtn = "Error: Incorrect pool deposit address";
+      rtn = 'Error: Incorrect pool deposit address';
       break;
     case 16:
-      rtn = "Error: Incorrect withdrawal address";
+      rtn = 'Error: Incorrect withdrawal address';
       break;
     case 17:
-      rtn = "Error: Insufficient Amount";
+      rtn = 'Error: Insufficient Amount';
       break;
     case 18:
-      rtn = "Less than minimum amount";
+      rtn = 'Less than minimum amount';
       break;
     case 19:
-      rtn = "Error: Invalid initializer";
+      rtn = 'Error: Invalid initializer';
       break;
     case 20:
-      rtn = "Error: Rate account list is incorrect";
+      rtn = 'Error: Rate account list is incorrect';
       break;
     case 21:
-      rtn = "Error: End rate account list is incorrect";
+      rtn = 'Error: End rate account list is incorrect';
       break;
     case 22:
-      rtn = "Error: Amount overflow";
+      rtn = 'Error: Amount overflow';
       break;
     case 23:
-      rtn = "Error: Invalid last payment";
+      rtn = 'Error: Invalid last payment';
       break;
     case 24:
-      rtn = "Error: Invalid time for new rate account";
+      rtn = 'Error: Invalid time for new rate account';
       break;
   }
   return rtn;
-}
+};
+
+export const getChainId = (wallet: Wallet) => {
+  switch (wallet.type) {
+    case WalletType.BSC_TOKEN:
+      return coinNames.BSC;
+    case WalletType.ETH_TOKEN:
+      return coinNames.ETH;
+    case WalletType.SOLANA_TOKEN:
+    case WalletType.SOLANA_TOKEN_DEV:
+      return coinNames.SOL;
+    case WalletType.SAFE_TOKEN:
+      return coinNames.SAFE;
+    case WalletType.CUSTOM_TOKEN:
+    default:
+      return '';
+  }
+};

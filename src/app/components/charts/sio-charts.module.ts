@@ -6,18 +6,13 @@ import { NgxEchartsModule } from 'ngx-echarts';
 
 @NgModule({
   imports: [
-    CommonModule, 
-    IonicModule, 
+    CommonModule,
+    IonicModule,
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts'), // or import('./path-to-my-custom-echarts')
     }),
   ],
-  declarations: [
-	  SioEmbededChartComponent,
-  ],
-  exports: [
-	  SioEmbededChartComponent,
-  ]
+  declarations: [SioEmbededChartComponent],
+  exports: [SioEmbededChartComponent],
 })
 export class SioChartsModule {}
-
