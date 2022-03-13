@@ -65,7 +65,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>This app requires calendar access to function properly.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>To Take Photos and Video</string>
+	<string>We need to scan the QR code in order to load the address.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>This app requires contacts access to function properly.</string>
 	<key>NSFaceIDUsageDescription</key>
