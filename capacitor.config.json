@@ -19,6 +19,11 @@
       "resize": "body"
     }
   },
+  "server": {
+		"hostname": "explorer.solana.com",
+		"androidScheme": "https",
+		"iosScheme": "https"
+	},
   "cordova": {
     "preferences": {
       "StatusBarStyle": "lightcontent",
