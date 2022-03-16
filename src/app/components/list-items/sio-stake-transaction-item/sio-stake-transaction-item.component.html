@@ -1,6 +1,4 @@
-<div
-  class="thumbnail-container"
->
+<div class="thumbnail-container">
   <sio-transaction-thumbnail [transaction-type]="txType"></sio-transaction-thumbnail>
 </div>
 
@@ -9,5 +7,5 @@
 </div>
 <div class="balance">
   <p [attr.transaction-type]="txType">{{ amount }} {{ ticker }} </p>
-  <span>{{ date | date:'MMM dd, yyyy' }}</span>
+  <span>{{ date | date: 'MMM dd, yyyy' }}</span>
 </div>

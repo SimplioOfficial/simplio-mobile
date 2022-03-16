@@ -1,6 +1,6 @@
 :host {
-	position: relative;
-	display: block;
+  position: relative;
+  display: block;
 }
 
 .thumbnail {
@@ -8,9 +8,9 @@
 }
 
 .mark {
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	transform: translate(25%, 25%);
-	z-index: 1;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translate(25%, 25%);
+  z-index: 1;
 }

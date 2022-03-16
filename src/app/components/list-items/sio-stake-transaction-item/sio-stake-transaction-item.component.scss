@@ -6,10 +6,10 @@ p {
   color: var(--ion-text-color);
 }
 
-[transaction-type="0"] {
-	color: var(--ion-color-danger);
+[transaction-type='0'] {
+  color: var(--ion-color-danger);
 }
 
-[transaction-type="1"] {
-	color: var(--ion-color-success);
+[transaction-type='1'] {
+  color: var(--ion-color-success);
 }
