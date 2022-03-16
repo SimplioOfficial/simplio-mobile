@@ -27,7 +27,6 @@
     "build-apk": "ionic build && npm run patch && npx cap sync android && npx cap open android",
     "build:prod:windows": "set NODE_OPTIONS=--max_old_space_size=8192 && ionic build --configuration production --release",
     "build:prod:mac": "export NODE_OPTIONS=--max_old_space_size=8192 && ionic build --configuration production --release",
-    "build:hotfix": "gulp getversion && npm run build:prod:mac && npm run patch",
     "preinstall": "npx npm-force-resolutions"
   },
   "private": true,
