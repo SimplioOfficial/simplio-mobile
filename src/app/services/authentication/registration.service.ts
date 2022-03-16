@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AccountCredentials, AgreementData, RegisterAccountData } from 'src/app/interface/account';
 import { AccountRegistrationError } from 'src/app/providers/errors/account-registration-error';
 import { Translate } from 'src/app/providers/translate';
+import { HttpService } from 'src/app/services/http.service';
 import { USERS_URLS } from '../../providers/routes/account.routes';
 import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
 
@@ -10,7 +11,7 @@ import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
   providedIn: 'root',
 })
 export class RegistrationService {
-  constructor(private $: Translate, private http: HttpFallbackService) {}
+  constructor(private $: Translate, private http: HttpFallbackService, private h: HttpService) {}
 
   register(data: RegisterAccountData): Promise<AccountCredentials> {
     const url = USERS_URLS.account.href;
@@ -23,7 +24,7 @@ export class RegistrationService {
       password: data.cred.password,
     };
 
-    return this.http
+    return this.h
       .post<void>(url, body, { headers })
       .then(() => data.cred)
       .catch((err: HttpErrorResponse) => {
