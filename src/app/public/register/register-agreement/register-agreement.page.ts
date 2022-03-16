@@ -66,7 +66,8 @@ export class RegisterAgreementPage {
     const loading = await this.loadingCtrl.create();
     await loading.present();
 
-    const ipAddress = await this.registration.getIpAddress();
+    // const ipAddress = await this.registration.getIpAddress();
+    const ipAddress = '192.168.1.1';
 
     const data = {
       agreements: {
