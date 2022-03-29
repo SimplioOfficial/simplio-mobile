@@ -28,6 +28,10 @@ type AfterLoginOptions = { verify: boolean; isNew: boolean };
 export class AuthenticationService {
   private reloadTimeout = null;
   private _refreshServerUrl = '';
+
+  private readonly RETRY_TIMEOUT = 3000; // in ms
+  private readonly MAX_ATTEMPTS_TO_RECONNECT = Number.MAX_SAFE_INTEGER;
+
   constructor(
     private $: Translate,
     private mfa: MultiFactorAuthenticationService,
@@ -111,14 +115,21 @@ export class AuthenticationService {
     });
   }
 
-  refresh(acc: Acc): Promise<Acc> {
+  async refresh(acc: Acc, itteration = 0): Promise<Acc> {
     return this._refresh(acc.rtk)
       .then(c =>
         this.acc.updateAccount({ rtk: c.refresh_token, atk: c.access_token, tkt: c.token_type }),
       )
-      .catch(err => {
-        this.logout();
-        throw err;
+      .catch(async _ => {
+        await new Promise(resolve => setTimeout(resolve, this.RETRY_TIMEOUT));
+
+        if (itteration < this.MAX_ATTEMPTS_TO_RECONNECT) {
+          // in case of lost connection, try again
+          console.log('Refresh failed, trying again...');
+          return this.refresh(acc, itteration + 1);
+        } else {
+          throw new Error('Refresh failed');
+        }
       });
   }
 
