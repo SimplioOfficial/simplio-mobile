@@ -18,7 +18,8 @@ export const environment = {
   USER_API: 'https://simplio-test-8tkjnaqb.ew.gateway.dev',
   SWIPELUX: 'https://jvm.api.aws-dev.swipelux.com/api',
   CUSTOM_CONTENT: {
-    SWIPELUX: false,
+    SWIPELUX: true,
     STAKING: false,
+    DISABLED_SWAP_PAIRS: false,
   },
 };

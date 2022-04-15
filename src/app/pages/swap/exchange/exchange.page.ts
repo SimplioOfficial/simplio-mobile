@@ -48,6 +48,7 @@ import {
 import { Settings } from 'src/app/interface/settings';
 import { SwapProvider } from 'src/app/providers/data/swap.provider';
 import { SioSwapValueComponent } from 'src/app/components/form/sio-swap-value/sio-swap-value.component';
+import { environment } from '../../../../environments/environment';
 import {
   SwapWalletModal,
   SwapWalletModalResponse,
@@ -1038,14 +1039,16 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private checkDisabledSwapPair() {
-    const disabledPairs: SwapCoin[] = [
-      { from: coinNames.BUSD, to: coinNames.BNB },
-      { from: coinNames.BUSD, to: coinNames.ZEC },
-      { from: coinNames.USDC, fromChain: coinNames.BSC, to: coinNames.BNB },
-      { from: coinNames.BUSD, to: coinNames.SOL },
-      { from: coinNames.LTC, to: coinNames.USDC, toChain: coinNames.BSC },
-      { from: coinNames.ETH, to: coinNames.USDT, toChain: coinNames.BSC },
-    ];
+    const disabledPairs: SwapCoin[] = environment.CUSTOM_CONTENT.DISABLED_SWAP_PAIRS
+      ? [
+          { from: coinNames.BUSD, to: coinNames.BNB },
+          { from: coinNames.BUSD, to: coinNames.ZEC },
+          { from: coinNames.USDC, fromChain: coinNames.BSC, to: coinNames.BNB },
+          { from: coinNames.BUSD, to: coinNames.SOL },
+          { from: coinNames.LTC, to: coinNames.USDC, toChain: coinNames.BSC },
+          { from: coinNames.ETH, to: coinNames.USDT, toChain: coinNames.BSC },
+        ]
+      : [];
 
     const fromChainTicker = getChainId(this.sourceWallet);
     const toChainTicker = getChainId(this.destinationWallet);
