@@ -3,9 +3,7 @@ import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { SignedTransaction } from 'src/app/interface/data';
 import { Subscription } from 'rxjs';
-import { UtilsService } from 'src/app/services/utils.service';
 import { Translate } from 'src/app/providers/translate/';
-import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { SwapTransaction } from 'src/app/interface/swap';
 import { SingleSwapService } from 'src/app/services/swap/single-swap.service';
 
@@ -22,17 +20,23 @@ export class SwapConfirmPage implements OnInit, OnDestroy {
     private router: Router,
     private singleSwap: SingleSwapService,
     private dataService: DataService,
-    private utilService: UtilsService,
-    private authProvider: AuthenticationProvider,
     public $: Translate,
   ) {}
 
   get sourceCoin(): string {
-    return this.swapTx ? this.swapTx?.source?.wallet?.ticker : '';
+    return this.swapTx ? this.swapTx.source?.wallet?.ticker : '';
+  }
+
+  get sourceNetwork(): string {
+    return this.swapTx ? this.swapTx.pair?.SourceCurrencyNetwork : '';
   }
 
   get targetCoin(): string {
-    return this.swapTx ? this.swapTx?.target?.wallet?.ticker : '';
+    return this.swapTx ? this.swapTx.target?.wallet?.ticker : '';
+  }
+
+  get targetNetwork(): string {
+    return this.swapTx ? this.swapTx.pair?.TargetCurrencyNetwork : '';
   }
 
   ngOnInit() {
