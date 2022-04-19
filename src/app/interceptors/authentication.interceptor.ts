@@ -6,51 +6,35 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY, from, Observable, throwError } from '@polkadot/x-rxjs';
+import { BehaviorSubject, from, Observable, throwError } from '@polkadot/x-rxjs';
 import { catchError, filter, switchMap, take, tap } from 'rxjs/operators';
+import { HeaderFlags, ApiResources } from 'src/app/interface/global';
 import { Acc } from 'src/app/interface/user';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { environment } from '../../environments/environment';
-import { SwipeluxProvider } from '../providers/swipelux/swipelux-provider.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private _isRefreshing = false;
+
   private _acc = new BehaviorSubject<Acc>(null);
 
   constructor(
     private auth: AuthenticationService,
-    private swipeluxProvider: SwipeluxProvider,
     private authProvider: AuthenticationProvider,
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+    if (req.headers.get(HeaderFlags.ApiResource) !== ApiResources.Simplio) return next.handle(req);
+
     const acc = this.authProvider.accountValue;
     if (!acc) return next.handle(req);
-
-    if (req.urlWithParams.indexOf('swipelux') > -1 && !environment.CUSTOM_CONTENT.SWIPELUX) {
-      console.log('Disabled swipelux content');
-      return EMPTY;
-    }
-
-    // requests to swipelux needs to be authorized with different token
-    if (req.url.includes(environment.SWIPELUX)) {
-      const cloned = req.clone({
-        setHeaders: {
-          Authorization: this.swipeluxProvider.authToken ?? '',
-          'x-merchant-key': this.swipeluxProvider.merchantKey ?? '',
-        },
-      });
-
-      return next.handle(cloned);
-    }
 
     req = this._authorize(req, acc);
 
     return next.handle(req).pipe(
       catchError(err => {
-        if (err instanceof HttpErrorResponse && err.status === 401) {
+        if (err instanceof HttpErrorResponse && (err.status === 401 || err.status === 0)) {
           return this._handleUnauthorizedError(req, next);
         }
 
@@ -71,22 +55,23 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    if (this._isRefreshing) return this._addToken(req, next);
-    else return this._refreshToken(req, next);
+    return this.authProvider.isRefreshing$.pipe(
+      take(1),
+      switchMap(isRefrehing => {
+        if (isRefrehing) return this._addToken(req, next);
+        else return this._refreshToken(req, next);
+      })
+    );
   }
 
   private _refreshToken(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this._isRefreshing = true;
+    this.authProvider.pushIsRefreshing(true);
     this._acc.next(null);
 
-    const acc = this.auth.refresh(this.authProvider.accountValue).then(acc => {
-      this._acc.next(acc);
-      return acc;
-    });
-
-    return from(acc).pipe(
-      tap(() => (this._isRefreshing = false)),
+    return from(this.auth.refresh(this.authProvider.accountValue)).pipe(
+      tap(acc => this._acc.next(acc)),
       switchMap(acc => next.handle(this._authorize(req, acc))),
+      tap(() => this.authProvider.pushIsRefreshing(false)),
     );
   }
 

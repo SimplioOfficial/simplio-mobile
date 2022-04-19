@@ -44,6 +44,7 @@ import { VerifyIdentityModalModule } from './pages/modals/verify-identity-modal/
 import { TutorialsProvider } from 'src/app/providers/data/tutorials.provider';
 import { AuthInterceptor } from 'src/app/interceptors/authentication.interceptor';
 import { LivechatWidgetModule } from '@livechat/angular-widget';
+import { SwipeluxInterceptor } from 'src/app/interceptors/swipelux.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -88,6 +89,11 @@ import { LivechatWidgetModule } from '@livechat/angular-widget';
     LocalStorage,
     HTTP,
     Diagnostic,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SwipeluxInterceptor,
+      multi: true,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

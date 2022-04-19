@@ -46,22 +46,7 @@ export class SwapConfirmPage implements OnInit, OnDestroy {
     this.dataService.cleanSwapTransaction();
   }
 
-  /**
-   * @todo saving the pending transaction is obsolete and it was removed why it is here?
-   */
-  onDone() {
-    const data = {
-      email: this.authProvider.accountValue.email,
-      swapTx: this.swapTx,
-    };
-
-    this.singleSwap
-      .savePendingSwap(data)
-      .then(() => this.router.navigate(['home', 'swap']))
-      .catch(async (err: Error) => {
-        console.error(err.message);
-        await this.utilService.showToast(this.$.SAVING_SWAP_HAS_FAILED, 1500, 'warning');
-        this.router.navigate(['home', 'swap']);
-      });
+  async onDone() {
+    await this.router.navigate(['home', 'swap']);
   }
 }

@@ -1,6 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SignedTransaction } from 'src/app/interface/data';
 import {
   SwapStatusText,
   SwapSingleResponse,
@@ -8,12 +7,11 @@ import {
   SwapConvertResponse,
   SwapReportRequestParams,
   SwapType,
-  SwapTransaction,
   SwapReportPage,
   SwapSingleUpdate,
 } from 'src/app/interface/swap';
 import { PlatformProvider } from 'src/app/providers/platform/platform';
-import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
+import { HeadersService } from 'src/app/services/headers.service';
 import { getParams } from '../authentication/utils';
 import { CommonSwap, SwapService } from './swap-common';
 
@@ -29,7 +27,7 @@ export class SingleSwapService extends CommonSwap implements SwapService {
   constructor(
     protected plt: PlatformProvider,
     protected platformProvider: PlatformProvider,
-    protected http: HttpFallbackService,
+    protected http: HttpClient,
   ) {
     super(plt, http, platformProvider);
   }
@@ -38,18 +36,23 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     const url = this.URLS.singleSwap.href;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
     });
-    return this.http.post(url, swapTransaction, { headers });
+    return this.http
+      .post(url, swapTransaction, { headers })
+      .toPromise();
   }
 
   cancel(sagaId: string): Promise<void> {
     const url = this.URLS.singleSwap.href;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
     });
     const body = { sagaId };
     return this.http
       .request<void>('DELETE', url, { headers, body })
+      .toPromise()
       .catch((err: HttpErrorResponse) => {
         console.error('Cancelling swap has failed');
         throw err;
@@ -60,10 +63,13 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     const url = this.URLS.singleSwapParams.href;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
     });
     const params = getParams(data);
 
-    return this.http.get<SwapConvertResponse>(url, { headers, params });
+    return this.http
+      .get<SwapConvertResponse>(url, { headers, params })
+      .toPromise();
   }
 
   report(data: ReportData): Promise<SwapReportPage> {
@@ -81,11 +87,12 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     const url = this.URLS.singleSwap.href;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
     });
 
     return this.http
-      .put(url, data, { headers })
-      .then(() => {})
+      .put<void>(url, data, { headers })
+      .toPromise()
       .catch((err: HttpErrorResponse) => {
         console.error('Updating swap transaction has failed');
         throw err;
@@ -96,11 +103,12 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     const url = this.URLS.linkedAccount.href;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
     });
 
     return this.http
       .get(url + '/' + address, { headers })
-
+      .toPromise()
       .catch((err: HttpErrorResponse) => {
         throw err;
       });
@@ -110,11 +118,12 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     const url = this.USER_URLS.email.href;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
     });
 
     return this.http
       .post(url, { userId }, { headers })
-
+      .toPromise()
       .catch((err: HttpErrorResponse) => {
         throw err;
       });
@@ -124,26 +133,15 @@ export class SingleSwapService extends CommonSwap implements SwapService {
     const url = this.URLS.unlinkAddress.href;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
     });
 
     return this.http
       .delete(url + '/' + address, { headers })
-
+      .toPromise()
       .catch((err: HttpErrorResponse) => {
         throw err;
       });
   }
 
-  // obsolete
-  async savePendingSwap(data: {
-    email: string;
-    swapTx: SwapTransaction<SignedTransaction>;
-  }): Promise<void> {
-    const { email, swapTx } = data;
-    try {
-    } catch (err) {
-      console.error(err);
-      throw new Error('Saving swap has failed');
-    }
-  }
 }
