@@ -16,19 +16,11 @@ import { BlockchainService } from '../blockchain/blockchain.service';
 })
 export class TxsolanaService extends TxBase {
   listSubscribe = [];
-  connection: solanaWeb3.Connection;
-  connectionDev: solanaWeb3.Connection;
   constructor(
     private blockchainService: BlockchainService,
     private networkService: NetworkService,
   ) {
     super('TxSolana');
-    this.connection = this.blockchainService.solana.getConnection({
-      api: solanaWeb3.clusterApiUrl('mainnet-beta'),
-    });
-    this.connectionDev = this.blockchainService.solana.getConnection({
-      api: solanaWeb3.clusterApiUrl('devnet'),
-    });
   }
 
   init() {}

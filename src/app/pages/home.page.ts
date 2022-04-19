@@ -296,10 +296,6 @@ export class HomePage extends TrackedPage implements OnInit {
   };
 
   ionViewWillEnter() {
-    const acc = this.authProvider.accountValue;
-    if (this.auth.isValid(acc.atk)) this.swapConn.start({ token: acc.atk });
-    else this.auth.refresh(acc).then(a => this.swapConn.start({ token: a.atk }));
-
     const transactionsAPISubscription = this.transactionProvider.transactions$
       .pipe(filter(tx => !!tx))
       .subscribe(tx => {

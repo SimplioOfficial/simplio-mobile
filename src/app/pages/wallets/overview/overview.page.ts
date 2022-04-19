@@ -453,8 +453,9 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
 
   async presentCreateTokenAccountPrompt() {
     if (UtilsService.isSolanaToken(this._wallet.type)) {
+      const apiUrl = this.blockchainService.getSolApi({ api: this._wallet.api });
       const minimumRent = await this.blockchainService.solana.getMinimumRentExemption({
-        api: this._wallet.api,
+        api: apiUrl,
       });
       const alertMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_FEE);
 
@@ -502,11 +503,12 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
                   ),
                 );
               }
+              const apiUrl = this.blockchainService.getSolApi({ api: this._wallet.api });
               await this.presentLoading(this.$.INITIALIZING_TOKEN);
               this.blockchainService.solana
                 .createTokenAddress({
                   address: this._wallet.mainAddress,
-                  api: this._wallet.api,
+                  api: apiUrl,
                   contractAddress: this._wallet.contractaddress,
                   seeds: this.io.decrypt(this._wallet.mnemo, idt),
                   addressType: this._wallet.addressType,

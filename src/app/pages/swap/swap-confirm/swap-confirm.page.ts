@@ -3,9 +3,7 @@ import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { SignedTransaction } from 'src/app/interface/data';
 import { Subscription } from 'rxjs';
-import { UtilsService } from 'src/app/services/utils.service';
 import { Translate } from 'src/app/providers/translate/';
-import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { SwapTransaction } from 'src/app/interface/swap';
 import { SingleSwapService } from 'src/app/services/swap/single-swap.service';
 
@@ -22,17 +20,23 @@ export class SwapConfirmPage implements OnInit, OnDestroy {
     private router: Router,
     private singleSwap: SingleSwapService,
     private dataService: DataService,
-    private utilService: UtilsService,
-    private authProvider: AuthenticationProvider,
     public $: Translate,
   ) {}
 
   get sourceCoin(): string {
-    return this.swapTx ? this.swapTx?.source?.wallet?.ticker : '';
+    return this.swapTx ? this.swapTx.source?.wallet?.ticker : '';
+  }
+
+  get sourceNetwork(): string {
+    return this.swapTx ? this.swapTx.pair?.SourceCurrencyNetwork : '';
   }
 
   get targetCoin(): string {
-    return this.swapTx ? this.swapTx?.target?.wallet?.ticker : '';
+    return this.swapTx ? this.swapTx.target?.wallet?.ticker : '';
+  }
+
+  get targetNetwork(): string {
+    return this.swapTx ? this.swapTx.pair?.TargetCurrencyNetwork : '';
   }
 
   ngOnInit() {
@@ -46,22 +50,7 @@ export class SwapConfirmPage implements OnInit, OnDestroy {
     this.dataService.cleanSwapTransaction();
   }
 
-  /**
-   * @todo saving the pending transaction is obsolete and it was removed why it is here?
-   */
-  onDone() {
-    const data = {
-      email: this.authProvider.accountValue.email,
-      swapTx: this.swapTx,
-    };
-
-    this.singleSwap
-      .savePendingSwap(data)
-      .then(() => this.router.navigate(['home', 'swap']))
-      .catch(async (err: Error) => {
-        console.error(err.message);
-        await this.utilService.showToast(this.$.SAVING_SWAP_HAS_FAILED, 1500, 'warning');
-        this.router.navigate(['home', 'swap']);
-      });
+  async onDone() {
+    await this.router.navigate(['home', 'swap']);
   }
 }

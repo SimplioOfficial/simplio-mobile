@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { OrderTypes, SwapReportItem, SwapReportPage, SwapStatusText } from 'src/app/interface/swap';
+import { SwapReportItem, SwapReportPage, SwapStatusText } from 'src/app/interface/swap';
 
 const completedStatuses = [SwapStatusText.Failed, SwapStatusText.Completed];
+
 const filterPending = (i: SwapReportItem[]) => i.filter(i => !completedStatuses.includes(i.Status));
 
 @Injectable()
@@ -51,13 +52,6 @@ export class SwapProvider {
 
   pushSwapData(data) {
     this._swapData.next(data);
-  }
-
-  updatePending(item: SwapReportItem): SwapReportItem[] {
-    switch (item.OrderType) {
-      case OrderTypes.SELL:
-        return this.updatePendingSwap(item);
-    }
   }
 
   updateSwapStatus(status: boolean | null) {
