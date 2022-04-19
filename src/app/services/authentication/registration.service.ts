@@ -1,16 +1,15 @@
-import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AccountCredentials, AgreementData, RegisterAccountData } from 'src/app/interface/account';
 import { AccountRegistrationError } from 'src/app/providers/errors/account-registration-error';
 import { Translate } from 'src/app/providers/translate';
 import { USERS_URLS } from '../../providers/routes/account.routes';
-import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegistrationService {
-  constructor(private $: Translate, private http: HttpFallbackService) {}
+  constructor(private $: Translate, private http: HttpClient) {}
 
   register(data: RegisterAccountData): Promise<AccountCredentials> {
     const url = USERS_URLS.account.href;
@@ -25,6 +24,7 @@ export class RegistrationService {
 
     return this.http
       .post<void>(url, body, { headers })
+      .toPromise()
       .then(() => data.cred)
       .catch((err: HttpErrorResponse) => {
         throw new AccountRegistrationError(err, this.$);
@@ -42,10 +42,10 @@ export class RegistrationService {
       agreements: JSON.stringify(data),
     };
 
-    return this.http.put(url, body, { headers });
+    return this.http.put(url, body, { headers }).toPromise();
   }
 
   getIpAddress(): Promise<string> {
-    return this.http.get<any>('http://www.ip-api.com/json').then(res => res.query);
+    return this.http.get<any>('http://www.ip-api.com/json').toPromise().then(res => res.query);
   }
 }

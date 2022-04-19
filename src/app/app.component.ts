@@ -17,6 +17,7 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { NetworkService } from './services/apiv2/connection/network.service';
 import { CoinsService } from './services/apiv2/connection/coins.service';
 import { LiveChatWidgetApiModel, LiveChatWidgetModel } from '@livechat/angular-widget';
+import { InsightMonitoringService } from './services/insight-monitoring.service';
 import { LivechatService } from './services/livechat.service';
 import { RateService } from './services/apiv2/connection/rate.service';
 
@@ -44,6 +45,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private coinsService: CoinsService,
     private rateService: RateService,
     private liveChat: LivechatService,
+    private insightMonitor: InsightMonitoringService, // create instance
   ) {}
 
   ngOnInit() {

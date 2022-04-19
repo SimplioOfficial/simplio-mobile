@@ -1,10 +1,12 @@
 import { AppInjector } from '../services/app-injector.service';
 import { AuthenticationProvider } from '../providers/data/authentication.provider';
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx';
+import { InsightMonitoringService } from '../services/insight-monitoring.service';
 
 export abstract class TrackedPage {
   private _firebaseAnalytics: FirebaseAnalytics;
   private _authProvider: AuthenticationProvider;
+  private _insightMonitoringService: InsightMonitoringService;
 
   protected constructor(login = false) {
     // Manually retrieve the dependencies from the injector
@@ -12,6 +14,7 @@ export abstract class TrackedPage {
     const injector = AppInjector.getInjector();
     this._firebaseAnalytics = injector.get(FirebaseAnalytics);
     this._authProvider = injector.get(AuthenticationProvider);
+    this._insightMonitoringService = injector.get(InsightMonitoringService);
     try {
       if (login) {
         this.login();
@@ -35,5 +38,7 @@ export abstract class TrackedPage {
     this._firebaseAnalytics
       .logEvent(name, { visited: name })
       .then(() => console.log(`Page ${name} tracked`));
+
+    this._insightMonitoringService.logPageView(name);
   }
 }

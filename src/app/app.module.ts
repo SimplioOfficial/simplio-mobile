@@ -1,7 +1,7 @@
 import { DataProvider } from './providers/data/data';
 import { Device } from '@ionic-native/device/ngx';
 import { PlatformProvider } from './providers/platform/platform';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
@@ -44,6 +44,8 @@ import { VerifyIdentityModalModule } from './pages/modals/verify-identity-modal/
 import { TutorialsProvider } from 'src/app/providers/data/tutorials.provider';
 import { AuthInterceptor } from 'src/app/interceptors/authentication.interceptor';
 import { LivechatWidgetModule } from '@livechat/angular-widget';
+import { SwipeluxInterceptor } from 'src/app/interceptors/swipelux.interceptor';
+import { ErrorHandlerService } from './services/error-handler.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -90,10 +92,16 @@ import { LivechatWidgetModule } from '@livechat/angular-widget';
     Diagnostic,
     {
       provide: HTTP_INTERCEPTORS,
+      useClass: SwipeluxInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
     },
     { provide: Window, useValue: window },
+    { provide: ErrorHandler, useClass: ErrorHandlerService },
     FirebaseAnalytics,
   ],
   bootstrap: [AppComponent],

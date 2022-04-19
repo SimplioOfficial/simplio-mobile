@@ -9,6 +9,7 @@ const defaults = {
   account: null,
   storeAccount: false,
   isAuthenticated: false,
+  isRefreshing: false,
   canRecover: true,
   autheticationErrors: null,
   accessTokenBody: null,
@@ -32,6 +33,9 @@ export class AuthenticationProvider {
 
   private _isAuthenticated = new BehaviorSubject<boolean>(defaults.isAuthenticated);
   isAuthenticated$ = this._isAuthenticated.asObservable();
+
+  private _isRefreshing = new BehaviorSubject<boolean>(defaults.isRefreshing);
+  isRefreshing$ = this._isRefreshing.asObservable();
 
   private _canRecover = new BehaviorSubject<boolean>(defaults.canRecover);
   canRecover$ = this._canRecover.asObservable();
@@ -98,6 +102,11 @@ export class AuthenticationProvider {
     if (opts.isNew) this._storeAccount.next(true);
 
     return account;
+  }
+
+  pushIsRefreshing(isRefreshing: boolean): boolean {
+    this._isRefreshing.next(isRefreshing);
+    return isRefreshing;
   }
 
   pushCanRecover(val: boolean): boolean {

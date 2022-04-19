@@ -610,8 +610,9 @@ export class SendAddressPage implements OnInit, OnDestroy {
     const { idt } = this.authProvider.accountValue;
 
     if (Utils.isSolanaToken(this.wallet.type)) {
+      const apiUrl = this.blockchainService.getSolApi({ api: wallet.api });
       const minimumRent = await this.blockchainService.solana.getMinimumRentExemption({
-        api: wallet.api,
+        api: apiUrl,
       });
 
       const alertMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_RECEIVER_FEE);
@@ -660,9 +661,10 @@ export class SendAddressPage implements OnInit, OnDestroy {
                 this.disableSend = true;
                 await this.presentLoading(this.$.INITIALIZING_TOKEN);
                 try {
+                  const apiUrl = this.blockchainService.getSolApi({ api: wallet.api });
                   await this.blockchainService.solana.createTokenAddress({
                     address: address,
-                    api: wallet.api,
+                    api: apiUrl,
                     contractAddress: wallet.contractaddress,
                     seeds: this.ioService.decrypt(wallet.mnemo, idt),
                     addressType: this.wallet.addressType,
