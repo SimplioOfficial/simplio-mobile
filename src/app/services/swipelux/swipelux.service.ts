@@ -22,9 +22,11 @@ export class SwipeluxService {
   cancelCurrentPayment(): Promise<any> {
     const url = SWIPELUX_URL.payment.href;
 
-    return this.http.delete(url, { 
-      headers: HeadersService.swipeluxHeaders,
-     }).toPromise();
+    return this.http
+      .delete(url, {
+        headers: HeadersService.swipeluxHeaders,
+      })
+      .toPromise();
   }
 
   createOrderByShareToken(
@@ -32,9 +34,7 @@ export class SwipeluxService {
   ): Promise<{ accessToken: string; orderId: string }> {
     const url = SWIPELUX_URL.orders.href;
 
-    return this.http
-      .post<any>(url, order, { headers: HeadersService.swipeluxHeaders })
-      .toPromise();
+    return this.http.post<any>(url, order, { headers: HeadersService.swipeluxHeaders }).toPromise();
   }
 
   getAllOrders(params?: any): Promise<{ items: OrdersResponse[]; pageInfo: any }> {
@@ -42,7 +42,7 @@ export class SwipeluxService {
 
     return this.http
       .get<any>(url, {
-        headers: HeadersService.swipeluxHeaders,
+        headers: HeadersService.simplioHeaders,
         params: getParams({
           sort: 'created_at',
           dir: 'desc',
