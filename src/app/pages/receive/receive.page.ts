@@ -148,8 +148,9 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
 
   async presentCreateTokenAccountPrompt() {
     if (UtilsService.isSolanaToken(this.wallet.type)) {
+      const apiUrl = this.blockchainService.getSolApi({ api: this.wallet.api });
       const minimumRent = await this.blockchainService.solana.getMinimumRentExemption({
-        api: this.wallet.api,
+        api: apiUrl,
       });
       const alertMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_FEE);
 
