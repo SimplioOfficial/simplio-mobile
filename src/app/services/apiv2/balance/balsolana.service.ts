@@ -78,7 +78,7 @@ export class BalsolanaService extends BalBase {
     const publickey = await this.blockchainService.solana.getTokenAddress({
       address: mainPublickey.address.toString(),
       contractAddress: data.contractAddress,
-      api: data.api ?? apiUrl,
+      api: apiUrl,
     });
     return connection
       .getParsedAccountInfo(publickey)
