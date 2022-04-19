@@ -11,7 +11,11 @@
     [attr.scale]="thumbScale"
   ></sio-wallet-thumbnail>
 
-  <div *ngIf="isToken()" class="platform-container">
+  <div
+    *ngIf="isToken()"
+    class="platform-container"
+    [class]="{ 'has-notification': notificationType > NOTIFICATION_TYPES.NONE }"
+  >
     <sio-wallet-thumbnail
       [iconID]="tokenId"
       (touchstart)="press($event)"
@@ -30,11 +34,11 @@
 </div>
 
 <!-- Balance -->
-<ng-content
+<ng-container
   *ngIf="isContent; else balance"
   (touchstart)="press($event)"
   (touchend)="pressUp($event)"
-></ng-content>
+></ng-container>
 <ng-template #balance>
   <div class="balance">
     <p

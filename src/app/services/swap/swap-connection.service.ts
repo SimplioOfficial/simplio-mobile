@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { SwapReportItem } from 'src/app/interface/swap';
+import {
+  Currency,
+  CurrencyNetwork,
+  SwapReportItem,
+  SwapStatus,
+  SwapStatusText,
+} from 'src/app/interface/swap';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { SwapProvider } from 'src/app/providers/data/swap.provider';
@@ -77,7 +83,15 @@ export class SwapConnectionService {
         const message: Message<any> = data.data;
         switch (message.event) {
           case Events.UPDATE_SWAP_REPORT:
-            return this.swapProvider.updatePending(message.data as SwapReportItem);
+            // map object from BE to correct shape
+            return this.swapProvider.updatePendingSwap({
+              ...(message.data as SwapReportItem),
+              Status: SwapStatusText[SwapStatus[message.data.Status]],
+              SourceCurrency: Currency[message.data.SourceCurrency],
+              SourceCurrencyNetwork: CurrencyNetwork[message.data.SourceCurrencyNetwork],
+              TargetCurrency: Currency[message.data.TargetCurrency],
+              TargetCurrencyNetwork: CurrencyNetwork[message.data.TargetCurrencyNetwork],
+            });
           case Events.CONNECTION_TERMINATED:
             console.log('WS connection is terminated');
             return refreshToken(this);
@@ -125,7 +139,7 @@ export class SwapConnectionService {
     };
 
     connection.on(Events.UPDATE_SWAP_REPORT, (data: SwapReportItem) =>
-      this.swapProvider.updatePending(data),
+      this.swapProvider.updatePendingSwap(data),
     );
 
     connection.onclose(err => onError(connection, err));

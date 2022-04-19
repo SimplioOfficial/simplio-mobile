@@ -27,4 +27,7 @@ export const environment = {
     STAKING: false,
     DISABLED_SWAP_PAIRS: true,
   },
+  appInsights: {
+    instrumentationKey: 'f083c9e4-1a72-4e9a-bf07-90f0f86099ed',
+  },
 };

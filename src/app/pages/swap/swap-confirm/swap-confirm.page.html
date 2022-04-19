@@ -2,7 +2,10 @@
   <main class="content">
     <header>
       <p>{{ $.SWAP_HAS_BEEN_SUCCESSFUL | translate }}</p>
-      <h3>{{ sourceCoin }} to {{ targetCoin }}</h3>
+      <h3
+        >{{ sourceCoin }} <sub>({{ sourceNetwork }})</sub> to {{ targetCoin }}
+        <sub>({{ targetNetwork }})</sub></h3
+      >
     </header>
     <div class="scene">
       <sio-rocket></sio-rocket>

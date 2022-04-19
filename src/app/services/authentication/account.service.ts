@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Acc } from 'src/app/interface/user';
 import { AccountRegistrationError } from 'src/app/providers/errors/account-registration-error';
@@ -24,9 +24,8 @@ export class AccountService {
   constructor(
     private $: Translate,
     private io: IoService,
-    private plt: PlatformProvider,
     private authProvider: AuthenticationProvider,
-    private http: HttpFallbackService,
+    private http: HttpClient,
   ) {}
 
   get canResetPassword(): boolean {
@@ -39,9 +38,12 @@ export class AccountService {
       'Content-Type': 'application/json',
     });
     const body = { emailAddress: email };
-    return this.http.post<void>(url, body, { headers }).catch((err: HttpErrorResponse) => {
-      throw new AccountRegistrationError(err, this.$);
-    });
+    return this.http
+      .post<void>(url, body, { headers })
+      .toPromise()
+      .catch((err: HttpErrorResponse) => {
+        throw new AccountRegistrationError(err, this.$);
+      });
   }
 
   changePassword(password: string): Promise<void> {
@@ -51,9 +53,12 @@ export class AccountService {
     });
     const body = { password };
 
-    return this.http.put<void>(url, body, { headers }).catch((err: HttpErrorResponse) => {
-      throw new AccountRegistrationError(err, this.$);
-    });
+    return this.http
+      .put<void>(url, body, { headers })
+      .toPromise()
+      .catch((err: HttpErrorResponse) => {
+        throw new AccountRegistrationError(err, this.$);
+      });
   }
 
   addAccount(account: Acc): Promise<Acc> {

@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   AccountCredentials,
@@ -10,13 +10,14 @@ import { IdentityVerificationError } from 'src/app/providers/errors/identity-ver
 import { Translate } from 'src/app/providers/translate';
 import { AuthenticationProvider } from '../../providers/data/authentication.provider';
 import { PlatformProvider } from '../../providers/platform/platform';
-import { USERS_URLS } from '../../providers/routes/account.routes';
-import { HttpService } from '../http.service';
 import { IoService } from '../io.service';
 import { parseJWT } from './utils';
 import { MultiFactorAuthenticationService } from './mfa.service';
+import { USERS_URLS, USERS_URLS_V2 } from 'src/app/providers/routes/swap.routes';
 import { AccountService } from 'src/app/services/authentication/account.service';
 import { SwapProvider } from '../../providers/data/swap.provider';
+import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
+import { HeadersService } from 'src/app/services/headers.service';
 
 type AfterLoginOptions = { verify: boolean; isNew: boolean };
 
@@ -24,11 +25,8 @@ type AfterLoginOptions = { verify: boolean; isNew: boolean };
   providedIn: 'root',
 })
 export class AuthenticationService {
+  private reloadTimeout = null;
   private _refreshServerUrl = '';
-
-  private readonly RETRY_TIMEOUT = 3000; // in ms
-  private readonly MAX_ATTEMPTS_TO_RECONNECT = Number.MAX_SAFE_INTEGER;
-
   constructor(
     private $: Translate,
     private mfa: MultiFactorAuthenticationService,
@@ -36,7 +34,7 @@ export class AuthenticationService {
     private io: IoService,
     private authProvider: AuthenticationProvider,
     private swapProvider: SwapProvider,
-    private http: HttpService,
+    private http: HttpClient,
     private acc: AccountService,
   ) {}
 
@@ -46,7 +44,10 @@ export class AuthenticationService {
 
   checkPassword(password: string): Promise<boolean> {
     const url = USERS_URLS.access.href;
-    const headers = this.http.getHttpHeaders('application/json', true);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
+    });
 
     const cred = {
       userId: this.authProvider.accountValue.email,
@@ -55,7 +56,8 @@ export class AuthenticationService {
     };
 
     return this.http
-      .post<AccountCredentialsResponse>(url, cred, headers)
+      .post<AccountCredentialsResponse>(url, cred, { headers })
+      .toPromise()
       .then(res => !!res.refresh_token);
   }
 
@@ -73,7 +75,6 @@ export class AuthenticationService {
   async login(cred: AccountCredentials, opt: Partial<AfterLoginOptions> = {}): Promise<Acc> {
     try {
       const cr = await this._login(cred);
-      // console.log(cr);
       const accountLog = await this.io.getLatestAccountLog(cred.userId);
 
       const o: AfterLoginOptions = {
@@ -95,7 +96,6 @@ export class AuthenticationService {
       const account = o.verify
         ? await this._verifyAccount(accountStruct, accountLog)
         : accountStruct;
-
       return this.authProvider.pushAccount(account, { isNew: o.isNew });
     } catch (err) {
       // TODO - resolve error here
@@ -110,49 +110,85 @@ export class AuthenticationService {
     });
   }
 
-  async refresh(acc: Acc, itteration = 0): Promise<Acc> {
+  refresh(acc: Acc): Promise<Acc> {
     return this._refresh(acc.rtk)
-      .then(c =>
-        this.acc.updateAccount({ rtk: c.refresh_token, atk: c.access_token, tkt: c.token_type }),
-      )
-      .catch(async _ => {
-        await new Promise(resolve => setTimeout(resolve, this.RETRY_TIMEOUT));
-
-        if (itteration < this.MAX_ATTEMPTS_TO_RECONNECT) {
-          // in case of lost connection, try again
-          console.log('Refresh failed, trying again...');
-          return this.refresh(acc, itteration + 1);
-        } else {
-          throw new Error('Refresh failed');
-        }
+      .then(c => this.acc.updateAccount({ 
+        rtk: c?.refresh_token ?? acc.rtk, 
+        atk: c.access_token, 
+        tkt: c.token_type 
+      }))
+      .catch((err: HttpErrorResponse) => {
+        if (err.status === 403) this.logout();
+        throw err;
       });
   }
 
   getAccountData(): Promise<RegisterAccountData> {
     const url = USERS_URLS.account.href;
-    const headers = this.http.getHttpHeaders('application/json', true);
-    return this.http.get<RegisterAccountData>(url, headers);
-  }
-
-  async checkToken() {
-    if (!this.isValid(this.authProvider.accountValue.atk)) {
-      return this.refresh(this.authProvider.accountValue);
-    }
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
+    });
+    return this.http
+      .get<RegisterAccountData>(url, { headers })
+      .toPromise();
   }
 
   private _login(cred: AccountCredentials): Promise<AccountCredentialsResponse> {
     return this._loginv1(cred).catch(err => {
-      throw err;
+      return this._loginv2(cred).catch(_ => {
+        throw err;
+      });
     });
   }
   private _loginv1(cred: AccountCredentials): Promise<AccountCredentialsResponse> {
     const url = USERS_URLS.access.href;
-    const headers = this.http.getHttpHeaders('application/json', true);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
 
     return this.http
-      .post<AccountCredentialsResponse>(url, cred, headers)
+      .post<AccountCredentialsResponse>(url, cred, { headers })
+      .toPromise()
       .catch((err: HttpErrorResponse) => {
-        console.log(err);
+        if (err.status === 401) {
+          let customErr = new HttpErrorResponse({
+            headers: err.headers,
+            url: err.url,
+            status: err.status,
+            statusText: err.statusText,
+            error: Object.freeze({
+              code: 'NO_SUCH_USER'
+            })
+          });
+          if (err.error.includes('verify your email')) {
+            customErr = new HttpErrorResponse({
+              headers: err.headers,
+              url: err.url,
+              status: err.status,
+              statusText: err.statusText,
+              error: Object.freeze({
+                code: 'NO_SUCH_USER',
+              }),
+            });
+
+            throw new IdentityVerificationError(customErr, this.$);
+          }
+        };
+        throw err;
+      });
+  }
+
+  private _loginv2(cred: AccountCredentials): Promise<AccountCredentialsResponse> {
+    const url = USERS_URLS_V2.access.href;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    return this.http
+      .post<AccountCredentialsResponse>(url, cred, { headers })
+      .toPromise()
+      .catch((err: HttpErrorResponse) => {
         if (err.status === 401) {
           let customErr = new HttpErrorResponse({
             headers: err.headers,
@@ -170,45 +206,48 @@ export class AuthenticationService {
               status: err.status,
               statusText: err.statusText,
               error: Object.freeze({
-                code: 'NO_SUCH_USER',
+                code: 'INCOMPLETE_REGISTRATION_PROCESS',
               }),
             });
-
-            throw new IdentityVerificationError(customErr, this.$);
           }
+
+          throw new IdentityVerificationError(customErr, this.$);
         }
         throw err;
       });
   }
 
   private _refresh(refreshToken: string): Promise<AccountCredentialsResponse> {
-    console.log('Refresh token');
+    return this._refreshv1(refreshToken).catch(err => {
+      return this._refreshv2(refreshToken).catch(_ => {
+        throw err;
+      });
+    });
+  }
+
+  private _refreshv1(refreshToken: string): Promise<AccountCredentialsResponse> {
     const url = USERS_URLS.refresh.href;
     this._refreshServerUrl = url;
-    const headers = this.http.getHttpHeaders('application/json', true);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
     const body = { refreshToken };
 
     return this.http
-      .post(url, body, headers)
-      .then(res => {
-        return res as AccountCredentialsResponse;
-      })
-      .catch(err => {
-        console.error(err);
-        if (err.status === 401) {
-          const customErr = new HttpErrorResponse({
-            headers: err.headers,
-            url: err.url,
-            status: err.status,
-            statusText: err.statusText,
-            error: Object.freeze({
-              code: 'NO_SUCH_USER',
-            }),
-          });
-          throw new IdentityVerificationError(customErr, this.$);
-        }
-        throw err;
-      });
+      .post<AccountCredentialsResponse>(url, body, { headers })
+      .toPromise();
+  }
+
+  private _refreshv2(refreshToken: string): Promise<AccountCredentialsResponse> {
+    const url = USERS_URLS_V2.refresh.href;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    const body = { refreshToken };
+
+    return this.http
+      .post<AccountCredentialsResponse>(url, body, { headers })
+      .toPromise();
   }
 
   private async _verifyAccount(acc: Acc, accLog: AccLog): Promise<Acc> {
