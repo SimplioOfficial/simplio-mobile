@@ -660,9 +660,10 @@ export class SendAddressPage implements OnInit, OnDestroy {
                 this.disableSend = true;
                 await this.presentLoading(this.$.INITIALIZING_TOKEN);
                 try {
+                  const apiUrl = this.blockchainService.getSolApi({ api: wallet.api });
                   await this.blockchainService.solana.createTokenAddress({
                     address: address,
-                    api: wallet.api,
+                    api: apiUrl,
                     contractAddress: wallet.contractaddress,
                     seeds: this.ioService.decrypt(wallet.mnemo, idt),
                     addressType: this.wallet.addressType,

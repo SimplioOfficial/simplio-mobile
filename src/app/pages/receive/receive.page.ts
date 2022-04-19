@@ -198,10 +198,11 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
                 );
               }
               await this.presentLoading(this.$.INITIALIZING_TOKEN);
+              const apiUrl = this.blockchainService.getSolApi({ api: this.wallet.api });
               this.blockchainService.solana
                 .createTokenAddress({
                   address: this.wallet.mainAddress,
-                  api: this.wallet.api,
+                  api: apiUrl,
                   contractAddress: this.wallet.contractaddress,
                   seeds: this.io.decrypt(this.wallet.mnemo, idt),
                   addressType: this.wallet.addressType,

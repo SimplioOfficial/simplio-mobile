@@ -502,11 +502,12 @@ export class OverviewPage extends TrackedPage implements OnInit, AfterViewInit, 
                   ),
                 );
               }
+              const apiUrl = this.blockchainService.getSolApi({ api: this._wallet.api });
               await this.presentLoading(this.$.INITIALIZING_TOKEN);
               this.blockchainService.solana
                 .createTokenAddress({
                   address: this._wallet.mainAddress,
-                  api: this._wallet.api,
+                  api: apiUrl,
                   contractAddress: this._wallet.contractaddress,
                   seeds: this.io.decrypt(this._wallet.mnemo, idt),
                   addressType: this._wallet.addressType,
