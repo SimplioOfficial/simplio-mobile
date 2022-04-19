@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   AccountCredentials,
@@ -10,15 +10,14 @@ import { IdentityVerificationError } from 'src/app/providers/errors/identity-ver
 import { Translate } from 'src/app/providers/translate';
 import { AuthenticationProvider } from '../../providers/data/authentication.provider';
 import { PlatformProvider } from '../../providers/platform/platform';
-import { USERS_URLS, USERS_URLS_V2 } from '../../providers/routes/account.routes';
 import { IoService } from '../io.service';
 import { parseJWT } from './utils';
 import { MultiFactorAuthenticationService } from './mfa.service';
+import { USERS_URLS, USERS_URLS_V2 } from 'src/app/providers/routes/swap.routes';
 import { AccountService } from 'src/app/services/authentication/account.service';
 import { SwapProvider } from '../../providers/data/swap.provider';
 import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
-import { CheckWalletsService } from '../wallets/check-wallets.service';
-import { TransactionsService } from '../transactions.service';
+import { HeadersService } from 'src/app/services/headers.service';
 
 type AfterLoginOptions = { verify: boolean; isNew: boolean };
 
@@ -28,10 +27,6 @@ type AfterLoginOptions = { verify: boolean; isNew: boolean };
 export class AuthenticationService {
   private reloadTimeout = null;
   private _refreshServerUrl = '';
-
-  private readonly RETRY_TIMEOUT = 3000; // in ms
-  private readonly MAX_ATTEMPTS_TO_RECONNECT = Number.MAX_SAFE_INTEGER;
-
   constructor(
     private $: Translate,
     private mfa: MultiFactorAuthenticationService,
@@ -39,8 +34,8 @@ export class AuthenticationService {
     private io: IoService,
     private authProvider: AuthenticationProvider,
     private swapProvider: SwapProvider,
-    private http: HttpFallbackService,
-    private acc: AccountService,
+    private http: HttpClient,
+    private acc: AccountService
   ) {}
 
   serverUrl() {
@@ -51,6 +46,7 @@ export class AuthenticationService {
     const url = USERS_URLS.access.href;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
     });
 
     const cred = {
@@ -61,6 +57,7 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, cred, { headers })
+      .toPromise()
       .then(res => !!res.refresh_token);
   }
 
@@ -78,7 +75,6 @@ export class AuthenticationService {
   async login(cred: AccountCredentials, opt: Partial<AfterLoginOptions> = {}): Promise<Acc> {
     try {
       const cr = await this._login(cred);
-      // console.log(cr);
       const accountLog = await this.io.getLatestAccountLog(cred.userId);
 
       const o: AfterLoginOptions = {
@@ -100,7 +96,6 @@ export class AuthenticationService {
       const account = o.verify
         ? await this._verifyAccount(accountStruct, accountLog)
         : accountStruct;
-
       return this.authProvider.pushAccount(account, { isNew: o.isNew });
     } catch (err) {
       // TODO - resolve error here
@@ -115,36 +110,24 @@ export class AuthenticationService {
     });
   }
 
-  async refresh(acc: Acc, itteration = 0): Promise<Acc> {
+  refresh(acc: Acc): Promise<Acc> {
     return this._refresh(acc.rtk)
-      .then(c =>
-        this.acc.updateAccount({ rtk: c.refresh_token, atk: c.access_token, tkt: c.token_type }),
-      )
-      .catch(async _ => {
-        await new Promise(resolve => setTimeout(resolve, this.RETRY_TIMEOUT));
-
-        if (itteration < this.MAX_ATTEMPTS_TO_RECONNECT) {
-          // in case of lost connection, try again
-          console.log('Refresh failed, trying again...');
-          return this.refresh(acc, itteration + 1);
-        } else {
-          throw new Error('Refresh failed');
-        }
-      });
+      .then(c => this.acc.updateAccount({ 
+        rtk: c?.refresh_token ?? acc.rtk, 
+        atk: c.access_token, 
+        tkt: c.token_type 
+      }));
   }
 
   getAccountData(): Promise<RegisterAccountData> {
     const url = USERS_URLS.account.href;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
     });
-    return this.http.get<RegisterAccountData>(url, { headers });
-  }
-
-  async checkToken() {
-    if (!this.isValid(this.authProvider.accountValue.atk)) {
-      return this.refresh(this.authProvider.accountValue);
-    }
+    return this.http
+      .get<RegisterAccountData>(url, { headers })
+      .toPromise();
   }
 
   private _login(cred: AccountCredentials): Promise<AccountCredentialsResponse> {
@@ -162,6 +145,7 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, cred, { headers })
+      .toPromise()
       .catch((err: HttpErrorResponse) => {
         if (err.status === 401) {
           let customErr = new HttpErrorResponse({
@@ -170,8 +154,8 @@ export class AuthenticationService {
             status: err.status,
             statusText: err.statusText,
             error: Object.freeze({
-              code: 'NO_SUCH_USER',
-            }),
+              code: 'NO_SUCH_USER'
+            })
           });
           if (err.error.includes('verify your email')) {
             customErr = new HttpErrorResponse({
@@ -186,7 +170,7 @@ export class AuthenticationService {
 
             throw new IdentityVerificationError(customErr, this.$);
           }
-        }
+        };
         throw err;
       });
   }
@@ -199,6 +183,7 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, cred, { headers })
+      .toPromise()
       .catch((err: HttpErrorResponse) => {
         if (err.status === 401) {
           let customErr = new HttpErrorResponse({
@@ -229,7 +214,6 @@ export class AuthenticationService {
   }
 
   private _refresh(refreshToken: string): Promise<AccountCredentialsResponse> {
-    console.log('Refresh token');
     return this._refreshv1(refreshToken).catch(err => {
       return this._refreshv2(refreshToken).catch(_ => {
         throw err;
@@ -246,6 +230,7 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, body, { headers })
+      .toPromise()
       .catch((err: HttpErrorResponse) => {
         if (err.status === 401) {
           const customErr = new HttpErrorResponse({
@@ -272,11 +257,9 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, body, { headers })
-      .then(res => {
-        this._refreshServerUrl = url;
-        return res;
-      })
-      .catch((err: HttpErrorResponse) => {
+      .toPromise()
+      .catch(err => {
+        console.error(err);
         if (err.status === 401) {
           const customErr = new HttpErrorResponse({
             headers: err.headers,

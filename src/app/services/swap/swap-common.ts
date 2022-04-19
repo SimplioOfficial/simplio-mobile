@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { SupportedFiat, Wallet } from 'src/app/interface/data';
 import {
   AddAddressesRequestBody,
@@ -8,10 +8,10 @@ import {
   SwapType,
 } from 'src/app/interface/swap';
 import { PlatformProvider } from 'src/app/providers/platform/platform';
+import { HeadersService } from 'src/app/services/headers.service';
 import { environment } from 'src/environments/environment';
 import { USERS_URLS } from '../../providers/routes/account.routes';
 import { SWAP_URLS } from '../../providers/routes/swap.routes';
-import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
 import { getParams } from '../authentication/utils';
 import { getCurrencyNetwork } from './utils';
 
@@ -29,7 +29,7 @@ export class CommonSwap {
 
   constructor(
     protected plt: PlatformProvider,
-    protected http: HttpFallbackService,
+    protected http: HttpClient,
     protected platformProvider: PlatformProvider,
   ) {}
 
@@ -52,16 +52,20 @@ export class CommonSwap {
     }
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
     });
 
-    return this.http.post<void>(url, data, { headers }).catch((err: HttpErrorResponse) => {
-      console.error('Adding address has failed', data, err);
-      if (!err.error && err.status === 404) {
-        throw new Error('Connection issue');
-      } else {
-        throw new Error('Adding address has failed');
-      }
-    });
+    return this.http
+      .post<void>(url, data, { headers })
+      .toPromise()
+      .catch((err: HttpErrorResponse) => {
+        console.error('Adding address has failed', data, err);
+        if (!err.error && err.status === 404) {
+          throw new Error('Connection issue');
+        } else {
+          throw new Error('Adding address has failed');
+        }
+      });
   }
 
   fetchList(params?: { swapType: SwapType; currency: SupportedFiat }): Promise<SwapPair[]> {
@@ -71,12 +75,16 @@ export class CommonSwap {
     }
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
     });
 
-    return this.http.get<SwapPair[]>(url, { headers, params }).catch((err: HttpErrorResponse) => {
-      console.error('Listing available swaps has failed');
-      throw err;
-    });
+    return this.http
+      .get<SwapPair[]>(url, { headers, params })
+      .toPromise()
+      .catch((err: HttpErrorResponse) => {
+        console.error('Listing available swaps has failed');
+        throw err;
+      });
   }
 
   getList(params?: { swapType: SwapType; currency: SupportedFiat }): Promise<SwapPair[]> {
@@ -93,11 +101,13 @@ export class CommonSwap {
     }
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      ...HeadersService.simplioHeaders,
     });
     const reqParams = getParams(params);
 
     return this.http
       .get<SwapReportPage>(url, { headers, params: reqParams })
+      .toPromise()
       .catch((err: HttpErrorResponse) => {
         console.error('Reporting swaps has failed');
         throw err;

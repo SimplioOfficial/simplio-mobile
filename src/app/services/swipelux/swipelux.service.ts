@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
+import { HeadersService } from 'src/app/services/headers.service';
 import {
   OrdersResponse,
   CurrencyPair,
@@ -21,7 +22,9 @@ export class SwipeluxService {
   cancelCurrentPayment(): Promise<any> {
     const url = SWIPELUX_URL.payment.href;
 
-    return this.http.delete(url, {}).toPromise();
+    return this.http.delete(url, { 
+      headers: HeadersService.swipeluxHeaders,
+     }).toPromise();
   }
 
   createOrderByShareToken(
@@ -29,34 +32,37 @@ export class SwipeluxService {
   ): Promise<{ accessToken: string; orderId: string }> {
     const url = SWIPELUX_URL.orders.href;
 
-    return this.http.post(url, order).toPromise<any>();
+    return this.http
+      .post<any>(url, order, { headers: HeadersService.swipeluxHeaders })
+      .toPromise();
   }
 
   getAllOrders(params?: any): Promise<{ items: OrdersResponse[]; pageInfo: any }> {
     const url = SWIPELUX_URL.orders.href;
 
     return this.http
-      .get(url, {
+      .get<any>(url, {
+        headers: HeadersService.swipeluxHeaders,
         params: getParams({
           sort: 'created_at',
           dir: 'desc',
           ...params,
         }),
       })
-      .toPromise() as any;
+      .toPromise();
   }
 
   getCurrentOrder(): Promise<OrderResponse> {
     const url = SWIPELUX_URL.currentOrders.href;
 
-    return this.http.get(url).toPromise() as any;
+    return this.http.get<any>(url, { headers: HeadersService.swipeluxHeaders }).toPromise();
   }
 
   getKycStatus(): Promise<{ passed: boolean; origin?: string; token?: string }> {
     const url = SWIPELUX_URL.kycVerification.href;
 
     return this.http
-      .get<any>(url, { observe: 'response' })
+      .get<any>(url, { observe: 'response', headers: HeadersService.swipeluxHeaders })
       .pipe(
         map(res => {
           if (res.status === 200) {
@@ -68,25 +74,26 @@ export class SwipeluxService {
           }
         }),
       )
-      .toPromise<any>();
+      .toPromise();
   }
 
   getPairs(): Promise<{ items: CurrencyPair[]; pageInfo: any }> {
     const url = SWIPELUX_URL.pairs.href;
 
     return this.http
-      .get(url, {
+      .get<any>(url, {
+        headers: HeadersService.swipeluxHeaders,
         params: {
           limit: 999,
         },
       })
-      .toPromise<any>();
+      .toPromise();
   }
 
   getRateFromTo(fromCcy: string, toCcy: string): Promise<RateResponse> {
     const url = `${SWIPELUX_URL.fromTo.href}/${fromCcy}/${toCcy}/rate`;
 
-    return this.http.get(url).toPromise<any>();
+    return this.http.get<any>(url, { headers: HeadersService.swipeluxHeaders }).toPromise();
   }
 
   initializePayment(): Promise<{
@@ -96,6 +103,6 @@ export class SwipeluxService {
   }> {
     const url = SWIPELUX_URL.payment.href;
 
-    return this.http.get(url).toPromise<any>();
+    return this.http.get<any>(url, { headers: HeadersService.swipeluxHeaders }).toPromise();
   }
 }
