@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { SioProgressCircleComponent } from 'src/app/components/list-items/sio-progress-circle/sio-progress-circle.component';
 import {
   SwapReportItem,
   SwapStatus,
@@ -35,10 +34,6 @@ export class SioSwapPendingItemComponent {
       this.translations[this.transaction.Status]
     })`;
   }
-
-  // get progress(): number {
-  //   return SioProgressCircleComponent.getProgress(this.transaction.Status);
-  // }
 
   get fiatValue() {
     return this.transaction.TargetWithdrawalAmount * this.rate;
