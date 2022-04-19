@@ -35,7 +35,7 @@ export class AuthenticationService {
     private authProvider: AuthenticationProvider,
     private swapProvider: SwapProvider,
     private http: HttpClient,
-    private acc: AccountService
+    private acc: AccountService,
   ) {}
 
   serverUrl() {
@@ -116,7 +116,11 @@ export class AuthenticationService {
         rtk: c?.refresh_token ?? acc.rtk, 
         atk: c.access_token, 
         tkt: c.token_type 
-      }));
+      }))
+      .catch((err: HttpErrorResponse) => {
+        if (err.status === 403) this.logout();
+        throw err;
+      });
   }
 
   getAccountData(): Promise<RegisterAccountData> {
@@ -220,6 +224,7 @@ export class AuthenticationService {
       });
     });
   }
+
   private _refreshv1(refreshToken: string): Promise<AccountCredentialsResponse> {
     const url = USERS_URLS.refresh.href;
     this._refreshServerUrl = url;
@@ -230,22 +235,7 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, body, { headers })
-      .toPromise()
-      .catch((err: HttpErrorResponse) => {
-        if (err.status === 401) {
-          const customErr = new HttpErrorResponse({
-            headers: err.headers,
-            url: err.url,
-            status: err.status,
-            statusText: err.statusText,
-            error: Object.freeze({
-              code: 'NO_SUCH_USER',
-            }),
-          });
-          throw new IdentityVerificationError(customErr, this.$);
-        }
-        throw err;
-      });
+      .toPromise();
   }
 
   private _refreshv2(refreshToken: string): Promise<AccountCredentialsResponse> {
@@ -257,23 +247,7 @@ export class AuthenticationService {
 
     return this.http
       .post<AccountCredentialsResponse>(url, body, { headers })
-      .toPromise()
-      .catch(err => {
-        console.error(err);
-        if (err.status === 401) {
-          const customErr = new HttpErrorResponse({
-            headers: err.headers,
-            url: err.url,
-            status: err.status,
-            statusText: err.statusText,
-            error: Object.freeze({
-              code: 'NO_SUCH_USER',
-            }),
-          });
-          throw new IdentityVerificationError(customErr, this.$);
-        }
-        throw err;
-      });
+      .toPromise();
   }
 
   private async _verifyAccount(acc: Acc, accLog: AccLog): Promise<Acc> {
