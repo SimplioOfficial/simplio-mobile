@@ -148,8 +148,9 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
 
   async presentCreateTokenAccountPrompt() {
     if (UtilsService.isSolanaToken(this.wallet.type)) {
+      const apiUrl = this.blockchainService.getSolApi({ api: this.wallet.api });
       const minimumRent = await this.blockchainService.solana.getMinimumRentExemption({
-        api: this.wallet.api,
+        api: apiUrl,
       });
       const alertMsg = this.instant(this.$.CREATE_NEW_SOLANA_TOKEN_ACCOUNT_FEE);
 
@@ -198,10 +199,11 @@ export class ReceivePage extends TrackedPage implements OnDestroy {
                 );
               }
               await this.presentLoading(this.$.INITIALIZING_TOKEN);
+              const apiUrl = this.blockchainService.getSolApi({ api: this.wallet.api });
               this.blockchainService.solana
                 .createTokenAddress({
                   address: this.wallet.mainAddress,
-                  api: this.wallet.api,
+                  api: apiUrl,
                   contractAddress: this.wallet.contractaddress,
                   seeds: this.io.decrypt(this.wallet.mnemo, idt),
                   addressType: this.wallet.addressType,

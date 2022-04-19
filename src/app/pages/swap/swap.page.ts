@@ -33,6 +33,7 @@ import { coinNames } from 'src/app/services/api/coins';
 import { Stake, Pool } from '@simplio/backend/interface/stake';
 import { NetworkService } from 'src/app/services/apiv2/connection/network.service';
 import { PurchaseDetailModal } from '../modals/purchase-detail-modal/purchase-detail.modal';
+import { SwapConnectionService } from 'src/app/services/swap/swap-connection.service';
 
 const DEFAULTS = {
   currentPage: 0,
@@ -76,6 +77,7 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     private authProvider: AuthenticationProvider,
     private io: IoService,
     private networkService: NetworkService,
+    private swapConn: SwapConnectionService,
   ) {
     super();
     this.subscription.add(this.swapProvider.allPendingSwaps$.subscribe(_ => this.loadData()));
@@ -216,6 +218,9 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
   ngOnInit() {
     this._isLoadingInit.next(true);
     this.loadData(true).then(_ => this._isLoadingInit.next(false));
+
+    const acc = this.authProvider.accountValue;
+    this.swapConn.start({ token: acc.atk });
   }
 
   ngOnDestroy() {
@@ -239,7 +244,6 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
     const d = { pageNumber: 1, clean: false, ...data };
     const statuses = [SwapStatusText.Completed, SwapStatusText.Failed, SwapStatusText.Expired];
     try {
-      await this.authService.checkToken();
       const page = await this.singleSwap.report({
         pageNumber: d.pageNumber,
         swapStatus: statuses,
@@ -269,7 +273,6 @@ export class SwapPage extends TrackedPage implements OnInit, OnDestroy {
         SwapStatusText.Swapping,
         SwapStatusText.Withdrawing,
       ];
-      await this.authService.checkToken();
       const page = await this.singleSwap.report({
         pageNumber: 1,
         swapStatus: query,
