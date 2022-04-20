@@ -51,10 +51,7 @@
               <span>{{ $.LAST_UPDATED | translate }}</span>
             </ion-col>
             <ion-col size="6" text-right>
-              <p
-                >{{ swapTx.UpdatedAt | date: 'mediumDate' }},
-                {{ swapTx.UpdatedAt | date: 'shortTime' }}</p
-              >
+              <p>{{ swapTx.UpdatedAt | date: 'mediumDate' }}, {{ localeShortTime }}</p>
             </ion-col>
           </ion-row>
 
