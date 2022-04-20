@@ -188,6 +188,10 @@ export class SwapDetailModal implements OnInit {
     return this.swapTx.SourceCurrency;
   }
 
+  get localeShortTime() {
+    return new Date(this.swapTx.UpdatedAt).toLocaleTimeString().slice(0, -3);
+  }
+
   ngOnInit() {
     import('src/assets/icon/icons.js').then(mod => {
       const coin = !!this.swapTx.TargetCurrency
