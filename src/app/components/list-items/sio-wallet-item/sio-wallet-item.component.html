@@ -38,7 +38,9 @@
   *ngIf="isContent; else balance"
   (touchstart)="press($event)"
   (touchend)="pressUp($event)"
-></ng-container>
+>
+  <ng-content></ng-content>
+</ng-container>
 <ng-template #balance>
   <div class="balance">
     <p

@@ -15,17 +15,6 @@ export const USERS_URLS = Object.freeze({
   data: url('users/data'),
 });
 
-const base2 = environment.SWAP_URL_DEX;
-const urlv2 = makeURL(base2).bind(null, '/api');
-export const USERS_URLS_V2 = Object.freeze({
-  account: urlv2('users/account'),
-  access: urlv2('users/token/issue'),
-  refresh: urlv2('users/token/refresh'),
-  password: urlv2('users/account/change-password'),
-  reset: urlv2('users/account/reset-password'),
-  data: urlv2('users/data'),
-});
-
 const base3 = environment.USER_API;
 const urlv3 = makeURL(base3).bind(null, '/api');
 
