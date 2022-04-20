@@ -5,7 +5,6 @@ export const environment = {
   SWAP_WS_URL: 'https://simplio-api-test.azurewebsites.net/ws/notifications',
   SWAP_URL: 'https://simplio-test.azurefd.net/api',
   LANG_URL: 'https://files.simplio.io/beta/',
-  SWAP_URL_DEX: 'https://dex-server.simplio.io/api',
   TEMPLATE_REGISTRATION: 'SIO.REGISTRATION',
   TEMPLATE_RESET: 'SIO.PASSWORD-RESET',
   EXPLORER_URL: 'https://files.simplio.io/explorers_fallback_beta.json',

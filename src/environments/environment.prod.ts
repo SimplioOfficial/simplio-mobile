@@ -4,7 +4,6 @@ export const environment = {
   POOL_ADDRESS: '6KBL8pMWQh9yM96Zxda7r1DFH5sqMgkrwacUjKEVeDPb',
   SWAP_WS_URL: 'https://simplio-api-prod.azurewebsites.net/ws/notifications',
   SWAP_URL: 'https://simplio-prod.azurefd.net/api',
-  SWAP_URL_DEX: 'https://dex-server.simplio.io/api',
   LANG_URL: 'https://files.simplio.io/prod/',
   TEMPLATE_REGISTRATION: 'SIO.REGISTRATION',
   TEMPLATE_RESET: 'SIO.PASSWORD-RESET',

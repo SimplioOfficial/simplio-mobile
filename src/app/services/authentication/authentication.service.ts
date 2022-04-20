@@ -13,10 +13,9 @@ import { PlatformProvider } from '../../providers/platform/platform';
 import { IoService } from '../io.service';
 import { parseJWT } from './utils';
 import { MultiFactorAuthenticationService } from './mfa.service';
-import { USERS_URLS, USERS_URLS_V2 } from 'src/app/providers/routes/swap.routes';
+import { USERS_URLS } from 'src/app/providers/routes/swap.routes';
 import { AccountService } from 'src/app/services/authentication/account.service';
 import { SwapProvider } from '../../providers/data/swap.provider';
-import { HttpFallbackService } from '../apiv2/connection/http-fallback.service';
 import { HeadersService } from 'src/app/services/headers.service';
 
 type AfterLoginOptions = { verify: boolean; isNew: boolean };
@@ -112,11 +111,13 @@ export class AuthenticationService {
 
   refresh(acc: Acc): Promise<Acc> {
     return this._refresh(acc.rtk)
-      .then(c => this.acc.updateAccount({ 
-        rtk: c?.refresh_token ?? acc.rtk, 
-        atk: c.access_token, 
-        tkt: c.token_type 
-      }))
+      .then(c =>
+        this.acc.updateAccount({
+          rtk: c?.refresh_token ?? acc.rtk,
+          atk: c.access_token,
+          tkt: c.token_type,
+        }),
+      )
       .catch((err: HttpErrorResponse) => {
         if (err.status === 403) this.logout();
         throw err;
@@ -129,58 +130,16 @@ export class AuthenticationService {
       'Content-Type': 'application/json',
       ...HeadersService.simplioHeaders,
     });
-    return this.http
-      .get<RegisterAccountData>(url, { headers })
-      .toPromise();
+    return this.http.get<RegisterAccountData>(url, { headers }).toPromise();
   }
 
   private _login(cred: AccountCredentials): Promise<AccountCredentialsResponse> {
     return this._loginv1(cred).catch(err => {
-      return this._loginv2(cred).catch(_ => {
-        throw err;
-      });
+      throw err;
     });
   }
   private _loginv1(cred: AccountCredentials): Promise<AccountCredentialsResponse> {
     const url = USERS_URLS.access.href;
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-
-    return this.http
-      .post<AccountCredentialsResponse>(url, cred, { headers })
-      .toPromise()
-      .catch((err: HttpErrorResponse) => {
-        if (err.status === 401) {
-          let customErr = new HttpErrorResponse({
-            headers: err.headers,
-            url: err.url,
-            status: err.status,
-            statusText: err.statusText,
-            error: Object.freeze({
-              code: 'NO_SUCH_USER'
-            })
-          });
-          if (err.error.includes('verify your email')) {
-            customErr = new HttpErrorResponse({
-              headers: err.headers,
-              url: err.url,
-              status: err.status,
-              statusText: err.statusText,
-              error: Object.freeze({
-                code: 'NO_SUCH_USER',
-              }),
-            });
-
-            throw new IdentityVerificationError(customErr, this.$);
-          }
-        };
-        throw err;
-      });
-  }
-
-  private _loginv2(cred: AccountCredentials): Promise<AccountCredentialsResponse> {
-    const url = USERS_URLS_V2.access.href;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
@@ -206,12 +165,12 @@ export class AuthenticationService {
               status: err.status,
               statusText: err.statusText,
               error: Object.freeze({
-                code: 'INCOMPLETE_REGISTRATION_PROCESS',
+                code: 'NO_SUCH_USER',
               }),
             });
-          }
 
-          throw new IdentityVerificationError(customErr, this.$);
+            throw new IdentityVerificationError(customErr, this.$);
+          }
         }
         throw err;
       });
@@ -219,9 +178,7 @@ export class AuthenticationService {
 
   private _refresh(refreshToken: string): Promise<AccountCredentialsResponse> {
     return this._refreshv1(refreshToken).catch(err => {
-      return this._refreshv2(refreshToken).catch(_ => {
-        throw err;
-      });
+      throw err;
     });
   }
 
@@ -233,21 +190,7 @@ export class AuthenticationService {
     });
     const body = { refreshToken };
 
-    return this.http
-      .post<AccountCredentialsResponse>(url, body, { headers })
-      .toPromise();
-  }
-
-  private _refreshv2(refreshToken: string): Promise<AccountCredentialsResponse> {
-    const url = USERS_URLS_V2.refresh.href;
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    const body = { refreshToken };
-
-    return this.http
-      .post<AccountCredentialsResponse>(url, body, { headers })
-      .toPromise();
+    return this.http.post<AccountCredentialsResponse>(url, body, { headers }).toPromise();
   }
 
   private async _verifyAccount(acc: Acc, accLog: AccLog): Promise<Acc> {
