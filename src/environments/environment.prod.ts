@@ -24,7 +24,6 @@ export const environment = {
   CUSTOM_CONTENT: {
     SWIPELUX: false,
     STAKING: false,
-    DISABLED_SWAP_PAIRS: false,
   },
   appInsights: {
     instrumentationKey: 'f083c9e4-1a72-4e9a-bf07-90f0f86099ed',
