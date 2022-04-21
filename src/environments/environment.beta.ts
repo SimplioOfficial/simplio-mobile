@@ -20,6 +20,5 @@ export const environment = {
   CUSTOM_CONTENT: {
     SWIPELUX: true,
     STAKING: false,
-    DISABLED_SWAP_PAIRS: false,
   },
 };
