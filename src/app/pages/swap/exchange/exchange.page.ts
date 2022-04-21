@@ -18,7 +18,7 @@ import {
 } from 'src/app/interface/data';
 import { WalletService } from 'src/app/services/wallet.service';
 import { DataService } from 'src/app/services/data.service';
-import { getChainId, pipeAmount, UtilsService } from 'src/app/services/utils.service';
+import { pipeAmount, UtilsService } from 'src/app/services/utils.service';
 import { TransactionsService } from 'src/app/services/transactions.service';
 import { SettingsProvider } from 'src/app/providers/data/settings.provider';
 import { AuthenticationProvider } from 'src/app/providers/data/authentication.provider';
@@ -48,7 +48,6 @@ import {
 import { Settings } from 'src/app/interface/settings';
 import { SwapProvider } from 'src/app/providers/data/swap.provider';
 import { SioSwapValueComponent } from 'src/app/components/form/sio-swap-value/sio-swap-value.component';
-import { environment } from '../../../../environments/environment';
 import {
   SwapWalletModal,
   SwapWalletModalResponse,
@@ -76,16 +75,12 @@ type RouteData = {
   pairs: SwapPair[];
 };
 
-type SwapCoin = { from: string; to: string; fromChain?: string; toChain?: string };
-
 @Component({
   selector: 'app-create',
   templateUrl: './exchange.page.html',
   styleUrls: ['./exchange.page.scss'],
 })
 export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
-  disabledSwapPair = false;
-
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -700,7 +695,6 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
           ),
         });
       })
-      .then(() => this.checkDisabledSwapPair())
       .catch((err: Error) => this.utilsService.showToast(err.message, 1500, 'warning'));
   }
 
@@ -741,12 +735,9 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
   onAmountChange(value: number) {
     this._feeEstimated = undefined;
     this.valueComponent.updateInputValue(value);
-
-    this.checkDisabledSwapPair();
   }
 
   async onMaxClick(_event) {
-    this.checkDisabledSwapPair();
     if (!this.isMax) {
       this.isMax = true;
       await this.presentLoading(this.$.CALCULATING);
@@ -1036,52 +1027,5 @@ export class ExchangePage implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     this.formField.patchValue({ feeWallet: mainWallet });
-  }
-
-  private checkDisabledSwapPair() {
-    const disabledPairs: SwapCoin[] = environment.CUSTOM_CONTENT.DISABLED_SWAP_PAIRS
-      ? [
-          { from: coinNames.BUSD, to: coinNames.BNB },
-          { from: coinNames.BUSD, to: coinNames.ZEC },
-          { from: coinNames.USDC, fromChain: coinNames.BSC, to: coinNames.BNB },
-          { from: coinNames.BUSD, to: coinNames.SOL },
-          { from: coinNames.LTC, to: coinNames.USDC, toChain: coinNames.BSC },
-          { from: coinNames.ETH, to: coinNames.USDT, toChain: coinNames.BSC },
-        ]
-      : [];
-
-    const fromChainTicker = getChainId(this.sourceWallet);
-    const toChainTicker = getChainId(this.destinationWallet);
-
-    const fromChainCondition = (pair: SwapCoin) => {
-      if (!pair.fromChain) return true;
-
-      return pair.fromChain === fromChainTicker || pair.fromChain === toChainTicker;
-    };
-
-    const toChainCondition = (pair: SwapCoin) => {
-      if (!pair.toChain) return true;
-
-      return pair.toChain === fromChainTicker || pair.toChain === toChainTicker;
-    };
-
-    const result = disabledPairs.some(
-      pair =>
-        (pair.from === this.sourceWallet.ticker || pair.to === this.sourceWallet.ticker) &&
-        (pair.from === this.destinationWallet.ticker ||
-          pair.to === this.destinationWallet.ticker) &&
-        fromChainCondition(pair) &&
-        toChainCondition(pair),
-    );
-
-    if (result) {
-      this.utilsService.showToast(
-        'This swap pair is temporary disabled. Please try it again later.',
-        3000,
-        'warning',
-      );
-    }
-
-    this.disabledSwapPair = result;
   }
 }
