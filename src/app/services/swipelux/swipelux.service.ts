@@ -34,7 +34,7 @@ export class SwipeluxService {
   ): Promise<{ accessToken: string; orderId: string }> {
     const url = SWIPELUX_URL.orders.href;
 
-    return this.http.post<any>(url, order, { headers: HeadersService.swipeluxHeaders }).toPromise();
+    return this.http.post<any>(url, order, { headers: HeadersService.simplioHeaders }).toPromise();
   }
 
   getAllOrders(params?: any): Promise<{ items: OrdersResponse[]; pageInfo: any }> {
