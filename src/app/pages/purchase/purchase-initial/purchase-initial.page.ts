@@ -49,6 +49,7 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     wallet: [null, [Validators.required]],
     amount: [0, [Validators.required, isGreaterThan(0)]],
     resultRate: [null, [Validators.required]],
+    targetAmount: [0, [Validators.required, isGreaterThan(0)]],
   });
   walletSelectingDisabled = false;
 
@@ -248,8 +249,7 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
   }
 
   get targetAmount(): number {
-    const rate = this.formField.value?.resultRate;
-    return this.formField.value.amount * rate;
+    return this.formField.value.targetAmount;
   }
 
   private _convert(value: number): Promise<void> {
@@ -263,15 +263,16 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     this.isPending = true;
 
     return this.swipeluxService
-      .getRateFromTo(this.currency, this.getWalletTicker())
+      .getRateFromTo(this.currency, this.formField.value.amount, this.getWalletTicker())
       .then(res => {
         this.isPending = false;
-        if (!!res?.rate?.amount) {
-          this.formField.patchValue({ resultRate: res.rate.amount ? 1 / res.rate.amount : 0 });
+        if (!!res?.rate) {
+          this.formField.patchValue({ resultRate: 1.0 / res.rate });
+          this.formField.patchValue({ targetAmount: res.amounts.to.amount });
           this.formField.controls.amount.clearValidators();
           this.formField.controls.amount.addValidators([
-            isGreaterOrEqualThan(res.rate.currency.minimum),
-            isLessOrEqualThan(res.rate.currency.maximum),
+            isGreaterOrEqualThan(res.amounts.from.currency.minimum),
+            isLessOrEqualThan(res.amounts.from.currency.maximum),
           ]);
           this.formField.patchValue({ amount: this.formField.value.amount });
         }

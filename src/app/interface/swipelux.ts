@@ -26,12 +26,36 @@ export interface CurrencyPair {
 }
 
 export interface RateResponse {
-  pair: {
-    fromCcy: Currency;
-    toCcy: Currency;
+  amounts: {
+    from: {
+      amount: string;
+      currency: Currency;
+    };
+    to: {
+      amount: string;
+      currency: Currency;
+    };
   };
-  rate: Rate;
-  updatedAt: Date;
+  fee: {
+    rate: string;
+    details: [{ provider: string; currency: string; amount: string }];
+  };
+  fees: {
+    MERCHANT: Fee;
+    RECV_XACT: Fee;
+    SEND_XACT: Fee;
+    SYSTEM: Fee;
+  };
+  rate: number;
+  rateTtl: number;
+}
+
+export interface Fee {
+  amounts: {
+    USD?: string;
+    EUR?: string;
+  };
+  baseCurrency: string;
 }
 
 export interface OrderData {

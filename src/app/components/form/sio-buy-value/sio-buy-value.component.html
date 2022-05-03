@@ -14,7 +14,11 @@
   ><ion-spinner name="dots"></ion-spinner
 ></span>
 <ng-template #targetAmountRef>
-  <span *ngIf="targetAmount === 0" class="swaped-value">{{ targetAmount }} {{ targetCurrency }}</span>
-  <span *ngIf="targetAmount > 0" class="swaped-value">~ {{ targetAmount | number: '1.1-4' }} {{ targetCurrency }}</span>
+  <span *ngIf="targetAmount === 0" class="swaped-value"
+    >{{ targetAmount }} {{ targetCurrency }}</span
+  >
+  <span *ngIf="targetAmount > 0" class="swaped-value"
+    >~ {{ targetAmount | number: '1.1-5' }} {{ targetCurrency }}</span
+  >
 </ng-template>
 <ng-content></ng-content>

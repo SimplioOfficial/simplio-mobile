@@ -90,10 +90,23 @@ export class SwipeluxService {
       .toPromise();
   }
 
-  getRateFromTo(fromCcy: string, toCcy: string): Promise<RateResponse> {
-    const url = `${SWIPELUX_URL.fromTo.href}/${fromCcy}/${toCcy}/rate`;
+  getRateFromTo(fromCcy: string, fromAmount: number, toCcy: string): Promise<RateResponse> {
+    const url = SWIPELUX_URL.estimateRates.href;
 
-    return this.http.get<any>(url, { headers: HeadersService.swipeluxHeaders }).toPromise();
+    const body = {
+      amounts: {
+        from: {
+          amount: fromAmount,
+          currency: fromCcy,
+        },
+        to: {
+          currency: toCcy,
+        },
+        targetAddress: '',
+      },
+    };
+
+    return this.http.post<any>(url, body, { headers: HeadersService.swipeluxHeaders }).toPromise();
   }
 
   initializePayment(): Promise<{
