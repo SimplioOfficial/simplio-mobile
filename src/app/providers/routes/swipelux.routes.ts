@@ -11,6 +11,7 @@ export const SWIPELUX_URL = Object.freeze({
   pairs: url('currencies/pairs'),
   fromTo: url('currencies/pairs'),
   currentOrders: url('orders/current'),
+  estimateRates: url('orders/estimateRates'),
   payment: url('orders/current/payment'),
   kycVerification: url('verifications/kyc'),
 
