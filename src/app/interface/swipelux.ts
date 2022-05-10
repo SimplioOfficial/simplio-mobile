@@ -69,13 +69,19 @@ export interface OrderData {
 }
 
 export interface OrderDataWithToken {
-  currencyPair: {
-    from: string;
-    to: string;
+  amounts: {
+    from: {
+      amount?: string; // <--- set either this
+      currency: string;
+    };
+    to: {
+      amount?: string; // <-- or this amount
+      currency: string;
+    };
   };
   shareToken: string;
   targetAddress: string;
-  targetAmount: number;
+  userId: string;
 }
 
 export interface MerchantSettings {
