@@ -18,6 +18,7 @@ import { Rate, Wallet, WalletsData } from '../../../interface/data';
 import { TrackedPage } from '../../../classes/trackedPage';
 import { SumSubStatus } from '../../../interface/kyc';
 import { CurrencyPair, OrderDataWithToken } from '../../../interface/swipelux';
+import { AuthenticationProvider } from '../../../providers/data/authentication.provider';
 import { SettingsProvider } from '../../../providers/data/settings.provider';
 import { SwipeluxProvider } from '../../../providers/swipelux/swipelux-provider.service';
 import { RateService } from '../../../services/apiv2/connection/rate.service';
@@ -82,6 +83,7 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
     private swipeluxService: SwipeluxService,
     private swipeluxProvider: SwipeluxProvider,
     private settingsProvider: SettingsProvider,
+    private authProvider: AuthenticationProvider,
     public $: Translate,
   ) {
     super();
@@ -187,13 +189,18 @@ export class PurchaseInitialPage extends TrackedPage implements OnInit {
       ).mainAddress;
 
       const order: OrderDataWithToken = {
-        currencyPair: {
-          from: this.currency,
-          to: this.getWalletTicker(),
+        amounts: {
+          from: {
+            amount: this.formField.value.amount.toString(),
+            currency: this.currency,
+          },
+          to: {
+            currency: this.getWalletTicker(),
+          },
         },
         shareToken,
         targetAddress,
-        targetAmount: Math.round(this.targetAmount * 1e8), // integer amount in satoshi
+        userId: this.authProvider.accountValue.email,
       };
 
       const status = await this.swipeluxService
